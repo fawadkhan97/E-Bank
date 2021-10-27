@@ -1,17 +1,18 @@
-package myapp.ebank.Entity;
+package myapp.ebank.model;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
 
+@Entity
 @Data
-public class User {
+public class Roles {
+	
 	@Id
 	@GeneratedValue
 	private long id;
-	private String name;
-	private String deptNameString;
-	
+	private String role;
 
 }
