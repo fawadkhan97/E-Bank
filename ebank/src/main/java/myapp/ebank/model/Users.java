@@ -27,9 +27,9 @@ public class Users {
 	private String userType;
 	@Column(name = "age")
 	private int age;
-	private String DOB;
-	private String CreatedDate;
-	private String UpdatedDate;
+	private String dob;
+	private String createdDate;
+	private String updatedDate;
 	private boolean status;
 	
 
