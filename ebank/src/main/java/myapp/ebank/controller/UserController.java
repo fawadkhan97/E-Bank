@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import myapp.ebank.model.Users;
 import myapp.ebank.service.UserService;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @RestController
 @RequestMapping("/user")
@@ -109,8 +110,6 @@ public class UserController {
 
 	}
 
-	
-
 	/**
 	 * 
 	 * @param authValue
@@ -138,21 +137,17 @@ public class UserController {
 	 * @param id
 	 * @param message
 	 * @createdDate 13-oct-2021
-	 */
-	@PostMapping("/{id}/sendSms")
-	public ResponseEntity<Object> sendSms(@RequestHeader(value = "Authorization", required = false) String authValue,
-			@PathVariable Long id, @RequestBody String message) {
-		if (authValue != null) {
-			if (authorize(authValue)) {
-				return userService.sendSms(id, message);
-			} else {
-				return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
-			}
-		} else {
-			return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
-		}
-	}
-
+	 *//*
+		 * @PostMapping("/{id}/sendSms") public ResponseEntity<Object>
+		 * sendSms(@RequestHeader(value = "Authorization", required = false) String
+		 * authValue,
+		 * 
+		 * @PathVariable Long id, @RequestBody String message) { if (authValue != null)
+		 * { if (authorize(authValue)) { return userService.sendSms(id, message); } else
+		 * { return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+		 * } } else { return new ResponseEntity<>("Incorrect authorization key ",
+		 * HttpStatus.UNAUTHORIZED); } }
+		 */
 	/**
 	 * 
 	 * @param authValue

@@ -1,5 +1,47 @@
 package myapp.ebank.util;
 
-public class EmailUtil {
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
+/**
+ * @author fawad khan
+ * @createdDate 14-oct-2021
+ */
+@Service
+public class EmailUtil {
+	final private JavaMailSender javaMailSender;
+
+	private final String body = " A new account was created using your email ,  please enter following code to verify: ";
+	private final String subject = " User verification email";
+
+	public EmailUtil(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
+
+	/**
+	 * @author fawad khan
+	 * @createdDate 14-oct-2021
+	 * @param toEmail
+	 * @param token
+	 * @return
+	 */
+	public ResponseEntity<Object> sendMail(String toEmail, int token) {
+
+		try {
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setTo(toEmail);
+			msg.setSubject(subject);
+			msg.setText(body + token);
+			javaMailSender.send(msg);
+			return new ResponseEntity<>("user added and email sent successfully please verify it", HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println(e.getCause());
+			return new ResponseEntity<>(e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }

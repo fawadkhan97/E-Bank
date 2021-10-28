@@ -16,6 +16,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
 	Optional<Users> findByIdAndEmailTokenAndSmsToken(Long id, int emailToken, int smsToken);
 
-	List<Users> findAllByStatus(boolean status);
+	List<Users> findAllByisActive(boolean status);
 
 }
