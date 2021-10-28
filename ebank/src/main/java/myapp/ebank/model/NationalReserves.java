@@ -18,6 +18,24 @@ public class NationalReserves {
 	private String foreignReserves;
 	@Column(name = "GoldReserves")
 	private String goldReserves;
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public String getForeignReserves() {
+		return foreignReserves;
+	}
+	public void setForeignReserves(String foreignReserves) {
+		this.foreignReserves = foreignReserves;
+	}
+	public String getGoldReserves() {
+		return goldReserves;
+	}
+	public void setGoldReserves(String goldReserves) {
+		this.goldReserves = goldReserves;
+	}
 	
 	
 	

@@ -2,26 +2,23 @@ package myapp.ebank.service;
 
 import org.springframework.stereotype.Service;
 
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import myapp.ebank.model.Users;
 import myapp.ebank.repository.UserRepository;
+import myapp.ebank.util.DateAndTime;
 import myapp.ebank.util.EmailUtil;
 import myapp.ebank.util.SMSUtil;
-
 
 /**
  * @author Fawad khan Created Date : 08-October-2021 A service class of user
@@ -51,7 +48,7 @@ public class UserService {
 	public ResponseEntity<Object> listAllUser() {
 		try {
 
-			List<Users> users = userRepository.findAllByStatus(true);
+			List<Users> users = userRepository.findAllByisActive(true);
 			log.info("list of  users fetch from db are ", users);
 			// check if list is empty
 			if (users.isEmpty()) {
@@ -90,29 +87,24 @@ public class UserService {
 					"some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
 					e.getMessage());
 
-			return new ResponseEntity<>("Unable to find Users, an error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Unable to find Users, an error has occurred",
+					HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
 
 	}
 
-	// send user sms
-	public ResponseEntity<Object> sendSms(Long id, String message) {
-		try {
-			Optional<Users> user = userRepository.findById(id);
-			if (user.isPresent()) {
-				log.info("user fetch and found from db by id  : ", user.toString());
-				return smsUtil.sendSMS(user.get().getPhoneNumber(), message);
-			} 
-		} catch (Exception e) {
-			log.error(
-					"some error has occurred during fetching Users by id , in class UserService and its function sendSms ",
-					e.getMessage());
-			System.out.println(e.getMessage() + e.getCause());
-			return new ResponseEntity<>("Unable to find Users, an error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
+	/*
+	 * // send user sms public ResponseEntity<Object> sendSms(Long id, String
+	 * message) { try { Optional<Users> user = userRepository.findById(id); if
+	 * (user.isPresent()) { log.info("user fetch and found from db by id  : ",
+	 * user.toString()); return smsUtil.sendSMS(user.get().getPhoneNumber(),
+	 * message); } } catch (Exception e) { log.error(
+	 * "some error has occurred during fetching Users by id , in class UserService and its function sendSms "
+	 * , e.getMessage()); System.out.println(e.getMessage() + e.getCause()); return
+	 * new ResponseEntity<>("Unable to find Users, an error has occurred",
+	 * HttpStatus.INTERNAL_SERVER_ERROR); } }
+	 */
 
 	/**
 	 *
@@ -146,28 +138,16 @@ public class UserService {
 	 */
 	public ResponseEntity<Object> saveUser(Users user) {
 		try {
-			String pattern = "dd-MM-yyyy hh:mm:ss";
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			String date = simpleDateFormat.format(new Date());
+
+			String date = DateAndTime.getDate();
 			user.setCreatedDate(date);
-			user.setStatus(false);
-			Random rndkey = new Random(); // Generating a random number
-			int emailToken = rndkey.nextInt(999999); // Generating a random email token of 6 digits
-			int smsToken = rndkey.nextInt(999999); // Generating a random email token of 6 digits
-			// send email token to user email and save in db
-			emailUtil.sendMail(user.getEmail(), emailToken);
-			user.setEmailToken(emailToken);
-
-			// send sms token to user email and save in db
-			smsUtil.sendSMS(user.getPhoneNumber(), smsToken);
-			user.setSmsToken(smsToken);
-
+			user.setActive(true);
 			// save user to db
 			userRepository.save(user);
 			user.toString();
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
-			return new ResponseEntity<>("Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
+			return new ResponseEntity<>(" Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
 		} catch (Exception e) {
 			log.error(
 					"some error has occurred while trying to save user,, in class UserService and its function saveUser ",
@@ -216,7 +196,7 @@ public class UserService {
 			if (user.isPresent()) {
 
 				// set status false
-				user.get().setStatus(false);
+				user.get().setActive(false);
 				// set updated date
 				String pattern = "dd-MM-yyyy hh:mm:ss";
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -249,7 +229,7 @@ public class UserService {
 			Optional<Users> user = userRepository.findByIdAndEmailTokenAndSmsToken(id, emailToken, smsToken);
 			if (user.isPresent()) {
 				System.out.println("user is : " + user.toString());
-				user.get().setStatus(true);
+				user.get().setActive(true);
 				userRepository.save(user.get());
 				return new ResponseEntity<>("user has been verified ", HttpStatus.OK);
 			} else

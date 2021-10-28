@@ -29,13 +29,6 @@ public class Users {
 	private String userType;
 	@Column(name = "age")
 	private int age;
-<<<<<<< HEAD
-	private String dob;
-	private String createdDate;
-	private String updatedDate;
-	private boolean status;
-	
-=======
 	@Column(name = "dob")
 	private String DOB;
 	@Column(name = "CreatedDate")
@@ -168,6 +161,5 @@ public class Users {
 	public void setSmsToken(int smsToken) {
 		this.smsToken = smsToken;
 	}
->>>>>>> development
 
 }
