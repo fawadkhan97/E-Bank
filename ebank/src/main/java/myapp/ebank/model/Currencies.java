@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class IssuedCurrency {
+public class Currencies {
 
 	@Id
 	@GeneratedValue
@@ -22,6 +22,12 @@ public class IssuedCurrency {
 	private String mainColor;
 	@Column(name = "note_description")
 	private String noteDescription;
+	@Column(name = "issuedDate")
+	private String issuedDate;
+	@Column(name = "updateDate")
+	private String updateDate;
+	@Column(name = "isActive")
+	private Boolean isActive;
 
 	public long getId() {
 		return id;
@@ -63,7 +69,29 @@ public class IssuedCurrency {
 		this.noteDescription = noteDescription;
 	}
 
-	
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getIssuedDate() {
+		return issuedDate;
+	}
+
+	public void setIssuedDate(String issuedDate) {
+		this.issuedDate = issuedDate;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
 
 	
 }

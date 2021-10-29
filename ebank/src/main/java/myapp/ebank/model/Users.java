@@ -29,13 +29,8 @@ public class Users {
 	private String userType;
 	@Column(name = "age")
 	private int age;
-	private String dob;
-	private String createdDate;
-	private String updatedDate;
-	private boolean status;
-	
 	@Column(name = "dob")
-	private String DOB;
+	private String dob;
 	@Column(name = "CreatedDate")
 	private String CreatedDate;
 	@Column(name = "UpdatedDate")
@@ -111,13 +106,7 @@ public class Users {
 		this.age = age;
 	}
 
-	public String getDOB() {
-		return DOB;
-	}
-
-	public void setDOB(String dOB) {
-		DOB = dOB;
-	}
+	
 
 	public String getCreatedDate() {
 		return CreatedDate;
@@ -165,6 +154,14 @@ public class Users {
 
 	public void setSmsToken(int smsToken) {
 		this.smsToken = smsToken;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
 	}
 
 }

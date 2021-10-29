@@ -18,7 +18,7 @@ public class DateAndTime {
 	
 
 	public static String getDateAndTime() {
-		String pattern = "dd-mm-yyyy hh:mm:ss";
+		String pattern = "dd-MM-yyyy hh:mm:ss";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(new Date());
 		return date;

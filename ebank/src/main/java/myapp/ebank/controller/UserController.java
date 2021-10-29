@@ -60,7 +60,7 @@ public class UserController {
 	 */
 
 	@GetMapping("/all")
-	public ResponseEntity<Object> users(@RequestHeader(value = "Authorization", required = false) String authValue) {
+	public ResponseEntity<Object> getAllusers(@RequestHeader(value = "Authorization", required = false) String authValue) {
 		if (authValue != null) {
 			if (authorize(authValue)) {
 				return userService.listAllUser();
@@ -148,6 +148,7 @@ public class UserController {
 		 * } } else { return new ResponseEntity<>("Incorrect authorization key ",
 		 * HttpStatus.UNAUTHORIZED); } }
 		 */
+	
 	/**
 	 * 
 	 * @param authValue
