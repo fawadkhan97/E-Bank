@@ -1,5 +1,6 @@
 package myapp.ebank.util;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EmailUtil {
+	@Autowired
 	final private JavaMailSender javaMailSender;
 
 	private final String body = " A new account was created using your email ,  please enter following code to verify: ";

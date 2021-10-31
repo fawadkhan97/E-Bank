@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Kibor {
+public class KiborRates {
 	@Id
 	@GeneratedValue
 	private long id;

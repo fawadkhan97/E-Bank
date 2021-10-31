@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class UserController {
 
 	UserService userService;
-	private static final String defaultAuthValue = "user12345";
+	private static final String defaultAuthValue = "12345";
 
 	private static final Logger log = LogManager.getLogger();
 
