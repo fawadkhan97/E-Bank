@@ -1,0 +1,94 @@
+package myapp.ebank.service;
+
+import myapp.ebank.model.Funds;
+import myapp.ebank.repository.FundRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class FundService {
+
+    final FundRepository fundRepository;
+
+    public FundService(FundRepository fundRepository) {
+        this.fundRepository = fundRepository;
+    }
+
+
+    /**
+     * add funds
+     *
+     * @param funds
+     * @return
+     */
+    public ResponseEntity<Object> addFund(Funds funds) {
+
+        try {
+
+            fundRepository.save(funds);
+            return new ResponseEntity<Object>(funds, HttpStatus.OK);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
+            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+    }
+
+    /**
+     * @param fund
+     * @return
+     * @author fawad khan
+     * @createdDate 01-nov-2021
+     */
+    public ResponseEntity<Object> updateFund(Funds fund) {
+        try {
+
+            fundRepository.save(fund);
+            return new ResponseEntity<>(fund, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() + "  " + e.getCause());
+		/*	log.error(
+					"some error has occurred while trying to update fund,, in class fundService and its function updatefund ",
+					e.getMessage());*/
+            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 01-nov-2021
+     */
+    public ResponseEntity<Object> deleteFund(Long id) {
+        try {
+            Optional<Funds> fund = fundRepository.findById(id);
+            if (fund.isPresent()) {
+
+                fundRepository.deleteById(id);
+
+                return new ResponseEntity<>("SMS: Funds deleted successfully", HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("SMS: Funds does not exists ", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+		/*	log.error(
+					"some error has occurred while trying to Delete fund,, in class fundService and its function deletefund ",
+					e.getMessage(), e.getCause(), e);*/
+            return new ResponseEntity<>("Funds could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+    }
+
+}
