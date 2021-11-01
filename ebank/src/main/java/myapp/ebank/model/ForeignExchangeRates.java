@@ -9,8 +9,7 @@ import lombok.Data;
 @Entity
 @Data
 public class ForeignExchangeRates {
-	
-	
+
 	@Id
 	@GeneratedValue
 	private long id;
@@ -22,7 +21,7 @@ public class ForeignExchangeRates {
 	private Double buying;
 	@Column(name = "selling")
 	private Double selling;
-	@Column
+	@Column(name = "date")
 	private String Date;
 	public long getId() {
 		return id;

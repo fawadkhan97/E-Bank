@@ -1,7 +1,10 @@
 package myapp.ebank.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
+import myapp.ebank.model.InterestRates;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +79,11 @@ public class InterestRatesService {
 
 	}
 
+	/**
+	 * save interest rate
+	 * @param interestRates
+	 * @return
+	 */
 	public ResponseEntity<Object> addInterestRate(InterestRates interestRates) {
 
 		try {
@@ -93,4 +101,51 @@ public class InterestRatesService {
 
 	}
 
+	/**
+	 * @author fawad khan
+	 * @createdDate 30-oct-2021
+	 * @param interestRate
+	 * @return
+	 */
+	public ResponseEntity<Object> updateInterestRate(InterestRates interestRate) {
+		try {
+			
+			interestRatesRepository.save(interestRate);
+			return new ResponseEntity<>(interestRate, HttpStatus.OK);
+		} catch (Exception e) {
+			System.out.println(e.getMessage() + "  " + e.getCause());
+		/*	log.error(
+					"some error has occurred while trying to update interestRate,, in class interestRateService and its function updateinterestRate ",
+					e.getMessage());*/
+			return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	/**
+	 * @author fawad khan
+	 * @createdDate 30-oct-2021
+	 * @param id
+	 * @return
+	 */
+	public ResponseEntity<Object> deleteInterestRate(Long id) {
+		try {
+			Optional<InterestRates> interestRate = interestRatesRepository.findById(id);
+			if (interestRate.isPresent()) {
+
+				interestRatesRepository.deleteById(id);
+
+				return new ResponseEntity<>("SMS: InterestRates deleted successfully", HttpStatus.OK);
+			} else
+				return new ResponseEntity<>("SMS: InterestRates does not exists ", HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+		/*	log.error(
+					"some error has occurred while trying to Delete interestRate,, in class interestRateService and its function deleteinterestRate ",
+					e.getMessage(), e.getCause(), e);*/
+			return new ResponseEntity<>("InterestRates could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
+
+		}
+
+	}
+	
 }
