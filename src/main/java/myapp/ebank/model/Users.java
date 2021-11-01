@@ -40,8 +40,6 @@ public class Users {
     @Column(name = "Token")
     private int token;
 
-
-
     @OneToMany(targetEntity = Funds.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Funds> funds = new ArrayList<>();
