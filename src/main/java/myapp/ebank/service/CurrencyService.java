@@ -1,8 +1,10 @@
 package myapp.ebank.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import myapp.ebank.model.Currencies;
 import myapp.ebank.repository.CurrencyRepository;
-import myapp.ebank.util.DateAndTime;
 
 @Service
 public class CurrencyService {
@@ -55,7 +56,7 @@ public class CurrencyService {
 	public ResponseEntity<Object> saveCurrency(Currencies currency) {
 		try {
 
-			String date = DateAndTime.getDate();
+			Date date = DateTime.getDateTime();
 			currency.setIssuedDate(date);
 			currency.setIsActive(true);
 			// save currency to db
@@ -86,7 +87,7 @@ public class CurrencyService {
 	public ResponseEntity<Object> updateCurrency(Currencies currency) {
 		try {
 
-			currency.setUpdateDate(DateAndTime.getDateAndTime());
+			currency.setUpdateDate(DateTime.getDateTime());
 			currencyRepository.save(currency);
 			currency.toString();
 			return new ResponseEntity<>(currency, HttpStatus.OK);
@@ -116,7 +117,7 @@ public class CurrencyService {
 				// set status false
 				currency.get().setIsActive(false);
 				// set updated date
-				String date = DateAndTime.getDateAndTime();
+				Date date = DateTime.getDateTime();
 				currency.get().setUpdateDate(date);
 				currencyRepository.save(currency.get());
 				return new ResponseEntity<>("  Currency deleted successfully", HttpStatus.OK);

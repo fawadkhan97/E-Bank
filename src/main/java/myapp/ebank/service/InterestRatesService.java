@@ -1,18 +1,16 @@
 package myapp.ebank.service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
 import myapp.ebank.model.InterestRates;
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import myapp.ebank.model.InterestRates;
 import myapp.ebank.repository.InterestRatesRepository;
-import myapp.ebank.util.DateAndTime;
 
 @Service
 public class InterestRatesService {
@@ -33,9 +31,9 @@ public class InterestRatesService {
 
 		try {
 
-			System.out.println(DateAndTime.getDate());
+			System.out.println(DateTime.getDateTime());
 
-			String date = DateAndTime.getDate();
+			Date date = DateTime.getDateTime();
 
 			Optional<InterestRates> interestRates = interestRatesRepository.findByDate(date);
 
@@ -59,7 +57,7 @@ public class InterestRatesService {
 	 * @param date
 	 * @return
 	 */
-	public ResponseEntity<Object> getInterestRateByDate(String date) {
+	public ResponseEntity<Object> getInterestRateByDate(Date date) {
 
 		try {
 

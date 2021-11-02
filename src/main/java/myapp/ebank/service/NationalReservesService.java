@@ -2,13 +2,14 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
-import myapp.ebank.util.DateAndTime;
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.util.Date;
 import java.util.Optional;
 @Service
 public class NationalReservesService {
@@ -26,8 +27,8 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> getDailyNationalReserves() {
         try {
-            System.out.println(DateAndTime.getDate());
-            String date = DateAndTime.getDate();
+            System.out.println(DateTime.getDateTime());
+            Date date = DateTime.getDateTime();
             Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDate(date);
             if (nationalReserves.isPresent()) {
                 System.out.println("Reserves are  " + nationalReserves.get().getForeignReserves());
@@ -49,7 +50,7 @@ public class NationalReservesService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getNationalReservesByDate(String date) {
+    public ResponseEntity<Object> getNationalReservesByDate(Date date) {
 
         try {
             Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDate(date);

@@ -1,6 +1,7 @@
 package myapp.ebank.service;
 
 import myapp.ebank.model.Funds;
+import myapp.ebank.model.Users;
 import myapp.ebank.repository.FundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,30 @@ public class FundService {
 
     public FundService(FundRepository fundRepository) {
         this.fundRepository = fundRepository;
+    }
+
+    /**
+     * @return List of funds
+     * @author Fawad khan
+     */
+    // Get list of all funds
+    public ResponseEntity<Object> listAllFunds() {
+        try {
+            List<Funds> funds = fundRepository.findAll();
+//            log.info("list of  funds fetch from db are ", funds);
+            // check if list is empty
+            if (funds.isEmpty()) {
+                return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(funds, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+           /* log.error(
+                    "some error has occurred trying to Fetch funds, in Class  UserService and its function listAllUser ",
+                    e.getMessage());*/
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

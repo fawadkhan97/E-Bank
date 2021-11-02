@@ -2,14 +2,18 @@ package myapp.ebank.model;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
-public class Users {
+public class Users  implements Serializable {
     @Id
     @GeneratedValue
     private long id;
@@ -25,31 +29,29 @@ public class Users {
     private String CNIC;
     @Column(name = "password")
     private String password;
-    @Column(name = "userType")
-    private String userType;
     @Column(name = "age")
     private int age;
     @Column(name = "dob")
     private String dob;
     @Column(name = "CreatedDate")
-    private String CreatedDate;
+    private Date CreatedDate;
     @Column(name = "UpdatedDate")
-    private String UpdatedDate;
+    private Date UpdatedDate;
     @Column(name = "isActive")
     private boolean isActive;
     @Column(name = "Token")
     private int token;
 
     @OneToMany(targetEntity = Funds.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private List<Funds> funds = new ArrayList<>();
 
     @OneToMany(targetEntity = Loans.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private List<Loans> loans = new ArrayList<>();
 
-    @ManyToOne(targetEntity = Organizations.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @JoinColumn
     private Organizations organization;
 
     @ManyToMany(targetEntity = Roles.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)

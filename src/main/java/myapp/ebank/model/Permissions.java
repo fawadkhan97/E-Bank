@@ -6,9 +6,11 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Entity
 @Data
-public class Permissions {
+public class Permissions implements Serializable {
 	@Id
 	@GeneratedValue
 	private long id;

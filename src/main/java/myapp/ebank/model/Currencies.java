@@ -7,9 +7,12 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.Date;
+
 @Data
 @Entity
-public class Currencies {
+public class Currencies  implements Serializable {
 	@Id
 	@GeneratedValue
 	private long id;
@@ -22,9 +25,9 @@ public class Currencies {
 	@Column(name = "note_description")
 	private String noteDescription;
 	@Column(name = "issuedDate")
-	private String issuedDate;
+	private Date issuedDate;
 	@Column(name = "updateDate")
-	private String updateDate;
+	private Date updateDate;
 	@Column(name = "isActive")
 	private Boolean isActive;
 
@@ -76,21 +79,27 @@ public class Currencies {
 		this.isActive = isActive;
 	}
 
-	public String getIssuedDate() {
+	public Date getIssuedDate() {
 		return issuedDate;
 	}
 
-	public void setIssuedDate(String issuedDate) {
+	public void setIssuedDate(Date issuedDate) {
 		this.issuedDate = issuedDate;
 	}
 
-	public String getUpdateDate() {
+	public Date getUpdateDate() {
 		return updateDate;
 	}
 
-	public void setUpdateDate(String updateDate) {
+	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
 	}
 
-	
+	public Boolean getActive() {
+		return isActive;
+	}
+
+	public void setActive(Boolean active) {
+		isActive = active;
+	}
 }

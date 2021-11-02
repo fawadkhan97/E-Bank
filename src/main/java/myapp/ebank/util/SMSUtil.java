@@ -8,15 +8,12 @@ import org.springframework.http.ResponseEntity;
 
 public class SMSUtil {
 
-	private final String ACCOUNT_SID = System.getenv("twilioAcc_SID");;
+	private final String ACCOUNT_SID = "AC41c995234967e84c7dd650af8ab28d0f";
 
-	private final String AUTH_TOKEN = System.getenv("twilioToken");;
+	private final String AUTH_TOKEN = "f63225ead31f36015a3d834897fa8606";
 
-	private final String FROM_NUMBER = System.getenv("twilio_Number");
-
+	private final String FROM_NUMBER = "+13158402662";
 	private final String sms = "otp is : ";
-
-
 	/**
 	 * @author fawad khan
 	 * @createdDate 11-oct-2021
@@ -27,10 +24,9 @@ public class SMSUtil {
 	// send otp sms
 	public ResponseEntity<Object> sendSMS(String phoneNumber, int token) {
 		try {
-			Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+		//	Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 			final String otpmsg = sms + token;
 			System.out.println(" data sms is " + otpmsg + "  phone is :  " + phoneNumber);
-
 			Message message = Message.creator(new PhoneNumber(phoneNumber), new PhoneNumber(FROM_NUMBER), otpmsg)
 					.create();
 			System.out.println(" message sent successfully here is my id: " + message.getSid());

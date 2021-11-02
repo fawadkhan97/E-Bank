@@ -2,12 +2,13 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.ForeignExchangeRates;
 import myapp.ebank.repository.ForeignExchangeRateRepository;
-import myapp.ebank.util.DateAndTime;
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +32,7 @@ public class ForeignExchangeRateService {
 
         try {
 
-            System.out.println(DateAndTime.getDate());
-
-            String date = DateAndTime.getDate();
+            Date date = DateTime.getDateTime();
 
             Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(date);
 
@@ -57,7 +56,7 @@ public class ForeignExchangeRateService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getForeignExchangeRateByDate(String date) {
+    public ResponseEntity<Object> getForeignExchangeRateByDate(Date date) {
 
         try {
 

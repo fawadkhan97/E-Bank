@@ -7,9 +7,11 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Entity
 @Data
-public class NationalReserves {
+public class NationalReserves implements Serializable {
 
     @Id
     @GeneratedValue

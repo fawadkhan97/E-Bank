@@ -10,6 +10,8 @@ import com.twilio.http.Response;
 
 import myapp.ebank.service.KiborService;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/kibor")
 public class KiborController {
@@ -31,7 +33,7 @@ public class KiborController {
 
 
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam String date) {
+    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date) {
         System.out.println(date);
         return kiborRatesService.getKiborRateByDate(date);
     }

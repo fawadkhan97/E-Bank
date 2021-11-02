@@ -1,8 +1,8 @@
 package myapp.ebank.service;
 
+import myapp.ebank.util.DateTime;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +15,6 @@ import org.springframework.http.*;
 
 import myapp.ebank.model.Users;
 import myapp.ebank.repository.UserRepository;
-import myapp.ebank.util.DateAndTime;
 import myapp.ebank.util.EmailUtil;
 import myapp.ebank.util.SMSUtil;
 
@@ -30,7 +29,7 @@ public class UserService {
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
 
-
+    private Date expirationTime;
     private static final Logger log = LogManager.getLogger(UserService.class);
 
     // Autowiring through constructor
@@ -75,12 +74,13 @@ public class UserService {
     public ResponseEntity<Object> getUserById(Long id) {
         try {
             Optional<Users> user = userRepository.findById(id);
-            if (user.isPresent()) {
-//                log.info("user fetch and found from db by id  : ", user.toString());
+            if (user.isPresent() && user.get().isActive()) {
+                // check if user is verified
+                //              log.info("user fetch and found from db by id  : ", user.toString());
                 return new ResponseEntity<>(user, HttpStatus.FOUND);
             } else
 //                log.info("no user found with id:", user.get().getId());
-                return new ResponseEntity<>("could not found user with given details....", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
         /*    log.error(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
@@ -126,31 +126,31 @@ public class UserService {
      */
     public ResponseEntity<Object> saveUser(Users user) {
         try {
-            String date = DateAndTime.getDateAndTime();
+            Date date = DateTime.getDateTime();
+            expirationTime = DateTime.getExpireTime();
             user.setCreatedDate(date);
-            user.setActive(true);
+            user.setActive(false);
             Random rndkey = new Random(); // Generating a random number
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
             user.setToken(token);
+            // save user to db
+            userRepository.save(user);
+            user.toString();
             // send email token to user email and save in db
             emailUtil.sendMail(user.getEmail(), token);
             // send sms token to user email and save in db
             smsUtil.sendSMS(user.getPhoneNumber(), token);
-            // save user to db
-            userRepository.save(user);
-            user.toString();
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-
            /* log.error(
                     "some error has occurred while trying to save user,, in class UserService and its function saveUser ",
                     e.getMessage());*/
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -164,20 +164,18 @@ public class UserService {
      */
     public ResponseEntity<Object> updateUser(Users user) {
         try {
-            String pattern = "dd-MM-yyyy hh:mm:ss";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            String date = simpleDateFormat.format(new Date());
-            user.setUpdatedDate(date);
+
+            user.setUpdatedDate(DateTime.getDateTime());
             userRepository.save(user);
             user.toString();
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.error(
+          /*  log.error(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser ",
-                    e.getMessage());
+                    e.getMessage());*/
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -195,14 +193,12 @@ public class UserService {
                 // set status false
                 user.get().setActive(false);
                 // set updated date
-                String pattern = "dd-MM-yyyy hh:mm:ss";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-                String date = simpleDateFormat.format(new Date());
-                user.get().setUpdatedDate(date);
+
+                user.get().setUpdatedDate(DateTime.getDateTime());
                 userRepository.save(user.get());
-                return new ResponseEntity<>("SMS: Users deleted successfully", HttpStatus.OK);
+                return new ResponseEntity<>(" : Users deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("SMS: Users does not exists ", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(" : Users does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.error(
                     "some error has occurred while trying to Delete user,, in class UserService and its function deleteUser ",
@@ -225,14 +221,19 @@ public class UserService {
     public ResponseEntity<Object> verifyUser(Long id, int token) {
         try {
             Optional<Users> user = userRepository.findByIdAndToken(id, token);
+            Date date = DateTime.getDateTime();
             if (user.isPresent()) {
+                //check if token is not expired
+                if (date.after(expirationTime)) {
+                    System.out.println("token has expired");
+                    return new ResponseEntity<>("Token verification time has expire please regenerate verification token ", HttpStatus.METHOD_NOT_ALLOWED);
+                }
                 System.out.println("user is : " + user.toString());
                 user.get().setActive(true);
                 userRepository.save(user.get());
                 return new ResponseEntity<>("user has been verified ", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("incorrect verification details were entered", HttpStatus.NOT_FOUND);
-
+                return new ResponseEntity<>("incorrect verification details were entered or verification time has expired", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println(e.getCause());
             return new ResponseEntity<>("could not verify user please try again later",
@@ -250,13 +251,15 @@ public class UserService {
     public ResponseEntity<Object> sendToken(Long id) {
         try {
             Optional<Users> user = userRepository.findById(id);
+
             if (user.isPresent()) {
+                expirationTime = DateTime.getExpireTime();
                 Random rndkey = new Random(); // Generating a random number
                 int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
                 user.get().setToken(token);
+                userRepository.save(user.get());
                 smsUtil.sendSMS(user.get().getPhoneNumber(), token);
                 emailUtil.sendMail(user.get().getEmail(), token);
-                userRepository.save(user.get());
                 return new ResponseEntity<>("token has been sent successfully please use it to verify ", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);

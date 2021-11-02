@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrganizationController {
     private static final String defaultAuthValue = "12345";
     OrganizationService organizationService;
+
     public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
@@ -33,7 +34,7 @@ public class OrganizationController {
      * @createdDate 01-nov-2021
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addOrganization(@RequestHeader(value = "Authorization", required = false) String authValue,
+    public ResponseEntity<Object> addOrganization(@RequestHeader(value = "Authorization") String authValue,
                                                   @RequestBody Organizations organization) {
         // check authorization
         if (authValue != null) {
@@ -47,6 +48,22 @@ public class OrganizationController {
 
     }
 
+    /**
+     * @param authValue
+     * @return list of users
+     * @Author "Fawad khan"
+     * @Description "Display all user from db in a list if present which can be then
+     * displayed on screen"
+     * @createdDate 27-oct-2021
+     */
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllOrganizations(@RequestHeader(value = "Authorization") String authValue) {
+        if (authorize(authValue)) {
+            return organizationService.listAllOrganization();
+        } else
+            return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
+    }
+
 
     /**
      * @param authValue
@@ -57,14 +74,10 @@ public class OrganizationController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getOrganization(@RequestHeader(value = "Authorization", required = false) String authValue,
                                                   @PathVariable Long id) {
-        if (authValue != null) {
-            if (authorize(authValue)) {
-                return organizationService.getOrganizationById(id);
-            } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
-            }
+        if (authorize(authValue)) {
+            return organizationService.getOrganizationById(id);
         } else {
-            return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
         }
     }
 

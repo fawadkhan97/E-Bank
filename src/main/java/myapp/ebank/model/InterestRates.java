@@ -7,10 +7,12 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 
 @Entity
 @Data
-public class InterestRates {
+public class InterestRates implements Serializable {
 	
 	@Id
 	@GeneratedValue

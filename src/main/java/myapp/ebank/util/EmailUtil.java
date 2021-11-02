@@ -31,7 +31,6 @@ public class EmailUtil {
 	 * @return
 	 */
 	public ResponseEntity<Object> sendMail(String toEmail, int token) {
-
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage();
 			msg.setTo(toEmail);
@@ -39,11 +38,9 @@ public class EmailUtil {
 			msg.setText(body + token);
 			javaMailSender.send(msg);
 			return new ResponseEntity<>("user added and email sent successfully please verify it", HttpStatus.OK);
-
 		} catch (Exception e) {
 			System.out.println(e.getCause());
 			return new ResponseEntity<>(e.getCause(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 }

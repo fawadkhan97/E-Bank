@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -46,8 +47,7 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam String date) {
-        System.out.println(date);
+    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam Date date) {
         return foreignExchangeRateService.getForeignExchangeRateByDate(date);
     }
 

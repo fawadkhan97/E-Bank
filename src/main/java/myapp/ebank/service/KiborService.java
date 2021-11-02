@@ -1,16 +1,16 @@
 package myapp.ebank.service;
 
+import java.util.Date;
 import java.util.Optional;
 
 import myapp.ebank.model.KiborRates;
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import myapp.ebank.model.KiborRates;
 import myapp.ebank.repository.KiborRepository;
-import myapp.ebank.util.DateAndTime;
 
 @Service
 public class KiborService {
@@ -29,7 +29,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> dailyKiborRates() {
         try {
-            String date = DateAndTime.getDate();
+            Date date = DateTime.getDateTime();
             Optional<KiborRates> kiborRates = kiborRatesRepository.findByDate(date);
             if (kiborRates.isPresent()) {
                 System.out.println("kibor rate is " + kiborRates.get().getBid());
@@ -52,7 +52,7 @@ public class KiborService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getKiborRateByDate(String date) {
+    public ResponseEntity<Object> getKiborRateByDate(Date date) {
         try {
 
             Optional<KiborRates> Kibor = kiborRatesRepository.findByDate(date);

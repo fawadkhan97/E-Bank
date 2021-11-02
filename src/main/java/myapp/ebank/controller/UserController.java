@@ -58,16 +58,12 @@ public class UserController {
      * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllUsers(@RequestHeader(value = "Authorization", required = false) String authValue) {
-        if (authValue != null) {
-            if (authorize(authValue)) {
-                return userService.listAllUser();
-            } else
-                return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
-        } else {
-            return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<Object> getAllUsers(@RequestHeader(value = "Authorization") String authValue) {
 
+        if (authorize(authValue)) {
+            return userService.listAllUser();
+        } else
+            return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -78,18 +74,14 @@ public class UserController {
      * @createdDate 27-oct-2021
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization", required = false) String authValue,
+    public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization") String authValue,
                                           @RequestBody Users user) {
         // check authorization
-        if (authValue != null) {
-            if (authorize(authValue)) {
-                return userService.saveUser(user);
-            } else
-                return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+        if (authorize(authValue)) {
+            return userService.saveUser(user);
         } else {
-            return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
         }
-
     }
 
     /**

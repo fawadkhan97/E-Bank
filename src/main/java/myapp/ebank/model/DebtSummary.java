@@ -7,9 +7,11 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Entity
 @Data
-public class DebtSummary {
+public class DebtSummary  implements Serializable {
 	@Id
 	@GeneratedValue
 	private long id;

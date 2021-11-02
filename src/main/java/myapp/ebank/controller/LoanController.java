@@ -1,20 +1,20 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.model.Funds;
-import myapp.ebank.service.FundService;
+import myapp.ebank.model.Loans;
+import myapp.ebank.service.LoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/fund")
-public class FundController {
+@RequestMapping("/loan")
+public class LoanController {
 
     private static final String defaultAuthValue = "12345";
-    final FundService fundService;
+    final LoanService loanService;
 
-    public FundController(FundService fundService) {
-        this.fundService = fundService;
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
     }
 
     public Boolean authorize(String authValue) {
@@ -24,44 +24,44 @@ public class FundController {
 
     /**
      * @param authValue
-     * @return list of funds
+     * @return list of loans
      * @Author "Fawad khan"
-     * @Description "Display all funds from db in a list if present which can be then
+     * @Description "Display all loans from db in a list if present which can be then
      * displayed on screen"
      * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllFunds(@RequestHeader(value = "Authorization") String authValue) {
+    public ResponseEntity<Object> getAllLoans(@RequestHeader(value = "Authorization") String authValue) {
         if (authorize(authValue)) {
-            return fundService.listAllFunds();
+            return loanService.listAllLoans();
         } else
             return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
     }
 
 
     /**
-     * add fund
+     * add loan
      *
-     * @param fund
+     * @param loan
      * @return
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addFund(@RequestBody Funds fund) {
-        return fundService.addFund(fund);
+    public ResponseEntity<Object> addLoan(@RequestBody Loans loan) {
+        return loanService.addLoan(loan);
     }
 
 
     /**
      * @param authValue
-     * @param fund
+     * @param loan
      * @return
      * @createdDate 29-oct-2021
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> updateFund(@RequestHeader(value = "Authorization") String authValue,
-                                             @RequestBody Funds fund) {
+    public ResponseEntity<Object> updateLoan(@RequestHeader(value = "Authorization") String authValue,
+                                             @RequestBody Loans loan) {
         if (authorize(authValue)) {
-            return fundService.updateFund(fund);
+            return loanService.updateLoan(loan);
         } else
             return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
     }
@@ -73,13 +73,14 @@ public class FundController {
      * @createdDate 27-oct-2021
      */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Object> deleteFund(@RequestHeader(value = "Authorization") String authValue,
+    public ResponseEntity<Object> deleteLoan(@RequestHeader(value = "Authorization") String authValue,
                                              @PathVariable Long id) {
 
         if (authorize(authValue)) {
-            return fundService.deleteFund(id);
+            return loanService.deleteLoan(id);
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
+
 
 }

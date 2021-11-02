@@ -4,12 +4,13 @@ import javax.persistence.*;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-public class Roles {
+public class Roles implements Serializable {
 
     @Id
     @GeneratedValue

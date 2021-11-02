@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import myapp.ebank.model.InterestRates;
 import myapp.ebank.service.InterestRatesService;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/interestRate")
 public class InterestRateController {
@@ -42,8 +44,7 @@ public class InterestRateController {
 	 * @return
 	 */
 	@GetMapping("/getByDate")
-	public ResponseEntity<Object> getInterestRateByDate(@RequestParam String date) {
-		System.out.println(date);
+	public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date) {
 		return interestRatesService.getInterestRateByDate(date);
 	}
 
