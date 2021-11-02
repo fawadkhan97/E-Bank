@@ -84,7 +84,6 @@ public class ForeignExchangeRateService {
      * @return
      */
     public ResponseEntity<Object> addForeignExchangeRate(List <ForeignExchangeRates> foreignExchangeRates) {
-
         try {
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
             return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);

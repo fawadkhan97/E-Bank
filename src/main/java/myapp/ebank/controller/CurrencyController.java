@@ -18,12 +18,9 @@ import myapp.ebank.service.CurrencyService;
 @RestController
 @RequestMapping("/currency")
 public class CurrencyController {
-	private static final String defaultAuthValue = "12345";
-
+	private final String defaultAuthValue = "12345";
 	CurrencyService currencyService;
-
 	public CurrencyController(CurrencyService currencyService) {
-
 		this.currencyService = currencyService;
 	}
 

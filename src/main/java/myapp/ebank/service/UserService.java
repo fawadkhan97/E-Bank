@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import myapp.ebank.model.Users;
 import myapp.ebank.repository.UserRepository;
@@ -28,17 +27,15 @@ import myapp.ebank.util.SMSUtil;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final UserService userService;
     private final EmailUtil emailUtil;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final SMSUtil smsUtil = new SMSUtil();
+
 
     private static final Logger log = LogManager.getLogger(UserService.class);
 
     // Autowiring through constructor
-    public UserService(UserRepository userRepository, UserService userService, EmailUtil emailUtil) {
+    public UserService(UserRepository userRepository, EmailUtil emailUtil) {
         this.userRepository = userRepository;
-        this.userService = userService;
         this.emailUtil = emailUtil;
     }
 
@@ -49,7 +46,6 @@ public class UserService {
     // Get list of all users
     public ResponseEntity<Object> listAllUser() {
         try {
-
             List<Users> users = userRepository.findAllByisActive(true);
             log.info("list of  users fetch from db are ", users);
             // check if list is empty
@@ -80,15 +76,15 @@ public class UserService {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent()) {
-                log.info("user fetch and found from db by id  : ", user.toString());
+//                log.info("user fetch and found from db by id  : ", user.toString());
                 return new ResponseEntity<>(user, HttpStatus.FOUND);
             } else
-                log.info("no user found with id:", user.get().getId());
-            return new ResponseEntity<>("could not found user with given details....", HttpStatus.NOT_FOUND);
+//                log.info("no user found with id:", user.get().getId());
+                return new ResponseEntity<>("could not found user with given details....", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+        /*    log.error(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
-                    e.getMessage());
+                    e.getMessage());*/
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
 
             return new ResponseEntity<>("Unable to find Users, an error has occurred",
@@ -97,7 +93,6 @@ public class UserService {
         }
 
     }
-
 
     /**
      * @param userName
@@ -131,10 +126,9 @@ public class UserService {
      */
     public ResponseEntity<Object> saveUser(Users user) {
         try {
-            String date = DateAndTime.getDate();
+            String date = DateAndTime.getDateAndTime();
             user.setCreatedDate(date);
             user.setActive(true);
-
             Random rndkey = new Random(); // Generating a random number
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
             user.setToken(token);
@@ -142,7 +136,6 @@ public class UserService {
             emailUtil.sendMail(user.getEmail(), token);
             // send sms token to user email and save in db
             smsUtil.sendSMS(user.getPhoneNumber(), token);
-
             // save user to db
             userRepository.save(user);
             user.toString();
@@ -153,9 +146,9 @@ public class UserService {
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
 
-            log.error(
+           /* log.error(
                     "some error has occurred while trying to save user,, in class UserService and its function saveUser ",
-                    e.getMessage());
+                    e.getMessage());*/
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
             return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -199,7 +192,6 @@ public class UserService {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent()) {
-
                 // set status false
                 user.get().setActive(false);
                 // set updated date
@@ -225,15 +217,14 @@ public class UserService {
 
     /**
      * @param id
-     * @param emailToken
-     * @param smsToken
+     * @param token
      * @return
      * @author fawad khan
      * @createdDate 14-oct-2021
      */
-    public ResponseEntity<Object> verifyUser(Long id, int emailToken, int smsToken) {
+    public ResponseEntity<Object> verifyUser(Long id, int token) {
         try {
-            Optional<Users> user = userRepository.findByIdAndSmsToken(id, smsToken);
+            Optional<Users> user = userRepository.findByIdAndToken(id, token);
             if (user.isPresent()) {
                 System.out.println("user is : " + user.toString());
                 user.get().setActive(true);
@@ -265,7 +256,8 @@ public class UserService {
                 user.get().setToken(token);
                 smsUtil.sendSMS(user.get().getPhoneNumber(), token);
                 emailUtil.sendMail(user.get().getEmail(), token);
-
+                userRepository.save(user.get());
+                return new ResponseEntity<>("token has been sent successfully please use it to verify ", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
             }

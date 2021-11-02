@@ -9,7 +9,5 @@ import myapp.ebank.model.Currencies;
 
 @Repository
 public interface CurrencyRepository extends JpaRepository<Currencies, Long> {
-	
 	List<Currencies> findAllByisActive(boolean status);
-
 }

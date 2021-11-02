@@ -1,10 +1,6 @@
 package myapp.ebank.controller;
 
-import java.util.List;
-import java.util.Optional;
 
-import myapp.ebank.repository.UserRepository;
-import myapp.ebank.util.SMSUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -13,15 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import myapp.ebank.model.Users;
 import myapp.ebank.service.UserService;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     UserService userService;
-    UserRepository userRepository;
-    SMSUtil smsUtil;
 
     private static final String defaultAuthValue = "12345";
 
@@ -100,39 +93,30 @@ public class UserController {
     }
 
     /**
-     *
      * @param authValue
      * @param id
-     * @param message
-     * @createdDate 13-oct-2021
+     * @createdDate 31-oct-2021
      */
-    @PostMapping("/{id}/sendSms")
-    public ResponseEntity<Object> sendSms(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                          @PathVariable Long id, @RequestBody String message) {
-        if (authValue != null) {
-            if (authorize(authValue)) {
-                return userService.sendSms(id, message);
-            } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
-            }
+    @PostMapping("/{id}/sendToken")
+    public ResponseEntity<Object> sendToken(@RequestHeader(value = "Authorization") String authValue,
+                                            @PathVariable Long id) {
+        if (authorize(authValue)) {
+            return userService.sendToken(id);
         } else {
-            return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Not authorize", HttpStatus.UNAUTHORIZED);
         }
     }
 
     /**
      * @param userid
-     * @param emailToken
-     * @param smsToken
+     * @param token
      * @return String of User verified or not
      * @createdDate 14-oct-2021
      */
     @GetMapping("/verify")
     public ResponseEntity<Object> verifyUser(@RequestHeader(value = "id") Long userid,
-                                             @RequestHeader(value = "emailToken") int emailToken, @RequestHeader(value = "smsToken") int smsToken) {
-
-        return userService.verifyUser(userid, emailToken, smsToken);
-
+                                             @RequestHeader(value = "token") int token) {
+        return userService.verifyUser(userid, token);
     }
 
     /**
@@ -183,14 +167,10 @@ public class UserController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteUser(@RequestHeader(value = "Authorization", required = false) String authValue,
                                              @PathVariable Long id) {
-        if (authValue != null) {
-            if (authorize(authValue)) {
-                return userService.deleteUser(id);
-            } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
-        } else {
-            return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
-        }
+        if (authorize(authValue)) {
+            return userService.deleteUser(id);
+        } else
+            return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
 }
+

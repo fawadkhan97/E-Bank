@@ -23,5 +23,6 @@ public class DateAndTime {
 		String date = simpleDateFormat.format(new Date());
 		return date;
 		}
-	
+
+
 }

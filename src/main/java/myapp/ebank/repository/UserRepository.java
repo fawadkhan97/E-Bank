@@ -9,11 +9,10 @@ import org.springframework.stereotype.Repository;
 import myapp.ebank.model.Users;
 
 @Repository
-
 public interface UserRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByUserNameAndPassword(String userName, String Password);
 
-    Optional<Users> findByIdAndSmsToken(Long id, int smsToken);
+    Optional<Users> findByIdAndToken(Long id, int token);
 
     List<Users> findAllByisActive(boolean status);
 
