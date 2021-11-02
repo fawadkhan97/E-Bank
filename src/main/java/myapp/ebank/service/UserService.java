@@ -1,22 +1,19 @@
 package myapp.ebank.service;
 
+import myapp.ebank.model.Loans;
+import myapp.ebank.model.Users;
+import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.DateTime;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
+import myapp.ebank.util.EmailUtil;
+import myapp.ebank.util.SMSUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-import myapp.ebank.model.Users;
-import myapp.ebank.repository.UserRepository;
-import myapp.ebank.util.EmailUtil;
-import myapp.ebank.util.SMSUtil;
+import java.util.*;
 
 /**
  * @author Fawad khan Created Date : 08-October-2021 A service class of user
@@ -25,12 +22,14 @@ import myapp.ebank.util.SMSUtil;
  */
 @Service
 public class UserService {
+    private static final Logger log = LogManager.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
-
     private Date expirationTime;
-    private static final Logger log = LogManager.getLogger(UserService.class);
+    private Double totalAmountWithInterest;
+    private Double interestRate = 0.045;
+
 
     // Autowiring through constructor
     public UserService(UserRepository userRepository, EmailUtil emailUtil) {
@@ -271,6 +270,41 @@ public class UserService {
             System.out.println(e.getMessage() + e.getCause());
             return new ResponseEntity<>("Unable to find User, an error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * @param id
+     * @param loan
+     * @return
+     */
+    public ResponseEntity<Object> applyForLoan(Long id, Loans loan) {
+        try {
+            Optional<Users> user = userRepository.findById(id);
+            if (user.isPresent() && user.get().isActive()) {
+                // check if user is  verified
+                // log.info("user fetch and found from db by id  : ", user.toString());
+                loan.setDate(DateTime.getDateTime());
+                loan.setInterestRate(interestRate);
+                loan.setTotalAmountToBePaid(loan.getLoanAmount() + (interestRate * loan.getLoanAmount()));
+                loan.setDueDate(DateTime.getDueDate());
+                loan.setAmountPaid(0.0);
+                loan.setPaidStatus(false);
+
+                List<Loans> loans = new ArrayList<>(user.get().getLoans());
+                loans.add(loan);
+                user.get().setLoans(loans);
+                userRepository.save(user.get());
+                return new ResponseEntity<>(loan, HttpStatus.OK);
+            } else
+//                log.info("no user found with id:", user.get().getId());
+                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("Unable to approved loan, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 
 

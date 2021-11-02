@@ -29,7 +29,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> dailyKiborRates() {
         try {
-            Date date = DateTime.getDateTime();
+            Date date = DateTime.getDate();
             Optional<KiborRates> kiborRates = kiborRatesRepository.findByDate(date);
             if (kiborRates.isPresent()) {
                 System.out.println("kibor rate is " + kiborRates.get().getBid());
@@ -81,7 +81,7 @@ public class KiborService {
 
         try {
             kiborRatesRepository.save(KiborRates);
-            return new ResponseEntity<Object>(KiborRates, HttpStatus.OK);
+            return new ResponseEntity<>(KiborRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " "+e.getMessage() );
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);

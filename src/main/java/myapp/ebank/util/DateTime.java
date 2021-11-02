@@ -63,4 +63,22 @@ public class DateTime {
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
     }
+
+
+    /**
+     * add 5 days  in the current Date which will be then use as due date
+     *
+     * @return
+     * @throws ParseException
+     * @author Fawad
+     */
+    public static Date getDueDate() throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 5);
+        String date = formatter.format(cal.getTime());
+        return formatter.parse(date);
+    }
+
+
 }

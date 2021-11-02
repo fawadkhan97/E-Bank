@@ -24,7 +24,7 @@ public class PermissionService {
     /**
      * @return list of permissions available
      * @author fawad khan
-     * @createdDate31-oct-2021
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> getAllPermission() {
 
@@ -46,7 +46,7 @@ public class PermissionService {
      * @param id
      * @return specific permission object as specify by id
      * @author fawad khan
-     * @createdDate31-oct-2021
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> getPermissionById(Long id) {
         try {
@@ -71,7 +71,7 @@ public class PermissionService {
      * @param permissions
      * @return saved permission object
      * @author fawad khan
-     * @createdDate31-oct-2021
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> savePermission(List<Permissions> permissions) {
         try {
@@ -95,7 +95,7 @@ public class PermissionService {
      * @param permissions
      * @return
      * @author fawad khan
-     * @createdDate31-oct-2021
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> updatePermission(List<Permissions> permissions) {
         try {
@@ -119,7 +119,7 @@ public class PermissionService {
      * @param id
      * @return
      * @author fawad khan
-     * @createdDate31-oct-2021
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<String> deletePermission(Long id) {
         try {

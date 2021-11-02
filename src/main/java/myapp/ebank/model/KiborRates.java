@@ -19,41 +19,9 @@ public class KiborRates implements Serializable {
     @Column(name = "date", unique = true, nullable = false)
     private Date date;
     @Column(name = "bid")
-    private String bid;
+    private Double bid;
     @Column(name = "offer")
-    private String offer;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getBid() {
-        return bid;
-    }
-
-    public void setBid(String bid) {
-        this.bid = bid;
-    }
-
-    public String getOffer() {
-        return offer;
-    }
-
-    public void setOffer(String offer) {
-        this.offer = offer;
-    }
+    private Double offer;
 
 
 }

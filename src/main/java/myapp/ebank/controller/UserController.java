@@ -1,27 +1,28 @@
 package myapp.ebank.controller;
 
 
+import myapp.ebank.model.Loans;
+import myapp.ebank.model.Users;
+import myapp.ebank.service.LoanService;
+import myapp.ebank.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.model.Users;
-import myapp.ebank.service.UserService;
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    UserService userService;
-
     private static final String defaultAuthValue = "12345";
-
     private static final Logger log = LogManager.getLogger();
+    final UserService userService;
+    final LoanService loanService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, LoanService loanService) {
         this.userService = userService;
+        this.loanService = loanService;
     }
 
     /**
@@ -164,5 +165,12 @@ public class UserController {
         } else
             return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
     }
+
+
+    @PostMapping("/{userid}/applyForLoan")
+    public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @RequestBody Loans loan) {
+        return userService.applyForLoan(userid, loan);
+    }
+
 }
 

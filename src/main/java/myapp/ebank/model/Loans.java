@@ -22,5 +22,4 @@ public class Loans implements Serializable {
     private Double interestRate;
     private Double totalAmountToBePaid;
     private Double amountPaid;
-
 }
