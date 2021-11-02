@@ -14,7 +14,7 @@ public class DateTime {
      * @throws ParseException
      */
     public static Date getDateTime() throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar cal = Calendar.getInstance();
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);

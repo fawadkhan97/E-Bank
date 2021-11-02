@@ -40,7 +40,6 @@ public class KiborController {
 
     /**
      * save kibor rate
-     *
      * @param kiborRate
      * @return
      */

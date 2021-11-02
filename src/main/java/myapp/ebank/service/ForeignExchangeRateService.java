@@ -31,11 +31,7 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> getDailyForeignExchangeRate() {
 
         try {
-
-            Date date = DateTime.getDateTime();
-
-            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(date);
-
+            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(DateTime.getDateTime());
             if (foreignExchangeRate.isPresent()) {
                 System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
@@ -59,9 +55,7 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> getForeignExchangeRateByDate(Date date) {
 
         try {
-
             Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(date);
-
             if (foreignExchangeRate.isPresent()) {
                 System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
@@ -78,19 +72,17 @@ public class ForeignExchangeRateService {
 
     /**
      * save foreignExchange rate
-     *
      * @param foreignExchangeRates
      * @return
      */
-    public ResponseEntity<Object> addForeignExchangeRate(List <ForeignExchangeRates> foreignExchangeRates) {
+    public ResponseEntity<Object> addForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates) {
         try {
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
-            return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
+            return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getCause() + " "+e.getMessage() );
+            System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("error occurred .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -102,7 +94,7 @@ public class ForeignExchangeRateService {
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> updateForeignExchangeRate( List <ForeignExchangeRates> foreignExchangeRates) {
+    public ResponseEntity<Object> updateForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates) {
         try {
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
             return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
