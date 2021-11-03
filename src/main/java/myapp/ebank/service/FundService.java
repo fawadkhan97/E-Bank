@@ -47,28 +47,6 @@ public class FundService {
     }
 
 
-    /**
-     * add funds
-     *
-     * @param funds
-     * @return
-     */
-    public ResponseEntity<Object> addFund(Funds funds) {
-
-        try {
-
-            fundRepository.save(funds);
-            return new ResponseEntity<Object>(funds, HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
-            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-
-    }
 
     /**
      * @param fund

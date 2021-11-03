@@ -1,16 +1,15 @@
 package myapp.ebank.service;
 
-import java.util.Date;
-import java.util.Optional;
-
 import myapp.ebank.model.KiborRates;
+import myapp.ebank.repository.KiborRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import myapp.ebank.repository.KiborRepository;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class KiborService {
@@ -37,13 +36,9 @@ public class KiborService {
             } else
                 return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            // TODO: handle exception
-
             System.out.println("error has occured " + e.getMessage() + " " + e.getCause());
-
             return new ResponseEntity<>("some error has occured ...", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -54,46 +49,37 @@ public class KiborService {
      */
     public ResponseEntity<Object> getKiborRateByDate(Date date) {
         try {
-
             Optional<KiborRates> Kibor = kiborRatesRepository.findByDate(date);
-
             if (Kibor.isPresent()) {
                 System.out.println("kibor rate is " + Kibor.get().getBid());
                 return new ResponseEntity<>(Kibor, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
-
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("some error has occured " + e.getCause());
             return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
      * save kibor rates
-     *
      * @param KiborRates
      * @return
      */
-    public ResponseEntity<Object> addKiborRate(KiborRates KiborRates) {
-
+    public ResponseEntity<Object> addKiborRate(KiborRates kiborRates) {
         try {
-            kiborRatesRepository.save(KiborRates);
-            return new ResponseEntity<>(KiborRates, HttpStatus.OK);
+            kiborRatesRepository.save(kiborRates);
+            return new ResponseEntity<>(kiborRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getCause() + " "+e.getMessage() );
+            System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
-
     }
-
 
     /**
      * @param kiborRate
@@ -111,8 +97,7 @@ public class KiborService {
 		/*	log.error(
 					"some error has occurred while trying to update kiborRate,, in class kiborRateService and its function updatekiborRate ",
 					e.getMessage());*/
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

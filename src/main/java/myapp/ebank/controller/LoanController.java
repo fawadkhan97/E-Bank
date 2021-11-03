@@ -21,7 +21,6 @@ public class LoanController {
         return defaultAuthValue.equals(authValue);
     }
 
-
     /**
      * @param authValue
      * @return list of loans
@@ -38,21 +37,7 @@ public class LoanController {
             return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
     }
 
-
-
-    /**
-     * add loan
-     *
-     * @param loan
-     * @return
-     */
-    @PostMapping("/add")
-    public ResponseEntity<Object> addLoan(@RequestBody Loans loan) {
-        return loanService.addLoan(loan);
-    }
-
-
-    /**
+     /**
      * @param authValue
      * @param loan
      * @return
@@ -66,7 +51,6 @@ public class LoanController {
         } else
             return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
     /**
      * @param authValue
      * @param id
@@ -82,6 +66,4 @@ public class LoanController {
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
-
 }

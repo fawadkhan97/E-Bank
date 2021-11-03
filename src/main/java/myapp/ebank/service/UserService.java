@@ -3,6 +3,7 @@ package myapp.ebank.service;
 import myapp.ebank.model.Funds;
 import myapp.ebank.model.Loans;
 import myapp.ebank.model.Users;
+import myapp.ebank.repository.LoanRepository;
 import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.DateTime;
 import myapp.ebank.util.EmailUtil;
@@ -24,6 +25,7 @@ import java.util.*;
 @Service
 public class UserService {
     private static final Logger log = LogManager.getLogger(UserService.class);
+    final LoanRepository loanRepository;
     private final UserRepository userRepository;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
@@ -31,11 +33,11 @@ public class UserService {
     private Double totalAmountWithInterest;
     private Double interestRate = 0.045;
 
-
     // Autowiring through constructor
-    public UserService(UserRepository userRepository, EmailUtil emailUtil) {
+    public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository) {
         this.userRepository = userRepository;
         this.emailUtil = emailUtil;
+        this.loanRepository = loanRepository;
     }
 
     /**
@@ -308,7 +310,50 @@ public class UserService {
 
     }
 
+    public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
+        try {
+            Optional<Users> user = userRepository.findById(id);
+            Optional<Loans> depositLoan = loanRepository.findById(loan.getId());
+            if (user.isPresent() && user.get().isActive() && depositLoan.isPresent()) {
+                double paidAmount = loan.getAmountPaid() - depositLoan.get().getTotalAmountToBePaid();
+                if (paidAmount > 0 || paidAmount < 0) {
+                    return new ResponseEntity<>("paid amount is not equal to amount to be paid", HttpStatus.FORBIDDEN);
+                }
+                // check if user is  verified
+                // log.info("user fetch and found from db by id  : ", user.toString());
+                loan.setDueDate(depositLoan.get().getDueDate());
+                loan.setDate(depositLoan.get().getDate());
+                if (Objects.equals(loan.getAmountPaid(), depositLoan.get().getTotalAmountToBePaid())) {
+                    loan.setPaidStatus(true);
+                }
+                loan.setTotalAmountToBePaid(depositLoan.get().getTotalAmountToBePaid());
+                loan.setAmountPaid(depositLoan.get().getAmountPaid());
+                loan.setDescription(depositLoan.get().getDescription());
+                loan.setDate(depositLoan.get().getDate());
 
+                List<Loans> loansList = new ArrayList<>(user.get().getLoans());
+
+                userRepository.save(user.get());
+                return new ResponseEntity<>(loan, HttpStatus.OK);
+            } else {
+//                log.info("no user found with id:", user.get().getId());
+                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("Unable to approved loan, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
+
+    /**
+     * @param id
+     * @param funds
+     * @return
+     */
     public ResponseEntity<Object> applyForFunds(Long id, Funds funds) {
         try {
             Optional<Users> user = userRepository.findById(id);

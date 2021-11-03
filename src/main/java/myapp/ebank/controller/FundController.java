@@ -40,18 +40,6 @@ public class FundController {
 
 
     /**
-     * add fund
-     *
-     * @param fund
-     * @return
-     */
-    @PostMapping("/add")
-    public ResponseEntity<Object> addFund(@RequestBody Funds fund) {
-        return fundService.addFund(fund);
-    }
-
-
-    /**
      * @param authValue
      * @param fund
      * @return

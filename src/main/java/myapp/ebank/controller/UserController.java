@@ -172,11 +172,19 @@ public class UserController {
     public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @RequestBody Loans loan) {
         return userService.applyForLoan(userid, loan);
     }
+  @PostMapping("/{userid}/depositLoan")
+    public ResponseEntity<Object> depositLoan(@PathVariable Long userid, @RequestBody Loans loan) {
+        return userService.applyForLoan(userid, loan);
+    }
 
     @PostMapping("/{userid}/applyForFunds")
     public ResponseEntity<Object> applyForFunds(@PathVariable Long userid, @RequestBody Funds funds) {
         return userService.applyForFunds(userid, funds);
     }
+
+
+
+
 
 }
 
