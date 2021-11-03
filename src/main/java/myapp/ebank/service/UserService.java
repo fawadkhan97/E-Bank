@@ -1,5 +1,6 @@
 package myapp.ebank.service;
 
+import myapp.ebank.model.Funds;
 import myapp.ebank.model.Loans;
 import myapp.ebank.model.Users;
 import myapp.ebank.repository.UserRepository;
@@ -295,6 +296,32 @@ public class UserService {
                 user.get().setLoans(loans);
                 userRepository.save(user.get());
                 return new ResponseEntity<>(loan, HttpStatus.OK);
+            } else
+//                log.info("no user found with id:", user.get().getId());
+                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("Unable to approved loan, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+    }
+
+
+    public ResponseEntity<Object> applyForFunds(Long id, Funds funds) {
+        try {
+            Optional<Users> user = userRepository.findById(id);
+            if (user.isPresent() && user.get().isActive()) {
+                // check if user is  verified
+                // log.info("user fetch and found from db by id  : ", user.toString());
+                if (user.get().getOrganization().getType().equalsIgnoreCase("government")) {
+                    List<Funds> fundsList = new ArrayList<>(user.get().getFunds());
+                    user.get().setFunds(fundsList);
+                    userRepository.save(user.get());
+                } else
+                    return new ResponseEntity<>("only government departments can apply for funds", HttpStatus.METHOD_NOT_ALLOWED);
+                return new ResponseEntity<>(funds, HttpStatus.OK);
             } else
 //                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);

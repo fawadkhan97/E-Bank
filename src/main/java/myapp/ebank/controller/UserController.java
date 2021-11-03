@@ -1,6 +1,7 @@
 package myapp.ebank.controller;
 
 
+import myapp.ebank.model.Funds;
 import myapp.ebank.model.Loans;
 import myapp.ebank.model.Users;
 import myapp.ebank.service.LoanService;
@@ -170,6 +171,11 @@ public class UserController {
     @PostMapping("/{userid}/applyForLoan")
     public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @RequestBody Loans loan) {
         return userService.applyForLoan(userid, loan);
+    }
+
+    @PostMapping("/{userid}/applyForFunds")
+    public ResponseEntity<Object> applyForFunds(@PathVariable Long userid, @RequestBody Funds funds) {
+        return userService.applyForFunds(userid, funds);
     }
 
 }
