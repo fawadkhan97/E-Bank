@@ -33,10 +33,15 @@ public class CurrencyController {
 		return defaultAuthValue.equals(authValue);
 	}
 
+	/**
+	 * get all currency notes
+	 * @return
+	 */
 	@GetMapping("/all")
 	public ResponseEntity<Object> getAllCurrencies() {
 		return currencyService.getAllCurrencies();
 	}
+
 
 	/**
 	 * @author Fawad khan
