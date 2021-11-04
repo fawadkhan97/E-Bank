@@ -1,6 +1,6 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.model.Loans;
+import myapp.ebank.model.entity.Loans;
 import myapp.ebank.service.LoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

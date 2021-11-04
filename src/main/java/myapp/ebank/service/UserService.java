@@ -1,8 +1,8 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Funds;
-import myapp.ebank.model.Loans;
-import myapp.ebank.model.Users;
+import myapp.ebank.model.entity.Funds;
+import myapp.ebank.model.entity.Loans;
+import myapp.ebank.model.entity.Users;
 import myapp.ebank.repository.LoanRepository;
 import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.DateTime;
@@ -27,6 +27,7 @@ public class UserService {
     private static final Logger log = LogManager.getLogger(UserService.class);
     final LoanRepository loanRepository;
     private final UserRepository userRepository;
+    final FeignPoliceRecordService feignPoliceRecordService;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
     private Date expirationTime;
@@ -34,10 +35,11 @@ public class UserService {
     private Double interestRate = 0.045;
 
     // Autowiring through constructor
-    public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository) {
+    public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository, FeignPoliceRecordService feignPoliceRecordService) {
         this.userRepository = userRepository;
         this.emailUtil = emailUtil;
         this.loanRepository = loanRepository;
+        this.feignPoliceRecordService = feignPoliceRecordService;
     }
 
     /**
@@ -128,6 +130,10 @@ public class UserService {
      */
     public ResponseEntity<Object> saveUser(Users user) {
         try {
+
+            Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
+
+            System.out.println("record is from kamran :" + criminalRecord);
             Date date = DateTime.getDateTime();
             expirationTime = DateTime.getExpireTime();
             user.setCreatedDate(date);
@@ -317,7 +323,7 @@ public class UserService {
             if (user.isPresent() && user.get().isActive() && depositLoan.isPresent()) {
                 double paidAmount = loan.getAmountPaid() - depositLoan.get().getTotalAmountToBePaid();
                 if (paidAmount > 0 || paidAmount < 0) {
-                    return new ResponseEntity<>("paid amount is not equal to amount to be paid", HttpStatus.FORBIDDEN);
+                    return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
                 }
                 // check if user is  verified
                 // log.info("user fetch and found from db by id  : ", user.toString());
@@ -337,7 +343,7 @@ public class UserService {
                 return new ResponseEntity<>(loan, HttpStatus.OK);
             } else {
 //                log.info("no user found with id:", user.get().getId());
-                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("could not found any record with given details.... user may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -357,6 +363,7 @@ public class UserService {
     public ResponseEntity<Object> applyForFunds(Long id, Funds funds) {
         try {
             Optional<Users> user = userRepository.findById(id);
+
             if (user.isPresent() && user.get().isActive()) {
                 // check if user is  verified
                 // log.info("user fetch and found from db by id  : ", user.toString());

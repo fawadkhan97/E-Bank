@@ -1,4 +1,4 @@
-package myapp.ebank.model;
+package myapp.ebank.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

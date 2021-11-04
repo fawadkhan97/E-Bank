@@ -1,7 +1,7 @@
 package myapp.ebank.controller;
 
 
-import myapp.ebank.model.Roles;
+import myapp.ebank.model.entity.Roles;
 import myapp.ebank.service.RoleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

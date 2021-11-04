@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Roles;
+import myapp.ebank.model.entity.Roles;
 import myapp.ebank.repository.RoleRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;

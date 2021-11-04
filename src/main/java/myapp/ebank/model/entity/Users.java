@@ -1,10 +1,9 @@
-package myapp.ebank.model;
+package myapp.ebank.model.entity;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,11 +41,11 @@ public class Users  implements Serializable {
     @Column(name = "Token")
     private int token;
 
-    @OneToMany(targetEntity = Funds.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Funds.class, fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn
     private List<Funds> funds = new ArrayList<>();
 
-    @OneToMany(targetEntity = Loans.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Loans.class, fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     @JoinColumn
     private List<Loans> loans = new ArrayList<>();
 

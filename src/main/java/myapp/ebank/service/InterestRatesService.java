@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.InterestRates;
+import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.repository.InterestRatesRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;

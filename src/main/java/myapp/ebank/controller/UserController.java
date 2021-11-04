@@ -1,9 +1,9 @@
 package myapp.ebank.controller;
 
 
-import myapp.ebank.model.Funds;
-import myapp.ebank.model.Loans;
-import myapp.ebank.model.Users;
+import myapp.ebank.model.entity.Funds;
+import myapp.ebank.model.entity.Loans;
+import myapp.ebank.model.entity.Users;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -174,7 +174,7 @@ public class UserController {
     }
   @PostMapping("/{userid}/depositLoan")
     public ResponseEntity<Object> depositLoan(@PathVariable Long userid, @RequestBody Loans loan) {
-        return userService.applyForLoan(userid, loan);
+        return userService.depositLoan(userid, loan);
     }
 
     @PostMapping("/{userid}/applyForFunds")

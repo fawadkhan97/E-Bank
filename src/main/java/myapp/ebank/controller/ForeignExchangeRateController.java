@@ -1,6 +1,6 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.model.ForeignExchangeRates;
+import myapp.ebank.model.entity.ForeignExchangeRates;
 import myapp.ebank.service.ForeignExchangeRateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

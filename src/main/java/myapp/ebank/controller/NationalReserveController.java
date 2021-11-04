@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.model.NationalReserves;
+import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.service.NationalReservesService;
 
 @RestController

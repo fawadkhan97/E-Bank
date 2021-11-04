@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Permissions;
+import myapp.ebank.model.entity.Permissions;
 import myapp.ebank.repository.PermissionRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;

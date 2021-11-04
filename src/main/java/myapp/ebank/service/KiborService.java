@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.KiborRates;
+import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.repository.KiborRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;

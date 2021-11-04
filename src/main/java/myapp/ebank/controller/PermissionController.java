@@ -1,6 +1,6 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.model.Permissions;
+import myapp.ebank.model.entity.Permissions;
 import myapp.ebank.service.PermissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

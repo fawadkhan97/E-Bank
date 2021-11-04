@@ -1,4 +1,4 @@
-package myapp.ebank.model;
+package myapp.ebank.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

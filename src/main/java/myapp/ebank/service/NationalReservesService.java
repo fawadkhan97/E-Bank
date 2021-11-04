@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.NationalReserves;
+import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;

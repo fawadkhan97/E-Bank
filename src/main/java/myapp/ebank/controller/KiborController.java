@@ -1,12 +1,9 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.model.KiborRates;
-import org.springframework.beans.factory.annotation.Autowired;
+import myapp.ebank.model.entity.KiborRates;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.twilio.http.Response;
 
 import myapp.ebank.service.KiborService;
 

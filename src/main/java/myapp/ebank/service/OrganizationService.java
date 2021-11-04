@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Organizations;
+import myapp.ebank.model.entity.Organizations;
 import myapp.ebank.repository.OrganizationRepository;
 import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

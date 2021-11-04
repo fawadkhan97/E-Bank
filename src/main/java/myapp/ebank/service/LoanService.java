@@ -1,6 +1,6 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Loans;
+import myapp.ebank.model.entity.Loans;
 import myapp.ebank.repository.LoanRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

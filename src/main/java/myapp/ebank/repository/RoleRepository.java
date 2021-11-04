@@ -1,7 +1,6 @@
 package myapp.ebank.repository;
 
-import myapp.ebank.model.Roles;
-import myapp.ebank.model.Users;
+import myapp.ebank.model.entity.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,11 +1,10 @@
 package myapp.ebank.controller;
 
-import myapp.ebank.util.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.model.InterestRates;
+import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.service.InterestRatesService;
 
 import java.util.Date;

@@ -1,13 +1,9 @@
 package myapp.ebank.service;
 
-import myapp.ebank.model.Funds;
-import myapp.ebank.model.Users;
+import myapp.ebank.model.entity.Funds;
 import myapp.ebank.repository.FundRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
