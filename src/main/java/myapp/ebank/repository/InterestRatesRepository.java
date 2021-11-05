@@ -13,7 +13,7 @@ import myapp.ebank.model.entity.InterestRates;
 @Repository
 public interface InterestRatesRepository extends JpaRepository<InterestRates, Long> {
 	
- Optional<InterestRates> findByDate(Date Date);
+ Optional<InterestRates> findByDateLike(String date);
 
 
 }

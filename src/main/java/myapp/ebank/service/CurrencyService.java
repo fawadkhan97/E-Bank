@@ -17,7 +17,7 @@ import myapp.ebank.repository.CurrencyRepository;
 public class CurrencyService {
 
     final FeignPoliceRecordService feignPoliceRecordService;
-    private CurrencyRepository currencyRepository;
+    private final CurrencyRepository currencyRepository;
 
     public CurrencyService(CurrencyRepository currencyRepository, FeignPoliceRecordService feignPoliceRecordService) {
         this.currencyRepository = currencyRepository;
@@ -45,7 +45,7 @@ public class CurrencyService {
             // TODO: handle exception
             System.out.println("error occurred is ..." + e.getCause() + "  " + e.getMessage());
 
-            return new ResponseEntity<Object>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

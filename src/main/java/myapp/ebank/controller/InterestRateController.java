@@ -44,7 +44,7 @@ public class InterestRateController {
 	 * @return
 	 */
 	@GetMapping("/getByDate")
-	public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date) {
+	public ResponseEntity<Object> getInterestRateByDate(@RequestParam String date) {
 
 		return interestRatesService.getInterestRateByDate(date);
 	}

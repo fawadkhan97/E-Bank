@@ -32,7 +32,32 @@ public class DateTime {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
         String date = formatter.format(cal.getTime());
+        System.out.println("Calendar date is " + date);
         return formatter.parse(date);
+    }
+
+
+    public static Date getDateInSqlFormat() throws ParseException {
+        java.util.Date utilDate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+        System.out.println("utilDate:" + utilDate);
+        System.out.println("sqlDate:" + sqlDate);
+        return sqlDate;
+    }
+
+    /**
+     * get current date in String only
+     *
+     * @return
+     * @throws ParseException
+     * @author Fawad
+     */
+    public static String getDateInString() throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar cal = Calendar.getInstance();
+        String date = formatter.format(cal.getTime());
+
+        return date;
     }
 
     /**
@@ -49,8 +74,6 @@ public class DateTime {
         return formatter.parse(date);
     }
 
-
-
     /**
      * add  minutes in the current time (as specify during function call) which will be then use as token verification expiry time
      *
@@ -65,7 +88,6 @@ public class DateTime {
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
     }
-
 
     /**
      * add 5 days  in the current Date which will be then use as due date

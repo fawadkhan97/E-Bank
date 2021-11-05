@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +16,6 @@ import java.util.Optional;
 public class ForeignExchangeRateService {
 
 
-    ForeignExchangeRates foreignExchangeRate;
     ForeignExchangeRateRepository foreignExchangeRateRepository;
 
     public ForeignExchangeRateService(ForeignExchangeRateRepository foreignExchangeRateRepository) {
@@ -31,7 +30,9 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> getDailyForeignExchangeRate() {
 
         try {
-            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(DateTime.getDateTime());
+            Date currentDate = (Date) DateTime.getDate();
+
+            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(currentDate);
             if (foreignExchangeRate.isPresent()) {
                 System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
@@ -55,7 +56,7 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> getForeignExchangeRateByDate(Date date) {
 
         try {
-            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDate(date);
+            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(date);
             if (foreignExchangeRate.isPresent()) {
                 System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
@@ -72,6 +73,7 @@ public class ForeignExchangeRateService {
 
     /**
      * save foreignExchange rate
+     *
      * @param foreignExchangeRates
      * @return
      */

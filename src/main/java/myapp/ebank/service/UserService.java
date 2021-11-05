@@ -49,8 +49,8 @@ public class UserService {
     // Get list of all users
     public ResponseEntity<Object> listAllUser() {
         try {
-            List<Users> users = userRepository.findAllByisActive(true);
-            log.info("list of  users fetch from db are ", users);
+            List<Users> users = userRepository.findAllByIsActive(true);
+       //     log.info("list of  users fetch from db are ", users);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -59,11 +59,11 @@ public class UserService {
             }
 
         } catch (Exception e) {
-            log.error(
+        /*    log.error(
                     "some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
+      */      return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

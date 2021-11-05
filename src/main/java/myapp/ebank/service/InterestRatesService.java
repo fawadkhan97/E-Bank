@@ -14,7 +14,6 @@ import java.util.Optional;
 @Service
 public class InterestRatesService {
 
-    InterestRates interestRates;
     InterestRatesRepository interestRatesRepository;
 
     public InterestRatesService(InterestRatesRepository interestRatesRepository) {
@@ -29,9 +28,9 @@ public class InterestRatesService {
     public ResponseEntity<Object> getDailyInterestRate() {
 
         try {
-            System.out.println(DateTime.getDateTime());
-            Date date = DateTime.getDate();
-            Optional<InterestRates> interestRates = interestRatesRepository.findByDate(date);
+            String date = DateTime.getDateInString();
+            System.out.println("\n \nDate is \n" + date);
+            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(date);
             if (interestRates.isPresent()) {
                 System.out.println("interest rate is " + interestRates.get().getInterestRate());
                 return new ResponseEntity<>(interestRates, HttpStatus.OK);
@@ -52,12 +51,10 @@ public class InterestRatesService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getInterestRateByDate(Date date) {
+    public ResponseEntity<Object> getInterestRateByDate(String date) {
 
         try {
-
-            Optional<InterestRates> interestRates = interestRatesRepository.findByDate(date);
-
+            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(date);
             if (interestRates.isPresent()) {
                 System.out.println("interest rate is " + interestRates.get().getInterestRate());
                 return new ResponseEntity<>(interestRates, HttpStatus.OK);

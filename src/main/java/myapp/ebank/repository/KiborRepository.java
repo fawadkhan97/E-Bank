@@ -11,7 +11,7 @@ import myapp.ebank.model.entity.KiborRates;
 
 @Repository
 public interface KiborRepository extends JpaRepository<KiborRates, Long> {
-	
-	Optional<KiborRates> findByDate(Date date);
+
+    Optional<KiborRates> findByDateLike(String date);
 
 }

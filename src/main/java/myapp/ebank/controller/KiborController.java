@@ -30,7 +30,7 @@ public class KiborController {
 
 
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date) {
+    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam String date) {
         System.out.println(date);
         return kiborRatesService.getKiborRateByDate(date);
     }

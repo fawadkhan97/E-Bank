@@ -46,7 +46,7 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam Date date) {
+    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam String date) {
         return foreignExchangeRateService.getForeignExchangeRateByDate(date);
     }
 

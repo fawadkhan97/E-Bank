@@ -28,8 +28,8 @@ public class KiborService {
      */
     public ResponseEntity<Object> dailyKiborRates() {
         try {
-            Date date = DateTime.getDate();
-            Optional<KiborRates> kiborRates = kiborRatesRepository.findByDate(date);
+            String currentDate = DateTime.getDateInString();
+            Optional<KiborRates> kiborRates = kiborRatesRepository.findByDateLike(currentDate);
             if (kiborRates.isPresent()) {
                 System.out.println("kibor rate is " + kiborRates.get().getBid());
                 return new ResponseEntity<>(kiborRates, HttpStatus.OK);
@@ -47,9 +47,9 @@ public class KiborService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getKiborRateByDate(Date date) {
+    public ResponseEntity<Object> getKiborRateByDate(String date) {
         try {
-            Optional<KiborRates> Kibor = kiborRatesRepository.findByDate(date);
+            Optional<KiborRates> Kibor = kiborRatesRepository.findByDateLike(date);
             if (Kibor.isPresent()) {
                 System.out.println("kibor rate is " + Kibor.get().getBid());
                 return new ResponseEntity<>(Kibor, HttpStatus.OK);
@@ -64,6 +64,7 @@ public class KiborService {
 
     /**
      * save kibor rates
+     *
      * @param KiborRates
      * @return
      */

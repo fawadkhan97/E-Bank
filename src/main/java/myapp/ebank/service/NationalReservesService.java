@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Date;
 import java.util.Optional;
+
 @Service
 public class NationalReservesService {
 
@@ -28,8 +28,8 @@ public class NationalReservesService {
     public ResponseEntity<Object> getDailyNationalReserves() {
         try {
             System.out.println(DateTime.getDateTime());
-            Date date = DateTime.getDateTime();
-            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDate(date);
+            String date = DateTime.getDateInString();
+            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(date);
             if (nationalReserves.isPresent()) {
                 System.out.println("Reserves are  " + nationalReserves.get().getForeignReserves());
                 return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
@@ -37,9 +37,8 @@ public class NationalReservesService {
                 return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -50,10 +49,10 @@ public class NationalReservesService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getNationalReservesByDate(Date date) {
+    public ResponseEntity<Object> getNationalReservesByDate(String date) {
 
         try {
-            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDate(date);
+            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(date);
             if (nationalReserves.isPresent()) {
                 System.out.println("Reserves are " + nationalReserves.get().getGoldReserves() + " " + nationalReserves.get().getForeignReserves());
                 return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
@@ -78,7 +77,7 @@ public class NationalReservesService {
             nationalReservesRepository.save(nationalReserves);
             return new ResponseEntity<Object>(nationalReserves, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getCause() + " "+e.getMessage() );
+            System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             // TODO: handle exception
@@ -112,9 +111,8 @@ public class NationalReservesService {
 
     /**
      * @param id
-     * @return
+     * @return ResponseEntity<Object>
      * @author fawad khan
-     * @createdDate 30-oct-2021
      */
     public ResponseEntity<Object> deleteNationalReserves(Long id) {
         try {
@@ -127,7 +125,7 @@ public class NationalReservesService {
         } catch (Exception e) {
        /*     log.error(
                     "some error has occurred while trying to Delete nationalReserve,, in class NationalReservesService and its function deleteNationalReserves ",
-                    e.getMessage(), e.getCause(), e);*/
+                    e.getMessage(), e.getCause());*/
             return new ResponseEntity<>("NationalReserves could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

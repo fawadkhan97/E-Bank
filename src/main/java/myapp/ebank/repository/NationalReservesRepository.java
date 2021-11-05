@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface NationalReservesRepository  extends JpaRepository<NationalReserves , Long> {
-    Optional<NationalReserves> findByDate(Date date);
+    Optional<NationalReserves> findByDateLike(String date);
 }
