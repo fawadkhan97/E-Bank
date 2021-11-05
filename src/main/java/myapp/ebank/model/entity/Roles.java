@@ -3,19 +3,22 @@ package myapp.ebank.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
-public class Roles {
+public class Roles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
+    @Column(name = "CreatedDate")
     private Date CreatedDate;
+    @Column(name = "UpdatedDate")
     private Date UpdatedDate;
     private boolean isActive;
 

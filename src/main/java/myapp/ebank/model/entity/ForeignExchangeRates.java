@@ -4,11 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 import lombok.Data;
-
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 
 @Entity
@@ -27,5 +25,8 @@ public class ForeignExchangeRates implements Serializable {
     private Double selling;
     @Column(name = "date")
     private String date;
-    
+    @Column(name = "createdDate")
+    private java.util.Date createdDate;
+    @Column(name = "updatedDate")
+    private Date updatedDate;
 }

@@ -91,7 +91,6 @@ public class CurrencyController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteCurrency(@RequestHeader(value = "Authorization") String authValue,
                                                  @PathVariable Long id) {
-
         if (authorize(authValue)) {
             return currencyService.deleteCurrency(id);
         } else

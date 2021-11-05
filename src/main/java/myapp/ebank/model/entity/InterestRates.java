@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Entity
@@ -24,8 +25,10 @@ public class InterestRates implements Serializable {
     private Double sbpOvernightRepoFloorRate;
     @Column(name = "m2mRevaluationRate")
     private Double m2mRevaluationRate;
-
     @Column(name = "date", unique = true, nullable = false)
     private String date;
-
+    @Column(name = "createdDate")
+    private Date createdDate;
+    @Column(name = "updatedDate")
+    private Date updatedDate;
 }

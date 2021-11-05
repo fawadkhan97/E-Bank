@@ -15,7 +15,7 @@ public class DateTime {
      * @author Fawad
      */
     public static Date getDateTime() throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Calendar cal = Calendar.getInstance();
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
@@ -43,23 +43,25 @@ public class DateTime {
      * @author Fawad
      */
     public static Date getTime() throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("HH:mm");
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         Calendar cal = Calendar.getInstance();
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
     }
 
+
+
     /**
-     * add 2 minutes in the current time which will be then use as token verification expiry time
+     * add  minutes in the current time (as specify during function call) which will be then use as token verification expiry time
      *
      * @return
      * @throws ParseException
      * @author Fawad
      */
-    public static Date getExpireTime() throws ParseException {
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+    public static Date getExpireTime(int expireTime) throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 2);
+        cal.add(Calendar.MINUTE, expireTime);
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
     }
@@ -72,10 +74,10 @@ public class DateTime {
      * @throws ParseException
      * @author Fawad
      */
-    public static Date getDueDate() throws ParseException {
+    public static Date getDueDate(int days) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 5);
+        cal.add(Calendar.DATE, days);
         String date = formatter.format(cal.getTime());
         return formatter.parse(date);
     }

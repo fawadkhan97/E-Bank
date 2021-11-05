@@ -22,6 +22,9 @@ public class KiborRates implements Serializable {
     private Double bid;
     @Column(name = "offer")
     private Double offer;
-
+    @Column(name = "createdDate")
+    private Date createdDate;
+    @Column(name = "updatedDate")
+    private Date updatedDate;
 
 }

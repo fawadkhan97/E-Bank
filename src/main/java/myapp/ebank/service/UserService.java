@@ -131,11 +131,10 @@ public class UserService {
     public ResponseEntity<Object> saveUser(Users user) {
         try {
 
-            Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
-
-            System.out.println("record is from kamran :" + criminalRecord);
+            //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
+            //   System.out.println("record is from kamran :" + criminalRecord);
             Date date = DateTime.getDateTime();
-            expirationTime = DateTime.getExpireTime();
+            expirationTime = DateTime.getExpireTime(2);
             user.setCreatedDate(date);
             user.setActive(false);
             Random rndkey = new Random(); // Generating a random number
@@ -143,7 +142,6 @@ public class UserService {
             user.setToken(token);
             // save user to db
             userRepository.save(user);
-            user.toString();
             // send email token to user email and save in db
             emailUtil.sendMail(user.getEmail(), token);
             // send sms token to user email and save in db
@@ -259,9 +257,8 @@ public class UserService {
     public ResponseEntity<Object> sendToken(Long id) {
         try {
             Optional<Users> user = userRepository.findById(id);
-
             if (user.isPresent()) {
-                expirationTime = DateTime.getExpireTime();
+                expirationTime = DateTime.getExpireTime(5);
                 Random rndkey = new Random(); // Generating a random number
                 int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
                 user.get().setToken(token);
@@ -295,7 +292,7 @@ public class UserService {
                 loan.setDate(DateTime.getDateTime());
                 loan.setInterestRate(interestRate);
                 loan.setTotalAmountToBePaid(loan.getLoanAmount() + (interestRate * loan.getLoanAmount()));
-                loan.setDueDate(DateTime.getDueDate());
+                loan.setDueDate(DateTime.getDueDate(5));
                 loan.setAmountPaid(0.0);
                 loan.setPaidStatus(false);
 

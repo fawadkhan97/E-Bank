@@ -17,7 +17,9 @@ public class Permissions {
 	private long id;
 	@Column(unique = true, nullable = false)
 	private String name;
-	private Date CreatedDate;
-	private Date UpdatedDate;
 	private boolean isActive;
+	@Column(name = "createdDate")
+	private Date createdDate;
+	@Column(name = "updatedDate")
+	private Date updatedDate;
 }

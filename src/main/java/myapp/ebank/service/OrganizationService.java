@@ -85,6 +85,7 @@ public class OrganizationService {
      */
     public ResponseEntity<Object> saveOrganization(Organizations organization) {
         try {
+            System.out.println("time is" + DateTime.getTime());
             Date date = DateTime.getDateTime();
             organization.setCreatedDate(date);
             organization.setIsActive(true);

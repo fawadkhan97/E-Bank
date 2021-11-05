@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import myapp.ebank.util.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +40,12 @@ public class CurrencyService {
             if (issuedCurrencies.isEmpty()) {
                 return new ResponseEntity<>("No data available ..... ", HttpStatus.NOT_FOUND);
             } else
-                return new ResponseEntity<Object>(issuedCurrencies, HttpStatus.OK);
+                return new ResponseEntity<>(issuedCurrencies, HttpStatus.OK);
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("error ocuured is ..." + e.getCause() + "  " + e.getMessage());
+            System.out.println("error occurred is ..." + e.getCause() + "  " + e.getMessage());
 
-            return new ResponseEntity<Object>("an error has occured..", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<Object>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -90,7 +89,7 @@ public class CurrencyService {
     public ResponseEntity<Object> updateCurrency(Currencies currency) {
         try {
 
-            currency.setUpdateDate(DateTime.getDateTime());
+            currency.setUpdatedDate(DateTime.getDateTime());
             currencyRepository.save(currency);
             currency.toString();
             return new ResponseEntity<>(currency, HttpStatus.OK);
@@ -121,7 +120,7 @@ public class CurrencyService {
                 currency.get().setIsActive(false);
                 // set updated date
                 Date date = DateTime.getDateTime();
-                currency.get().setUpdateDate(date);
+                currency.get().setUpdatedDate(date);
                 currencyRepository.save(currency.get());
                 return new ResponseEntity<>("  Currency deleted successfully", HttpStatus.OK);
             } else

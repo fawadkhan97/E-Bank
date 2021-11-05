@@ -16,7 +16,9 @@ public class Organizations implements Serializable {
     private long id;
     private String name;
     private String type;
-    private Date createdDate;
-    private Date updatedDate;
     private Boolean isActive;
+    @Column(name = "createdDate")
+    private Date createdDate;
+    @Column(name = "updatedDate")
+    private Date updatedDate;
 }
