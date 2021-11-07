@@ -29,7 +29,7 @@ public class PermissionService {
     public ResponseEntity<Object> getAllPermission() {
 
         try {
-            List<Permissions> permissions = permissionRepository.findAllByisActive(true);
+            List<Permissions> permissions = permissionRepository.findAllByIsActive(true);
             if (!permissions.isEmpty()) {
                 return new ResponseEntity<>(permissions, HttpStatus.OK);
             } else

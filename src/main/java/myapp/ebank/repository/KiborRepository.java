@@ -1,17 +1,24 @@
 package myapp.ebank.repository;
 
-import java.util.Date;
-import java.util.Optional;
-
+import myapp.ebank.model.entity.KiborRates;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import myapp.ebank.model.entity.KiborRates;
+import java.sql.Date;
+import java.util.Optional;
 
 
 @Repository
 public interface KiborRepository extends JpaRepository<KiborRates, Long> {
 
-    Optional<KiborRates> findByDateLike(String date);
+    @Query(value = "SELECT * FROM kibor_rates where date like CONCAT(:date,'%')", nativeQuery = true)
+    Optional<KiborRates> findByDateLike(Date date);
+
+    @Query(value = "SELECT * from kibor_rates where date >= :startDate", nativeQuery = true)
+    Optional<KiborRates> findByStartDate(java.util.Date startDate);
+
+    @Query(value = "SELECT * from kibor_rates where date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    Optional<KiborRates> findByStartAndEndDate(java.util.Date startDate, java.util.Date endDate);
 
 }

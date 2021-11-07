@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface FeignPoliceRecordService {
   /*  @GetMapping("/currency/getByid/{id}")
     public String getByid(@PathVariable int id);
-
 */
     //public PoliceRecordDTO getPoliceRecord(String cnic);
 

@@ -2,13 +2,14 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
-import myapp.ebank.util.DateTime;
+import myapp.ebank.util.SqlDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-
+import java.sql.Date;
 import java.util.Optional;
 
 @Service
@@ -27,14 +28,13 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> getDailyNationalReserves() {
         try {
-            System.out.println(DateTime.getDateTime());
-            String date = DateTime.getDateInString();
-            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(date);
+            Date currentDate = SqlDate.getDateInSqlFormat();
+            Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(currentDate);
             if (nationalReserves.isPresent()) {
                 System.out.println("Reserves are  " + nationalReserves.get().getForeignReserves());
                 return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
             } else
-                return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Could not get today s  ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
@@ -49,7 +49,7 @@ public class NationalReservesService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getNationalReservesByDate(String date) {
+    public ResponseEntity<Object> getNationalReservesByDate(Date date) {
 
         try {
             Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(date);
@@ -57,7 +57,7 @@ public class NationalReservesService {
                 System.out.println("Reserves are " + nationalReserves.get().getGoldReserves() + " " + nationalReserves.get().getForeignReserves());
                 return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
             } else
-                return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Could not get today  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("some error has occured " + e.getCause());
@@ -65,6 +65,70 @@ public class NationalReservesService {
         }
 
     }
+
+
+    /**
+     * get nationalReserves Rate for specific Date
+     *
+     * @param date
+     * @return
+     */
+    public ResponseEntity<Object> getNationalReservesRateByDate(Date date) {
+        try {
+            Optional<NationalReserves> NationalReserves = nationalReservesRepository.findByDateLike(date);
+            if (NationalReserves.isPresent()) {
+                return new ResponseEntity<>(NationalReserves, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get today  ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occured " + e.getCause());
+            return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * find between specific date range by starting date
+     *
+     * @param startDate
+     * @return
+     */
+    public ResponseEntity<Object> getNationalReservesRateByStartDate(@RequestParam java.util.Date startDate) {
+        try {
+            Optional<NationalReserves> interestRate = nationalReservesRepository.findByStartDate(startDate);
+            if (interestRate.isPresent()) {
+                //System.out.println("NationalReservesExchange  is " + NationalReservesExchangeRate.get().getCurrency() + " " + NationalReservesExchangeRate.get().getBuying());
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * find between specific date range start and end
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity<Object> getNationalReservesRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+        try {
+            Optional<NationalReserves> interestRate = nationalReservesRepository.findByStartAndEndDate(startDate, endDate);
+            if (interestRate.isPresent()) {
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     /**
      * save  National Reserves

@@ -1,6 +1,5 @@
 package myapp.ebank.controller;
 
-
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
@@ -159,31 +158,40 @@ public class UserController {
      * @createdDate 27-oct-2021
      */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Object> deleteUser(@RequestHeader(value = "Authorization", required = false) String authValue,
+    public ResponseEntity<Object> deleteUser(@RequestHeader(value = "Authorization") String authValue,
                                              @PathVariable Long id) {
         if (authorize(authValue)) {
             return userService.deleteUser(id);
         } else
-            return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
 
     @PostMapping("/{userid}/applyForLoan")
-    public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @RequestBody Loans loan) {
-        return userService.applyForLoan(userid, loan);
+    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Loans loan) {
+        if (authorize(authValue)) {
+            return userService.applyForLoan(userid, loan);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+
     }
-  @PostMapping("/{userid}/depositLoan")
-    public ResponseEntity<Object> depositLoan(@PathVariable Long userid, @RequestBody Loans loan) {
-        return userService.depositLoan(userid, loan);
+
+    @PostMapping("/{userid}/depositLoan")
+    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Loans loan) {
+        if (authorize(authValue)) {
+            return userService.depositLoan(userid, loan);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+
     }
 
     @PostMapping("/{userid}/applyForFunds")
-    public ResponseEntity<Object> applyForFunds(@PathVariable Long userid, @RequestBody Funds funds) {
-        return userService.applyForFunds(userid, funds);
+    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Funds funds) {
+        if (authorize(authValue)) {
+            return userService.applyForFunds(userid, funds);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
-
-
 
 
 }

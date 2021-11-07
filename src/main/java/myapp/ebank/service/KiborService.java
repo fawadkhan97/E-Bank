@@ -1,14 +1,16 @@
 package myapp.ebank.service;
 
 import myapp.ebank.model.entity.KiborRates;
+import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.repository.KiborRepository;
-import myapp.ebank.util.DateTime;
+import myapp.ebank.util.SqlDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Optional;
 
 @Service
@@ -28,7 +30,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> dailyKiborRates() {
         try {
-            String currentDate = DateTime.getDateInString();
+            Date currentDate = SqlDate.getDateInSqlFormat();
             Optional<KiborRates> kiborRates = kiborRatesRepository.findByDateLike(currentDate);
             if (kiborRates.isPresent()) {
                 System.out.println("kibor rate is " + kiborRates.get().getBid());
@@ -47,11 +49,10 @@ public class KiborService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getKiborRateByDate(String date) {
+    public ResponseEntity<Object> getKiborRateByDate(Date date) {
         try {
             Optional<KiborRates> Kibor = kiborRatesRepository.findByDateLike(date);
             if (Kibor.isPresent()) {
-                System.out.println("kibor rate is " + Kibor.get().getBid());
                 return new ResponseEntity<>(Kibor, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
@@ -63,9 +64,50 @@ public class KiborService {
     }
 
     /**
+     * find between specific date range by starting date
+     *
+     * @param startDate
+     * @return
+     */
+    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam java.util.Date startDate) {
+        try {
+            Optional<KiborRates> interestRate = kiborRatesRepository.findByStartDate(startDate);
+            if (interestRate.isPresent()) {
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get Kibor rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * find between specific date range start and end
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity<Object> getKiborRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+        try {
+            Optional<KiborRates> interestRate = kiborRatesRepository.findByStartAndEndDate(startDate, endDate);
+            if (interestRate.isPresent()) {
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get Kibor rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * save kibor rates
      *
-     * @param KiborRates
+     * @param kiborRates
      * @return
      */
     public ResponseEntity<Object> addKiborRate(KiborRates kiborRates) {

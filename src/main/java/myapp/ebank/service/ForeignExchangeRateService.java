@@ -2,11 +2,12 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.ForeignExchangeRates;
 import myapp.ebank.repository.ForeignExchangeRateRepository;
-import myapp.ebank.util.DateTime;
+import myapp.ebank.util.SqlDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
 import java.util.List;
@@ -30,11 +31,11 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> getDailyForeignExchangeRate() {
 
         try {
-            Date currentDate = (Date) DateTime.getDate();
-
-            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(currentDate);
-            if (foreignExchangeRate.isPresent()) {
-                System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
+            Date currentDate = SqlDate.getDateInSqlFormat();
+            System.out.println("Date is " + currentDate);
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(currentDate);
+            if (!foreignExchangeRate.isEmpty()) {
+                //  System.out.println("foreignExchange rate is " + foreignExchangeRate.getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
@@ -54,21 +55,60 @@ public class ForeignExchangeRateService {
      * @return
      */
     public ResponseEntity<Object> getForeignExchangeRateByDate(Date date) {
-
         try {
-            Optional<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(date);
-            if (foreignExchangeRate.isPresent()) {
-                System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateLike(date);
+            if (!foreignExchangeRate.isEmpty()) {
+                //        System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
-
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    /**
+     * find between specific date range by starting date
+     * @param startDate
+     * @return
+     */
+    public ResponseEntity<Object> getForeignExchangeRateByStartDate(@RequestParam java.util.Date startDate) {
+        try {
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByStartDate(startDate);
+            if (!foreignExchangeRate.isEmpty()) {
+                //        System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
+                return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get foreign rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * find between specific date range start and end
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity<Object> getForeignExchangeRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+        try {
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByStartAndEndDate(startDate,endDate);
+            if (!foreignExchangeRate.isEmpty()) {
+                //        System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
+                return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get foreign rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

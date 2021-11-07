@@ -1,99 +1,122 @@
 package myapp.ebank.controller;
 
+import myapp.ebank.model.entity.InterestRates;
+import myapp.ebank.service.InterestRateService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.model.entity.InterestRates;
-import myapp.ebank.service.InterestRatesService;
-
-import java.util.Date;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/interestRate")
 public class InterestRateController {
-	private static final String defaultAuthValue = "12345";
-	InterestRatesService interestRatesService;
-	public InterestRateController(InterestRatesService interestRatesService) {
-		this.interestRatesService = interestRatesService;
-	}
+    private static final String defaultAuthValue = "12345";
+    InterestRateService interestRateService;
+
+    public InterestRateController(InterestRateService interestRateService) {
+        this.interestRateService = interestRateService;
+    }
 
 
-	/**
-	 * check user is authorized or not
-	 *
-	 * @param authValue
-	 * @return
-	 */
-	public Boolean authorize(String authValue) {
-		return defaultAuthValue.equals(authValue);
-	}
+    /**
+     * check user is authorized or not
+     *
+     * @param authValue
+     * @return
+     */
+    public Boolean authorize(String authValue) {
+        return defaultAuthValue.equals(authValue);
+    }
 
-	/**
-	 * return daily rates
-	 * @return
-	 */
-	@GetMapping("/dailyRates")
-	public ResponseEntity<Object> getDailyInterestRate() {
-		return interestRatesService.getDailyInterestRate();
-	}
+    /**
+     * return daily rates
+     *
+     * @return
+     */
+    @GetMapping("/dailyRates")
+    public ResponseEntity<Object> getDailyInterestRate() {
+        return interestRateService.getDailyInterestRate();
+    }
 
-	/**
-	 * get rates by specific date
-	 * @param date
-	 * @return
-	 */
-	@GetMapping("/getByDate")
-	public ResponseEntity<Object> getInterestRateByDate(@RequestParam String date) {
+    /**
+     * get rates by specific date
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("/getByDate")
+    public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date) {
+        return interestRateService.getInterestRateByDate(date);
+    }
 
-		return interestRatesService.getInterestRateByDate(date);
-	}
+    /**
+     * get interest rates from start date to  current date
+     *
+     * @param startDate
+     * @return
+     */
+    @GetMapping("/getByStartDate")
+    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
+        return interestRateService.getInterestRateByStartDate(startDate);
+    }
 
-	/**
-	 * save interest rate
-	 * @param interestRates
-	 * @return
-	 */
-	@PostMapping("/add")
-	public ResponseEntity<Object> addInterestRate(@RequestBody InterestRates interestRates) {
-		return interestRatesService.addInterestRate(interestRates);
-	}
+    /**
+     * get interest rates from start date to  end date
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/getByDateBetween")
+    public ResponseEntity<Object> getInterestRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+        return interestRateService.getInterestRateBetweenDates(startDate, endDate);
+    }
 
+    /**
+     * save interest rate
+     *
+     * @param interestRates
+     * @return
+     */
+    @PostMapping("/add")
+    public ResponseEntity<Object> addInterestRate(@RequestHeader(value = "Authorization") String authValue, @RequestBody InterestRates interestRates) {
+        if (authorize(authValue)) {
+            return interestRateService.addInterestRate(interestRates);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+    }
 
-	/**
-	 *
-	 * @param authValue
-	 *
-	 * @param interestRate
-	 *
-	 * @createdDate 29-oct-2021
-	 *
-	 * @return
-	 */
-	@PutMapping("/update")
-	public ResponseEntity<Object> updateInterestRate(@RequestHeader(value = "Authorization") String authValue,
-												 @RequestBody InterestRates interestRate) {
-		if (authorize(authValue)) {
-			return interestRatesService.updateInterestRate(interestRate);
-		} else
-			return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
-	}
+    /**
+     * @param authValue
+     * @param interestRate
+     * @return
+     * @createdDate 29-oct-2021
+     */
+    @PutMapping("/update")
+    public ResponseEntity<Object> updateInterestRate(@RequestHeader(value = "Authorization") String authValue,
+                                                     @RequestBody InterestRates interestRate) {
+        if (authorize(authValue)) {
+            return interestRateService.updateInterestRate(interestRate);
+        } else
+            return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
+    }
 
-	/**
-	 *
-	 * @param authValue
-	 * @param id
-	 * @createdDate 27-oct-2021
-	 * @return
-	 */
-	@DeleteMapping("delete/{id}")
-	public ResponseEntity<Object> deleteInterestRate(@RequestHeader(value = "Authorization") String authValue,
-												 @PathVariable Long id) {
+    /**
+     * @param authValue
+     * @param id
+     * @return
+     * @createdDate 27-oct-2021
+     */
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<Object> deleteInterestRate(@RequestHeader(value = "Authorization") String authValue,
+                                                     @PathVariable Long id) {
 
-		if (authorize(authValue)) {
-			return interestRatesService.deleteInterestRate(id);
-		} else
-			return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
-	}
+        if (authorize(authValue)) {
+            return interestRateService.deleteInterestRate(id);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+    }
 
 }

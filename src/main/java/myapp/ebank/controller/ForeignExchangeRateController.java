@@ -2,11 +2,12 @@ package myapp.ebank.controller;
 
 import myapp.ebank.model.entity.ForeignExchangeRates;
 import myapp.ebank.service.ForeignExchangeRateService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -46,9 +47,31 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam String date) {
+    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam Date date) {
         return foreignExchangeRateService.getForeignExchangeRateByDate(date);
     }
+
+
+    /** get foreign rates from start date to  current date
+     * @param startDate
+     * @return
+     */
+    @GetMapping("/getByStartDate")
+    public ResponseEntity<Object> getForeignExchangeRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
+        return foreignExchangeRateService.getForeignExchangeRateByStartDate(startDate);
+    }
+
+    /**
+     * get foreign rates from start date to  end date
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/getByDateBetween")
+    public ResponseEntity<Object> getForeignExchangeRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+        return foreignExchangeRateService.getForeignExchangeRateBetweenDates(startDate, endDate);
+    }
+
 
     /**
      * save interest rate

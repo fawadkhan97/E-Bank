@@ -1,12 +1,14 @@
 package myapp.ebank.controller;
 
 
+import myapp.ebank.model.entity.NationalReserves;
+import myapp.ebank.service.NationalReservesService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.model.entity.NationalReserves;
-import myapp.ebank.service.NationalReservesService;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/nationalReserves")
@@ -52,6 +54,44 @@ public class NationalReserveController {
     }
 
     /**
+     * get rates by specific date
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("/getByDate")
+    public ResponseEntity<Object> getNationalReservesByDate(@RequestParam Date date) {
+        return nationalReservesService.getNationalReservesByDate(date);
+    }
+
+
+    /**
+     * get nationalReserves rates from start date to  current date
+     *
+     * @param startDate
+     * @return
+     */
+    @GetMapping("/getByStartDate")
+    public ResponseEntity<Object> getNationalReservesRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
+        return nationalReservesService.getNationalReservesRateByStartDate(startDate);
+    }
+
+    /**
+     * get nationalReserves rates from start date to  end date
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/getByDateBetween")
+    public ResponseEntity<Object> getNationalReservesRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+        return nationalReservesService.getNationalReservesRateBetweenDates(startDate, endDate);
+    }
+
+
+    /**
+     * add reserves record to db
+     *
      * @param authValue
      * @param nationalreserves
      * @return added nationalreserves object
@@ -72,6 +112,7 @@ public class NationalReserveController {
         }
 
     }
+
     /**
      * @param authValue
      * @param nationalreserves

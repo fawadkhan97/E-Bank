@@ -2,21 +2,22 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.repository.InterestRatesRepository;
-import myapp.ebank.util.DateTime;
+import myapp.ebank.util.SqlDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.Optional;
 
 @Service
-public class InterestRatesService {
+public class InterestRateService {
 
     InterestRatesRepository interestRatesRepository;
 
-    public InterestRatesService(InterestRatesRepository interestRatesRepository) {
+    public InterestRateService(InterestRatesRepository interestRatesRepository) {
         this.interestRatesRepository = interestRatesRepository;
     }
 
@@ -28,9 +29,8 @@ public class InterestRatesService {
     public ResponseEntity<Object> getDailyInterestRate() {
 
         try {
-            String date = DateTime.getDateInString();
-            System.out.println("\n \nDate is \n" + date);
-            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(date);
+            Date currentDate = SqlDate.getDateInSqlFormat();
+            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(currentDate);
             if (interestRates.isPresent()) {
                 System.out.println("interest rate is " + interestRates.get().getInterestRate());
                 return new ResponseEntity<>(interestRates, HttpStatus.OK);
@@ -39,8 +39,8 @@ public class InterestRatesService {
 
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("some error has occured " + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -51,22 +51,63 @@ public class InterestRatesService {
      * @param date
      * @return
      */
-    public ResponseEntity<Object> getInterestRateByDate(String date) {
-
+    public ResponseEntity<Object> getInterestRateByDate(Date date) {
         try {
             Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(date);
             if (interestRates.isPresent()) {
-                System.out.println("interest rate is " + interestRates.get().getInterestRate());
                 return new ResponseEntity<>(interestRates, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("some error has occured " + e.getCause());
-            return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    /**
+     * find between specific date range by starting date
+     *
+     * @param startDate
+     * @return
+     */
+    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam java.util.Date startDate) {
+        try {
+            Optional<InterestRates> interestRate = interestRatesRepository.findByStartDate(startDate);
+            if (interestRate.isPresent()) {
+                //System.out.println("InterestExchange rate is " + InterestExchangeRate.get().getCurrency() + " " + InterestExchangeRate.get().getBuying());
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get Interest rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * find between specific date range start and end
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public ResponseEntity<Object> getInterestRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+        try {
+            Optional<InterestRates> interestRate = interestRatesRepository.findByStartAndEndDate(startDate, endDate);
+            if (interestRate.isPresent()) {
+                //System.out.println("InterestExchange rate is " + InterestExchangeRate.get().getCurrency() + " " + InterestExchangeRate.get().getBuying());
+                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            } else
+                return new ResponseEntity<>("Could not get Interest rate ...", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println("some error has occurred " + e.getCause());
+            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -85,8 +126,8 @@ public class InterestRatesService {
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             // TODO: handle exception
-            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
-            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("error occurred .." + e.getCause() + "  " + e.getMessage());
+            return new ResponseEntity<>("some error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 

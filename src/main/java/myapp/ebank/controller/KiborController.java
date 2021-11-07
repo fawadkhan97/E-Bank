@@ -1,13 +1,13 @@
 package myapp.ebank.controller;
 
 import myapp.ebank.model.entity.KiborRates;
+import myapp.ebank.service.KiborService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import myapp.ebank.service.KiborService;
-
-import java.util.Date;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/kibor")
@@ -23,20 +23,52 @@ public class KiborController {
         return defaultAuthValue.equals(authValue);
     }
 
+    /**
+     * fetch daily kibor rates
+     *
+     * @return daily kibor rates
+     */
     @GetMapping("/dailyRates")
     public ResponseEntity<Object> dailyKiborRates() {
         return kiborRatesService.dailyKiborRates();
     }
 
-
+    /** get rates for specified date
+     * @param date
+     * @return
+     */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam String date) {
+    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date) {
         System.out.println(date);
         return kiborRatesService.getKiborRateByDate(date);
     }
 
     /**
+     * get kibor rates from start date to  current date
+     *
+     * @param startDate
+     * @return
+     */
+    @GetMapping("/getByStartDate")
+    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
+        return kiborRatesService.getKiborRateByStartDate(startDate);
+    }
+
+    /**
+     * get kibor rates from start date to  end date
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @GetMapping("/getByDateBetween")
+    public ResponseEntity<Object> getKiborRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+        return kiborRatesService.getKiborRateBetweenDates(startDate, endDate);
+    }
+
+    /**
      * save kibor rate
+     *
      * @param kiborRate
      * @return
      */
