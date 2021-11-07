@@ -26,13 +26,14 @@ import java.util.*;
 public class UserService {
     private static final Logger log = LogManager.getLogger(UserService.class);
     final LoanRepository loanRepository;
-    private final UserRepository userRepository;
     final FeignPoliceRecordService feignPoliceRecordService;
+    private final UserRepository userRepository;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
+    int unpaidLoanCount = 0;
     private Date expirationTime;
-    private Double totalAmountWithInterest;
     private Double interestRate = 0.045;
+
 
     // Autowiring through constructor
     public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository, FeignPoliceRecordService feignPoliceRecordService) {
@@ -50,7 +51,7 @@ public class UserService {
     public ResponseEntity<Object> listAllUser() {
         try {
             List<Users> users = userRepository.findAllByIsActive(true);
-       //     log.info("list of  users fetch from db are ", users);
+            //     log.info("list of  users fetch from db are ", users);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -63,7 +64,8 @@ public class UserService {
                     "some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-      */      return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
+      */
+            return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -152,9 +154,9 @@ public class UserService {
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-           /* log.error(
+            log.error(
                     "some error has occurred while trying to save user,, in class UserService and its function saveUser ",
-                    e.getMessage());*/
+                    e.getMessage());
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
             return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -287,7 +289,17 @@ public class UserService {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent() && user.get().isActive()) {
-                // check if user is  verified
+                List<Loans> loans = new ArrayList<>(user.get().getLoans());
+                if (!loans.isEmpty()) {
+                    for (Loans loan1 : loans) {
+                        if (!loan1.getPaidStatus()) {
+                            unpaidLoanCount += 1;
+                        }
+                    }
+                    if (unpaidLoanCount > 2) {
+                        return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
+                    }
+                }
                 // log.info("user fetch and found from db by id  : ", user.toString());
                 loan.setDate(DateTime.getDateTime());
                 loan.setInterestRate(interestRate);
@@ -296,48 +308,65 @@ public class UserService {
                 loan.setAmountPaid(0.0);
                 loan.setPaidStatus(false);
 
-                List<Loans> loans = new ArrayList<>(user.get().getLoans());
                 loans.add(loan);
                 user.get().setLoans(loans);
+                // save loan to db first then save user
+                loanRepository.save(loan);
                 userRepository.save(user.get());
                 return new ResponseEntity<>(loan, HttpStatus.OK);
             } else
 //                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            System.out.println("error is : " + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
 
     public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
+        Boolean findLoanById = false;
         try {
             Optional<Users> user = userRepository.findById(id);
-            Optional<Loans> depositLoan = loanRepository.findById(loan.getId());
-            if (user.isPresent() && user.get().isActive() && depositLoan.isPresent()) {
-                double paidAmount = loan.getAmountPaid() - depositLoan.get().getTotalAmountToBePaid();
-                if (paidAmount > 0 || paidAmount < 0) {
-                    return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
-                }
-                // check if user is  verified
-                // log.info("user fetch and found from db by id  : ", user.toString());
-                loan.setDueDate(depositLoan.get().getDueDate());
-                loan.setDate(depositLoan.get().getDate());
-                if (Objects.equals(loan.getAmountPaid(), depositLoan.get().getTotalAmountToBePaid())) {
-                    loan.setPaidStatus(true);
-                }
-                loan.setTotalAmountToBePaid(depositLoan.get().getTotalAmountToBePaid());
-                loan.setAmountPaid(depositLoan.get().getAmountPaid());
-                loan.setDescription(depositLoan.get().getDescription());
-                loan.setDate(depositLoan.get().getDate());
 
+            if (user.isPresent() && user.get().isActive()) {
+                for (Loans loan1 : user.get().getLoans()) {
+                    if (loan1.getId() != loan.getId()) {
+                        findLoanById = false;
+                    } else if (loan1.getId() == loan.getId() && loan1.getPaidStatus()) {
+                        return new ResponseEntity<>("loan is already paid", HttpStatus.CONFLICT);
+                    } else findLoanById = true;
+                }
+                if (!findLoanById) {
+                    return new ResponseEntity<>("no loans with given id found for user", HttpStatus.NOT_FOUND);
+                }
+                Optional<Loans> depositLoan = loanRepository.findById(loan.getId());
+                // check if loan record is present in db
+                if (depositLoan.isPresent()) {
+                    // check if amount paid is same as amount to be paid
+                    double paidAmount = loan.getAmountPaid() - depositLoan.get().getTotalAmountToBePaid();
+                    if (paidAmount > 0 || paidAmount < 0) {
+                        return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
+                    }
+
+                    // check if user is  verified
+                    // log.info("user fetch and found from db by id  : ", user.toString());
+                    loan.setDueDate(depositLoan.get().getDueDate());
+                    loan.setLoanAmount(depositLoan.get().getLoanAmount());
+                    loan.setDate(depositLoan.get().getDate());
+                    loan.setInterestRate(depositLoan.get().getInterestRate());
+                    if (Objects.equals(loan.getAmountPaid(), depositLoan.get().getTotalAmountToBePaid())) {
+                        loan.setPaidStatus(true);
+                    }
+                    loan.setTotalAmountToBePaid(depositLoan.get().getTotalAmountToBePaid());
+                    loan.setDescription(depositLoan.get().getDescription());
+                    loan.setDate(depositLoan.get().getDate());
+                }
                 List<Loans> loansList = new ArrayList<>(user.get().getLoans());
-
+                loansList.add(loan);
+                user.get().setLoans(loansList);
                 userRepository.save(user.get());
-                return new ResponseEntity<>(loan, HttpStatus.OK);
+                return new ResponseEntity<>("loan paid successfully", HttpStatus.OK);
             } else {
 //                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found any record with given details.... user may not be verified", HttpStatus.NOT_FOUND);
@@ -347,10 +376,7 @@ public class UserService {
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
-
 
     /**
      * @param id

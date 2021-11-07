@@ -173,7 +173,6 @@ public class UserController {
             return userService.applyForLoan(userid, loan);
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
-
     }
 
     @PostMapping("/{userid}/depositLoan")

@@ -2,11 +2,13 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.repository.LoanRepository;
+import myapp.ebank.util.DateTime;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,7 +76,8 @@ public class LoanService {
      */
     public ResponseEntity<Object> updateLoan(Loans loan) {
         try {
-
+            Date updatedDate = DateTime.getDateTime();
+            loan.setUpdatedDate(updatedDate);
             loanRepository.save(loan);
             return new ResponseEntity<>(loan, HttpStatus.OK);
         } catch (Exception e) {
@@ -113,26 +116,5 @@ public class LoanService {
 
     }
 
-    /**
-     * add loans
-     *
-     * @param loans
-     * @return
-     */
-    public ResponseEntity<Object> applyForLoan(Loans loans) {
-        try {
-
-            loanRepository.save(loans);
-            return new ResponseEntity<>(loans, HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
-            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-
-    }
 
 }

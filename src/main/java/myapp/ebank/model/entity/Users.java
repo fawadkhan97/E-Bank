@@ -42,15 +42,15 @@ public class Users implements Serializable {
     private int token;
 
     @OneToMany(targetEntity = Funds.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private List<Funds> funds = new ArrayList<>();
 
     @OneToMany(targetEntity = Loans.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn
+    @JoinColumn (name = "user_id")
     private List<Loans> loans = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn
+    @JoinColumn(name = "organization_id")
     private Organizations organization;
 
     @ManyToMany(targetEntity = Roles.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
