@@ -63,10 +63,9 @@ public class CurrencyService {
             currency.setIsActive(true);
             // save currency to db
             currencyRepository.save(currency);
-            currency.toString();
             return new ResponseEntity<>(currency, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>(" Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
+            return new ResponseEntity<>(" Data already exists ..or.. Some Data field maybe missing , ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             /*
              * log.error(

@@ -1,13 +1,19 @@
 package myapp.ebank.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.service.InterestRateService;
+import myapp.ebank.util.ExceptionHandling;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/interestRate")
@@ -119,4 +125,9 @@ public class InterestRateController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return ExceptionHandling.handleMethodArgumentNotValid(ex);
+    }
 }

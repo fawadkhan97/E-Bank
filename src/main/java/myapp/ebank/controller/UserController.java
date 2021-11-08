@@ -1,20 +1,32 @@
 package myapp.ebank.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
+import myapp.ebank.util.ErrorResponse;
+import myapp.ebank.util.ExceptionHandling;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
+@Validated
 public class UserController {
-
     private static final String defaultAuthValue = "12345";
     private static final Logger log = LogManager.getLogger();
     final UserService userService;
@@ -76,7 +88,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @RequestBody Users user) {
+                                          @Valid @RequestBody Users user) {
         // check authorization
         if (authorize(authValue)) {
             return userService.saveUser(user);
@@ -140,7 +152,7 @@ public class UserController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateUser(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                             @RequestBody Users user) {
+                                             @Valid @RequestBody Users user) {
         if (authValue != null) {
             if (authorize(authValue)) {
                 return userService.updateUser(user);
@@ -168,7 +180,7 @@ public class UserController {
 
 
     @PostMapping("/{userid}/applyForLoan")
-    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Loans loan) {
+    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan) {
         if (authorize(authValue)) {
             return userService.applyForLoan(userid, loan);
         } else
@@ -176,7 +188,7 @@ public class UserController {
     }
 
     @PostMapping("/{userid}/depositLoan")
-    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Loans loan) {
+    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan) {
         if (authorize(authValue)) {
             return userService.depositLoan(userid, loan);
         } else
@@ -185,11 +197,18 @@ public class UserController {
     }
 
     @PostMapping("/{userid}/applyForFunds")
-    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @RequestBody Funds funds) {
+    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds) {
         if (authorize(authValue)) {
             return userService.applyForFunds(userid, funds);
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+    }
+
+    // handle input exceptions
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, IllegalStateException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return ExceptionHandling.handleMethodArgumentNotValid(ex);
     }
 
 

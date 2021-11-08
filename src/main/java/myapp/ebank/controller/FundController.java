@@ -1,10 +1,17 @@
 package myapp.ebank.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.service.FundService;
+import myapp.ebank.util.ExceptionHandling;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/fund")
@@ -70,4 +77,9 @@ public class FundController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return ExceptionHandling.handleMethodArgumentNotValid(ex);
+    }
 }

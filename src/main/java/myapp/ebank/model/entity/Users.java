@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,17 +17,23 @@ public class Users implements Serializable {
     @Id
     @GeneratedValue
     private long id;
-    @Column(name = "fullName")
+    @Column(name = "fullName", nullable = false)
+    @NotBlank(message = "fullName is mandatory")
     private String fullName;
-    @Column(name = "userName", unique = true)
+    @Column(name = "userName", unique = true, nullable = false)
+    @NotBlank(message = "username is mandatory")
     private String userName;
-    @Column(name = "PhoneNumber", unique = true)
+    @Column(name = "PhoneNumber", unique = true, nullable = false)
+    @NotBlank(message = "phoneNumber is mandatory")
     private String phoneNumber;
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
+    @NotBlank(message = "email is mandatory")
     private String email;
-    @Column(name = "CNIC", unique = true)
-    private String CNIC;
-    @Column(name = "password")
+    @Column(name = "CNIC", unique = true, nullable = false)
+    @NotBlank(message = "cnic is mandatory")
+    private String cnic;
+    @Column(name = "password", nullable = false)
+    @NotBlank(message = "password is mandatory")
     private String password;
     @Column(name = "age")
     private int age;
@@ -46,7 +53,7 @@ public class Users implements Serializable {
     private List<Funds> funds = new ArrayList<>();
 
     @OneToMany(targetEntity = Loans.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn (name = "user_id")
+    @JoinColumn(name = "user_id")
     private List<Loans> loans = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

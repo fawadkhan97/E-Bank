@@ -1,5 +1,6 @@
 package myapp.ebank.service;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
@@ -10,17 +11,25 @@ import myapp.ebank.util.EmailUtil;
 import myapp.ebank.util.SMSUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.PropertyValueException;
+import org.hibernate.TransientPropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
+import java.util.zip.DataFormatException;
 
 /**
  * @author Fawad khan Created Date : 08-October-2021 A service class of user
  * connected with repository which contains user CRUD operations
- * @createdDate 27-oct-2021
+ * createdDate 27-oct-2021
  */
 @Service
 public class UserService {
@@ -32,7 +41,7 @@ public class UserService {
     private final SMSUtil smsUtil = new SMSUtil();
     int unpaidLoanCount = 0;
     private Date expirationTime;
-    private Double interestRate = 0.045;
+    private final Double interestRate = 0.045;
 
 
     // Autowiring through constructor
@@ -60,11 +69,9 @@ public class UserService {
             }
 
         } catch (Exception e) {
-        /*    log.error(
-                    "some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ",
-                    e.getMessage());
+            log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ", e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-      */
+
             return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -132,12 +139,12 @@ public class UserService {
      */
     public ResponseEntity<Object> saveUser(Users user) {
         try {
-
             //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
             //   System.out.println("record is from kamran :" + criminalRecord);
             Date date = DateTime.getDateTime();
             expirationTime = DateTime.getExpireTime(2);
             user.setCreatedDate(date);
+            user.setUpdatedDate(null);
             user.setActive(false);
             Random rndkey = new Random(); // Generating a random number
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
@@ -149,9 +156,15 @@ public class UserService {
             // send sms token to user email and save in db
             smsUtil.sendSMS(user.getPhoneNumber(), token);
             return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (InvalidDataAccessApiUsageException | TransientPropertyValueException e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("organization with given id does not exist or organization is not provided", HttpStatus.NOT_ACCEPTABLE);
+        } catch (PropertyValueException e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("some required fields might be null", HttpStatus.NOT_ACCEPTABLE);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
+            return new ResponseEntity<>(" Some Data field maybe missing or Data already exists   ", HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
             log.error(
@@ -325,45 +338,39 @@ public class UserService {
     }
 
     public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
-        Boolean findLoanById = false;
+        boolean findLoanById = false;
         try {
             Optional<Users> user = userRepository.findById(id);
 
             if (user.isPresent() && user.get().isActive()) {
-                for (Loans loan1 : user.get().getLoans()) {
+                List<Loans> loansList = new ArrayList<>(user.get().getLoans());
+
+                for (Loans loan1 : loansList) {
+                    // check if user contain  the loan specified
                     if (loan1.getId() != loan.getId()) {
                         findLoanById = false;
-                    } else if (loan1.getId() == loan.getId() && loan1.getPaidStatus()) {
+                    }
+                    //check if loan exist and has not been already paid
+                    else if (loan1.getId() == loan.getId() && Boolean.TRUE.equals(loan1.getPaidStatus())) {
                         return new ResponseEntity<>("loan is already paid", HttpStatus.CONFLICT);
-                    } else findLoanById = true;
+                    } else {
+                        // check if amount paid is same as amount to be paid
+                        double paidAmount = loan.getAmountPaid() - loan1.getTotalAmountToBePaid();
+                        if (paidAmount > 0 || paidAmount < 0) {
+                            return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
+                        }
+                        // log.info("user fetch and found from db by id  : ", user.toString());
+                        if (Objects.equals(loan.getAmountPaid(), loan1.getTotalAmountToBePaid())) {
+                            loan1.setPaidStatus(true);
+                            loan1.setAmountPaid(loan.getAmountPaid());
+                        }
+                        findLoanById = true;
+                    }
                 }
                 if (!findLoanById) {
                     return new ResponseEntity<>("no loans with given id found for user", HttpStatus.NOT_FOUND);
                 }
-                Optional<Loans> depositLoan = loanRepository.findById(loan.getId());
-                // check if loan record is present in db
-                if (depositLoan.isPresent()) {
-                    // check if amount paid is same as amount to be paid
-                    double paidAmount = loan.getAmountPaid() - depositLoan.get().getTotalAmountToBePaid();
-                    if (paidAmount > 0 || paidAmount < 0) {
-                        return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
-                    }
 
-                    // check if user is  verified
-                    // log.info("user fetch and found from db by id  : ", user.toString());
-                    loan.setDueDate(depositLoan.get().getDueDate());
-                    loan.setLoanAmount(depositLoan.get().getLoanAmount());
-                    loan.setDate(depositLoan.get().getDate());
-                    loan.setInterestRate(depositLoan.get().getInterestRate());
-                    if (Objects.equals(loan.getAmountPaid(), depositLoan.get().getTotalAmountToBePaid())) {
-                        loan.setPaidStatus(true);
-                    }
-                    loan.setTotalAmountToBePaid(depositLoan.get().getTotalAmountToBePaid());
-                    loan.setDescription(depositLoan.get().getDescription());
-                    loan.setDate(depositLoan.get().getDate());
-                }
-                List<Loans> loansList = new ArrayList<>(user.get().getLoans());
-                loansList.add(loan);
                 user.get().setLoans(loansList);
                 userRepository.save(user.get());
                 return new ResponseEntity<>("loan paid successfully", HttpStatus.OK);
@@ -408,6 +415,7 @@ public class UserService {
 
 
     }
+
 
 
 }
