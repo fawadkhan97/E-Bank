@@ -1,6 +1,5 @@
 package myapp.ebank.service;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
@@ -19,12 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
-import java.util.zip.DataFormatException;
 
 /**
  * @author Fawad khan Created Date : 08-October-2021 A service class of user
@@ -39,9 +34,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
+    private final Double interestRate = 0.045;
     int unpaidLoanCount = 0;
     private Date expirationTime;
-    private final Double interestRate = 0.045;
 
 
     // Autowiring through constructor
@@ -60,7 +55,6 @@ public class UserService {
     public ResponseEntity<Object> listAllUser() {
         try {
             List<Users> users = userRepository.findAllByIsActive(true);
-            //     log.info("list of  users fetch from db are ", users);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -69,7 +63,7 @@ public class UserService {
             }
 
         } catch (Exception e) {
-            log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ", e.getMessage());
+            log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ");
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
 
             return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,9 +89,9 @@ public class UserService {
 //                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-        /*    log.error(
+           log.error(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
-                    e.getMessage());*/
+                    e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
 
             return new ResponseEntity<>("Unable to find Users, an error has occurred",
@@ -137,7 +131,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> saveUser(Users user) {
+    public ResponseEntity<Object> saveUser(Users user) throws HttpMessageNotReadableException {
         try {
             //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
             //   System.out.println("record is from kamran :" + criminalRecord);
@@ -156,6 +150,8 @@ public class UserService {
             // send sms token to user email and save in db
             smsUtil.sendSMS(user.getPhoneNumber(), token);
             return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (HttpMessageNotReadableException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InvalidDataAccessApiUsageException | TransientPropertyValueException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("organization with given id does not exist or organization is not provided", HttpStatus.NOT_ACCEPTABLE);
@@ -412,10 +408,5 @@ public class UserService {
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
     }
-
-
-
 }

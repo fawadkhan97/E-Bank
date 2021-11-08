@@ -3,6 +3,8 @@ package myapp.ebank.service;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.repository.LoanRepository;
 import myapp.ebank.util.DateTime;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class LoanService {
 
 
+    private static final Logger log = LogManager.getLogger(LoanService.class);
     final LoanRepository loanRepository;
 
     public LoanService(LoanRepository loanRepository) {
@@ -26,11 +29,9 @@ public class LoanService {
      * @return List of loans
      * @author Fawad khan
      */
-    // Get list of all loans
     public ResponseEntity<Object> listAllLoans() {
         try {
             List<Loans> loans = loanRepository.findAll();
-//            log.info("list of  loans fetch from db are ", loans);
             // check if list is empty
             if (loans.isEmpty()) {
                 return new ResponseEntity<>("  Loans are empty", HttpStatus.NOT_FOUND);
@@ -38,9 +39,9 @@ public class LoanService {
                 return new ResponseEntity<>(loans, HttpStatus.OK);
             }
         } catch (Exception e) {
-           /* log.error(
+            log.debug(
                     "some error has occurred trying to Fetch loans, in Class  LoanService and its function listAllLoan ",
-                    e.getMessage());*/
+                    e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("Loans could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -82,9 +83,9 @@ public class LoanService {
             return new ResponseEntity<>(loan, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-		/*	log.error(
-					"some error has occurred while trying to update loan,, in class loanService and its function updateloan ",
-					e.getMessage());*/
+            log.debug(
+                    "some error has occurred while trying to update loan,, in class loanService and its function updateloan ",
+                    e.getMessage());
             return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -103,13 +104,13 @@ public class LoanService {
 
                 loanRepository.deleteById(id);
 
-                return new ResponseEntity<>("SMS: Loans deleted successfully", HttpStatus.OK);
+                return new ResponseEntity<>("Loans deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("SMS: Loans does not exists ", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Loans does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-		/*	log.error(
-					"some error has occurred while trying to Delete loan,, in class loanService and its function deleteloan ",
-					e.getMessage(), e.getCause(), e);*/
+            log.debug(
+                    "some error has occurred while trying to Delete loan,, in class loanService and its function deleteloan ",
+                    e.getMessage(), e.getCause(), e);
             return new ResponseEntity<>("Loans could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

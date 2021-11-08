@@ -117,7 +117,7 @@ public class KiborController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ExceptionHandling.handleMethodArgumentNotValid(ex);
     }
 

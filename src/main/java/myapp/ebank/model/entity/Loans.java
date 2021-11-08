@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +16,7 @@ public class Loans implements Serializable {
     @Id
     @GeneratedValue
     private long id;
+    @NotBlank(message = "loanAmount is mandatory")
     @Column(name = "loanAmount")
     private Double loanAmount;
     @Column(name = "description")

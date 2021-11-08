@@ -1,21 +1,23 @@
 package myapp.ebank.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import myapp.ebank.model.entity.Currencies;
+import myapp.ebank.repository.CurrencyRepository;
 import myapp.ebank.util.DateTime;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import myapp.ebank.model.entity.Currencies;
-import myapp.ebank.repository.CurrencyRepository;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrencyService {
 
+    private static final Logger log = LogManager.getLogger(CurrencyService.class);
     final FeignPoliceRecordService feignPoliceRecordService;
     private final CurrencyRepository currencyRepository;
 
@@ -32,9 +34,9 @@ public class CurrencyService {
     public ResponseEntity<Object> getAllCurrencies() {
         try {
 
+            //check police record from e-police using feign client
        /*     String currency = feignPoliceRecordService.getByid(1);
-            System.out.println("currency is " + currency);
-*/
+            System.out.println("currency is " + currency);*/
             List<Currencies> issuedCurrencies = currencyRepository.findAllByisActive(true);
             // check if list is empty
             if (issuedCurrencies.isEmpty()) {
@@ -42,9 +44,9 @@ public class CurrencyService {
             } else
                 return new ResponseEntity<>(issuedCurrencies, HttpStatus.OK);
         } catch (Exception e) {
-            // TODO: handle exception
             System.out.println("error occurred is ..." + e.getCause() + "  " + e.getMessage());
-
+            log.debug(
+                    "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies ", e.getMessage());
             return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -61,19 +63,19 @@ public class CurrencyService {
             Date date = DateTime.getDateTime();
             currency.setIssuedDate(date);
             currency.setIsActive(true);
+            currency.setUpdatedDate(null);
             // save currency to db
             currencyRepository.save(currency);
             return new ResponseEntity<>(currency, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>(" Data already exists ..or.. Some Data field maybe missing , ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            /*
-             * log.error(
-             * "some error has occurred while trying to save currency,, in class CurrencyService and its function saveCurrency "
-             * , e.getMessage());
-             */
+
+            log.error("some error has occurred while trying to save currency,, in class CurrencyService and its function saveCurrency "
+                    , e.getMessage());
+
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("currency could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -94,12 +96,12 @@ public class CurrencyService {
             return new ResponseEntity<>(currency, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            /*
-             * log.error(
-             * "some error has occurred while trying to update currency,, in class CurrencyService and its function updateCurrency "
-             * , e.getMessage());
-             */
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+
+            log.error(
+                    "some error has occurred while trying to update currency,, in class CurrencyService and its function updateCurrency "
+                    , e.getMessage());
+
+            return new ResponseEntity<>("currency could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -125,11 +127,11 @@ public class CurrencyService {
             } else
                 return new ResponseEntity<>("  Currency does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            /*
-             * log.error(
-             * "some error has occurred while trying to Delete currency,, in class CurrencyService and its function deleteCurrency "
-             * , e.getMessage(), e.getCause(), e);
-             */
+
+              log.error(
+              "some error has occurred while trying to Delete currency,, in class CurrencyService and its function deleteCurrency "
+              , e.getMessage(), e.getCause(), e);
+
             return new ResponseEntity<>("Currency could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

@@ -27,7 +27,7 @@ public class DebtSummary implements Serializable {
     @Column(name = "commodityOperationAndPSEDebt")
     private Double commodityOperationAndPSEDebt;
     @Column(name = "FiscalYear")
-    private Double fiscalYear;
+    private java.sql.Date fiscalYear;
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")

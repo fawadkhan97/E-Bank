@@ -103,7 +103,7 @@ public class RoleController {
 
     /**
      * @param authValue
-     * @param categories
+     * @param roles
      * @author fawad khan
      * @createdDate 31-oct-2021
      */
@@ -137,7 +137,7 @@ public class RoleController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ExceptionHandling.handleMethodArgumentNotValid(ex);
     }
 }

@@ -3,6 +3,8 @@ package myapp.ebank.service;
 import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
 import myapp.ebank.util.SqlDate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @Service
 public class NationalReservesService {
 
+    private static final Logger log = LogManager.getLogger(NationalReservesService.class);
     NationalReservesRepository nationalReservesRepository;
 
     public NationalReservesService(NationalReservesRepository nationalReservesRepository) {
@@ -34,10 +37,12 @@ public class NationalReservesService {
                 System.out.println("Reserves are  " + nationalReserves.get().getForeignReserves());
                 return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
             } else
-                return new ResponseEntity<>("Could not get today s  ...", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
+            log.debug(
+                    "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function get dailynational reserves ", e.getMessage());
             return new ResponseEntity<>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -61,30 +66,12 @@ public class NationalReservesService {
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("some error has occured " + e.getCause());
+            log.debug(
+                    "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreserves by date ", e.getMessage());
+
             return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-    }
-
-
-    /**
-     * get nationalReserves Rate for specific Date
-     *
-     * @param date
-     * @return
-     */
-    public ResponseEntity<Object> getNationalReservesRateByDate(Date date) {
-        try {
-            Optional<NationalReserves> NationalReserves = nationalReservesRepository.findByDateLike(date);
-            if (NationalReserves.isPresent()) {
-                return new ResponseEntity<>(NationalReserves, HttpStatus.OK);
-            } else
-                return new ResponseEntity<>("Could not get today  ...", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("some error has occured " + e.getCause());
-            return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -102,7 +89,8 @@ public class NationalReservesService {
             } else
                 return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            // TODO: handle exception
+            log.debug(
+                    "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreservesbystartingdate ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -123,7 +111,9 @@ public class NationalReservesService {
             } else
                 return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            // TODO: handle exception
+            log.debug(
+                    "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreserves between dates ", e.getMessage());
+
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -138,13 +128,16 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> addNationalReserves(NationalReserves nationalReserves) {
         try {
+            Date currentDate = SqlDate.getDateInSqlFormat();
+            nationalReserves.setUpdatedDate(currentDate);
             nationalReservesRepository.save(nationalReserves);
-            return new ResponseEntity<Object>(nationalReserves, HttpStatus.OK);
+            return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            // TODO: handle exception
+            log.debug(
+                    "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function add nationalreserves ", e.getMessage());
             System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -152,22 +145,22 @@ public class NationalReservesService {
     }
 
     /**
-     * @param nationalReserve
+     * @param nationalReserves
      * @return
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> updateNationalReserves(NationalReserves nationalReserve) {
+    public ResponseEntity<Object> updateNationalReserves(NationalReserves nationalReserves) {
         try {
-
-            nationalReservesRepository.save(nationalReserve);
-            nationalReserve.toString();
-            return new ResponseEntity<>(nationalReserve, HttpStatus.OK);
+            Date currentDate = SqlDate.getDateInSqlFormat();
+            nationalReserves.setUpdatedDate(currentDate);
+            nationalReservesRepository.save(nationalReserves);
+            return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-          /*  log.error(
+            log.debug(
                     "some error has occurred while trying to update nationalReserve,, in class NationalReservesService and its function updateNationalReserves ",
-                    e.getMessage());*/
+                    e.getMessage());
             return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -183,13 +176,13 @@ public class NationalReservesService {
             Optional<NationalReserves> nationalReserve = nationalReservesRepository.findById(id);
             if (nationalReserve.isPresent()) {
                 nationalReservesRepository.save(nationalReserve.get());
-                return new ResponseEntity<>("SMS: NationalReserves deleted successfully", HttpStatus.OK);
+                return new ResponseEntity<>(" NationalReserves deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("SMS: NationalReserves does not exists ", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(" NationalReserves does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-       /*     log.error(
+       log.debug(
                     "some error has occurred while trying to Delete nationalReserve,, in class NationalReservesService and its function deleteNationalReserves ",
-                    e.getMessage(), e.getCause());*/
+                    e.getMessage(), e.getCause());
             return new ResponseEntity<>("NationalReserves could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

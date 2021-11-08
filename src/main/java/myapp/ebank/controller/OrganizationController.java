@@ -4,21 +4,20 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Organizations;
 import myapp.ebank.service.OrganizationService;
 import myapp.ebank.util.ExceptionHandling;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/organization")
 public class OrganizationController {
     private static final String defaultAuthValue = "12345";
+    private static final Logger log = LogManager.getLogger(OrganizationController.class);
     OrganizationService organizationService;
 
     public OrganizationController(OrganizationService organizationService) {
@@ -130,7 +129,7 @@ public class OrganizationController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class,IllegalStateException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         return ExceptionHandling.handleMethodArgumentNotValid(ex);
     }
 
