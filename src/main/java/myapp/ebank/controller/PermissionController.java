@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.Permissions;
 import myapp.ebank.service.PermissionService;
 import myapp.ebank.util.ExceptionHandling;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +19,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/permission")
 public class PermissionController {
-    private static final String defaultAuthValue = "permission12345";
+    private static final String defaultAuthValue = "12345";
     final private PermissionService permissionService;
-    //  private static final Logger log = LogManager.getLogger(PermissionService.class);
+      private static final Logger log = LogManager.getLogger(PermissionService.class);
 
     public PermissionController(PermissionService permissionService) {
         this.permissionService = permissionService;
@@ -49,7 +51,7 @@ public class PermissionController {
             if (authorize(authValue)) {
                 return permissionService.getAllPermission();
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -69,7 +71,7 @@ public class PermissionController {
             if (authorize(authValue)) {
                 return permissionService.getPermissionById(id);
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -89,7 +91,7 @@ public class PermissionController {
             if (authorize(authValue)) {
                 return permissionService.savePermission(permissions);
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -109,7 +111,7 @@ public class PermissionController {
             if (authorize(authValue)) {
                 return permissionService.updatePermission(permission);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }
@@ -128,7 +130,7 @@ public class PermissionController {
             if (authorize(authValue)) {
                 return permissionService.deletePermission(id);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }

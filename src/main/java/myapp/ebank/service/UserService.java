@@ -83,13 +83,14 @@ public class UserService {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent() && user.get().isActive()) {
                 // check if user is verified
-                //              log.info("user fetch and found from db by id  : ", user.toString());
+                log.info("user fetch and found from db by id  : ", user.toString());
                 return new ResponseEntity<>(user, HttpStatus.FOUND);
-            } else
-//                log.info("no user found with id:", user.get().getId());
+            } else {
+                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
-           log.error(
+            log.error(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -109,7 +110,7 @@ public class UserService {
     public ResponseEntity<Object> getUserByNameAndPassword(String userName, String password) {
         try {
             Optional<Users> user = userRepository.findByUserNameAndPassword(userName, password);
-            if (user.isPresent())
+            if (user.isPresent() && user.get().isActive())
                 return new ResponseEntity<>("login success", HttpStatus.OK);
             else
                 return new ResponseEntity<>("incorrect login details, Login failed", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -327,6 +328,7 @@ public class UserService {
 //                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
+            log.info("an error has occured in userService method apply for loan", e.getMessage());
             System.out.println("error is : " + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -337,48 +339,39 @@ public class UserService {
         boolean findLoanById = false;
         try {
             Optional<Users> user = userRepository.findById(id);
-
-            if (user.isPresent() && user.get().isActive()) {
+            Optional<Loans> fetchUserLoans = loanRepository.findById(loan.getId());
+            if (user.isPresent() && user.get().isActive() && fetchUserLoans.isPresent()) {
                 List<Loans> loansList = new ArrayList<>(user.get().getLoans());
-
                 for (Loans loan1 : loansList) {
                     // check if user contain  the loan specified
-                    if (loan1.getId() != loan.getId()) {
-                        findLoanById = false;
-                    }
-                    //check if loan exist and has not been already paid
-                    else if (loan1.getId() == loan.getId() && Boolean.TRUE.equals(loan1.getPaidStatus())) {
-                        return new ResponseEntity<>("loan is already paid", HttpStatus.CONFLICT);
-                    } else {
-                        // check if amount paid is same as amount to be paid
+                    if (loan1.getId() == loan.getId() && !loan1.getPaidStatus()) {
                         double paidAmount = loan.getAmountPaid() - loan1.getTotalAmountToBePaid();
                         if (paidAmount > 0 || paidAmount < 0) {
                             return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
                         }
-                        // log.info("user fetch and found from db by id  : ", user.toString());
                         if (Objects.equals(loan.getAmountPaid(), loan1.getTotalAmountToBePaid())) {
                             loan1.setPaidStatus(true);
                             loan1.setAmountPaid(loan.getAmountPaid());
+                            loanRepository.save(loan1);
+                            return new ResponseEntity<>("loan paid successfully", HttpStatus.OK);
                         }
-                        findLoanById = true;
-                    }
-                }
-                if (!findLoanById) {
-                    return new ResponseEntity<>("no loans with given id found for user", HttpStatus.NOT_FOUND);
-                }
 
-                user.get().setLoans(loansList);
-                userRepository.save(user.get());
-                return new ResponseEntity<>("loan paid successfully", HttpStatus.OK);
-            } else {
-//                log.info("no user found with id:", user.get().getId());
-                return new ResponseEntity<>("could not found any record with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+                    } else
+                        return new ResponseEntity<>("loan could not be paid..it  has been paid already", HttpStatus.BAD_REQUEST);
+                }
+            } else if (fetchUserLoans.isEmpty()) {
+                return new ResponseEntity<>("loans does not exist for given id", HttpStatus.BAD_REQUEST);
             }
-        } catch (Exception e) {
+            return new ResponseEntity<>("could not found any user record with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+
+        } catch (
+                Exception e) {
+            log.info("an error has occured in userService method depositLoan", e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("Unable to approved loan, an error has occurred",
+            return new ResponseEntity<>("Unable to deposit loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     /**
@@ -392,7 +385,6 @@ public class UserService {
 
             if (user.isPresent() && user.get().isActive()) {
                 // check if user is  verified
-                // log.info("user fetch and found from db by id  : ", user.toString());
                 if (user.get().getOrganization().getType().equalsIgnoreCase("government")) {
                     List<Funds> fundsList = new ArrayList<>(user.get().getFunds());
                     user.get().setFunds(fundsList);
@@ -401,7 +393,6 @@ public class UserService {
                     return new ResponseEntity<>("only government departments can apply for funds", HttpStatus.METHOD_NOT_ALLOWED);
                 return new ResponseEntity<>(funds, HttpStatus.OK);
             } else
-//                log.info("no user found with id:", user.get().getId());
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());

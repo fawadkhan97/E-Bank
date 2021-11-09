@@ -1,6 +1,5 @@
 package myapp.ebank.service;
 
-import myapp.ebank.controller.UserController;
 import myapp.ebank.model.entity.Organizations;
 import myapp.ebank.repository.OrganizationRepository;
 import myapp.ebank.util.DateTime;
@@ -15,8 +14,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 @Service
 public class OrganizationService {
     final private OrganizationRepository organizationRepository;
@@ -65,10 +63,10 @@ public class OrganizationService {
         try {
             Optional<Organizations> organization = organizationRepository.findById(id);
             if (organization.isPresent()) {
-//                log.info("organization fetch and found from db by id  : ", organization.toString());
+               log.info("organization fetch and found from db by id  : ", organization.toString());
                 return new ResponseEntity<>(organization, HttpStatus.FOUND);
             } else {
-//                log.info("no organization found with id:", organization.get().getId());
+                log.info("no organization found with id:", organization.get().getId());
                 return new ResponseEntity<>("could not found organization with given details....", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
@@ -105,7 +103,7 @@ public class OrganizationService {
                     "some error has occurred while trying to save organization,, in class OrganizationService and its function saveOrganization ",
                     e.getMessage());
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("organization could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -129,7 +127,7 @@ public class OrganizationService {
             log.error(
                     "some error has occurred while trying to update organization,, in class OrganizationService and its function updateOrganization ",
                     e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("organization could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

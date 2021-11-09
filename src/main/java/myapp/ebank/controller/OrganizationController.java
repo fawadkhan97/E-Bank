@@ -85,7 +85,7 @@ public class OrganizationController {
         if (authorize(authValue)) {
             return organizationService.getOrganizationById(id);
         } else {
-            return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -102,7 +102,7 @@ public class OrganizationController {
             if (authorize(authValue)) {
                 return organizationService.updateOrganization(organization);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }
@@ -121,7 +121,7 @@ public class OrganizationController {
             if (authorize(authValue)) {
                 return organizationService.deleteOrganization(id);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>("  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }

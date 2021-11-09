@@ -43,11 +43,6 @@ public class CurrencyController {
         return currencyService.getAllCurrencies();
     }
 
-    @GetMapping("/bank")
-    public String bankFiegn() {
-		System.out.println("Bank service use by 3rt party");
-        return "you have reach e-bank...";
-    }
 
     /**
      * @param authValue

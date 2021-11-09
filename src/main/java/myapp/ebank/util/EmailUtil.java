@@ -16,7 +16,7 @@ public class EmailUtil {
 	@Autowired
 	final private JavaMailSender javaMailSender;
 
-	private final String body = " A new account was created using your email ,  please enter following code to verify: ";
+	private final String body = " A new account was created using your email on e- bank app,  please enter following code to verify: ";
 	private final String subject = " User verification email";
 
 	public EmailUtil(JavaMailSender javaMailSender) {

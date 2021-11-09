@@ -81,9 +81,9 @@ public class FundService {
             } else
                 return new ResponseEntity<>("SMS: Funds does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-		/*	log.error(
+			log.error(
 					"some error has occurred while trying to Delete fund,, in class fundService and its function deletefund ",
-					e.getMessage(), e.getCause(), e);*/
+					e.getMessage(), e.getCause(), e);
             return new ResponseEntity<>("Funds could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

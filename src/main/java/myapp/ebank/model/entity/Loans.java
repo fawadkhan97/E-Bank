@@ -16,10 +16,9 @@ public class Loans implements Serializable {
     @Id
     @GeneratedValue
     private long id;
-    @NotBlank(message = "loanAmount is mandatory")
-    @Column(name = "loanAmount")
-    private Double loanAmount;
-    @Column(name = "description")
+    @Column(name = "loanAmount",nullable = false)
+    private int loanAmount;
+    @Column(name = "description",nullable = false)
     private String description;
     @Column(name = "paidstatus")
     private Boolean paidStatus;

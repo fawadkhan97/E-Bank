@@ -22,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    private static final String defaultAuthValue = "role12345";
+    private static final String defaultAuthValue = "12345";
     final private RoleService roleService;
 
     public RoleController(RoleService roleService) {
@@ -52,7 +52,7 @@ public class RoleController {
             if (authorize(authValue)) {
                 return roleService.getAllRoles();
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -72,7 +72,7 @@ public class RoleController {
             if (authorize(authValue)) {
                 return roleService.getRoleById(id);
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -114,7 +114,7 @@ public class RoleController {
         if (authorize(authValue)) {
             return roleService.updateRole(roles);
         } else
-            return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -129,7 +129,7 @@ public class RoleController {
             if (authorize(authValue)) {
                 return roleService.deleteRole(id);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }

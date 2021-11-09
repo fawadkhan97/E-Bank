@@ -135,7 +135,7 @@ public class UserController {
             if (authorize(authValue)) {
                 return userService.getUserById(id);
             } else {
-                return new ResponseEntity<>("SMS: Not authorize", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(": Not authorize", HttpStatus.UNAUTHORIZED);
             }
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
@@ -155,7 +155,7 @@ public class UserController {
             if (authorize(authValue)) {
                 return userService.updateUser(user);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }

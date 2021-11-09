@@ -132,7 +132,7 @@ public class NationalReserveController {
             if (authorize(authValue)) {
                 return nationalReservesService.updateNationalReserves(nationalreserves);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }
@@ -151,7 +151,7 @@ public class NationalReserveController {
             if (authorize(authValue)) {
                 return nationalReservesService.deleteNationalReserves(id);
             } else
-                return new ResponseEntity<>("SMS:  not authorize ", HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(":  not authorize ", HttpStatus.UNAUTHORIZED);
         } else {
             return new ResponseEntity<>("Incorrect authorization key ", HttpStatus.UNAUTHORIZED);
         }

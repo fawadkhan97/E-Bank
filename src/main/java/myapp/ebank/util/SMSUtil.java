@@ -13,7 +13,8 @@ public class SMSUtil {
 	private final String AUTH_TOKEN = "f63225ead31f36015a3d834897fa8606";
 
 	private final String FROM_NUMBER = "+13158402662";
-	private final String sms = "otp is : ";
+	private final String sms = "user account using your phone number was created at at e-bank app if it was you please enter otp to verify " +
+			"otp is : ";
 	/**
 	 * @author fawad khan
 	 * @createdDate 11-oct-2021
