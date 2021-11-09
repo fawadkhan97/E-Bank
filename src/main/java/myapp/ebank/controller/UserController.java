@@ -18,8 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/user")
@@ -176,7 +175,12 @@ public class UserController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
-
+    /**
+     * @param authValue
+     * @param userid
+     * @param loan
+     * @return
+     */
     @PostMapping("/{userid}/applyForLoan")
     public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan) {
         if (authorize(authValue)) {
@@ -185,6 +189,12 @@ public class UserController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * @param authValue
+     * @param userid
+     * @param loan
+     * @return
+     */
     @PostMapping("/{userid}/depositLoan")
     public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan) {
         if (authorize(authValue)) {
@@ -194,6 +204,12 @@ public class UserController {
 
     }
 
+    /**
+     * @param authValue
+     * @param userid
+     * @param funds
+     * @return
+     */
     @PostMapping("/{userid}/applyForFunds")
     public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds) {
         if (authorize(authValue)) {
@@ -201,6 +217,20 @@ public class UserController {
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
+
+    /**
+     * @param authValue
+     * @param userid
+     * @return
+     */
+    @GetMapping("/{userid}/getFundsAndLoans")
+    public ResponseEntity<Object> getUserFundsAndLoans(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid) {
+        if (authorize(authValue)) {
+            return userService.getUserFundsAndLoans(userid);
+        } else
+            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
+    }
+
 
     // handle input exceptions
     @ResponseStatus(HttpStatus.BAD_REQUEST)

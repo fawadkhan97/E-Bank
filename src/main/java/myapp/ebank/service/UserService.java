@@ -1,5 +1,6 @@
 package myapp.ebank.service;
 
+import myapp.ebank.model.dto.UserFundsAndLoans;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
@@ -90,7 +91,7 @@ public class UserService {
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.error(
+            log.debug(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -117,7 +118,7 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            log.error(
+            log.debug(
                     "some error has occurred during fetching Users by username , in class UserService and its function getUserByName ",
                     e.getMessage());
             return new ResponseEntity<>("Unable to Login either password or username might be incorrect",
@@ -164,7 +165,7 @@ public class UserService {
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists   ", HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            log.error(
+            log.debug(
                     "some error has occurred while trying to save user,, in class UserService and its function saveUser ",
                     e.getMessage());
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
@@ -189,7 +190,7 @@ public class UserService {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-          /*  log.error(
+          /*  log.debug(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser ",
                     e.getMessage());*/
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -218,7 +219,7 @@ public class UserService {
             } else
                 return new ResponseEntity<>(" : Users does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+            log.debug(
                     "some error has occurred while trying to Delete user,, in class UserService and its function deleteUser ",
                     e.getMessage(), e.getCause(), e);
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -282,7 +283,7 @@ public class UserService {
                 return new ResponseEntity<>("user not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            /*log.error(
+            /*log.debug(
                     "some error has occurred during fetching User by id , in class UserService and its function sendSms ",
                     e.getMessage());*/
             System.out.println(e.getMessage() + e.getCause());
@@ -317,6 +318,7 @@ public class UserService {
                 loan.setDueDate(DateTime.getDueDate(5));
                 loan.setAmountPaid(0.0);
                 loan.setPaidStatus(false);
+                loan.setPaidDate(null);
 
                 loans.add(loan);
                 user.get().setLoans(loans);
@@ -352,17 +354,17 @@ public class UserService {
                         if (Objects.equals(loan.getAmountPaid(), loan1.getTotalAmountToBePaid())) {
                             loan1.setPaidStatus(true);
                             loan1.setAmountPaid(loan.getAmountPaid());
+                            loan1.setPaidDate(DateTime.getDateTime());
                             loanRepository.save(loan1);
                             return new ResponseEntity<>("loan paid successfully", HttpStatus.OK);
                         }
-
                     } else
-                        return new ResponseEntity<>("loan could not be paid..it  has been paid already", HttpStatus.BAD_REQUEST);
+                        return new ResponseEntity<>("loan could not be paid..it may have been paid already", HttpStatus.BAD_REQUEST);
                 }
             } else if (fetchUserLoans.isEmpty()) {
                 return new ResponseEntity<>("loans does not exist for given id", HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>("could not found any user record with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("could not found any user record with given details.... user may not be verified", HttpStatus.BAD_REQUEST);
 
         } catch (
                 Exception e) {
@@ -398,6 +400,34 @@ public class UserService {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    public ResponseEntity<Object> getUserFundsAndLoans(Long id) {
+        try {
+            Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
+            if (user.isPresent()) {
+                // save chats and categories from user object
+                UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();
+                userFundsAndLoans.setFunds(user.get().getFunds());
+                userFundsAndLoans.setLoans(user.get().getLoans());
+                log.info("user chats and categories from db by id  : ", user.get().getId());
+
+                return new ResponseEntity<>(userFundsAndLoans, HttpStatus.OK);
+            } else return new ResponseEntity<>("user may not exists for given id", HttpStatus.NOT_FOUND);
+
+
+        } catch (Exception e) {
+            log.debug(
+                    "some error has occurred during fetching User by id , in class UserService and its function getUserFundsAndLoans ",
+                    e.getMessage());
+            System.out.println(e.getMessage() + " " + e.getCause());
+            return new ResponseEntity<>("Unable to find User, an error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 }

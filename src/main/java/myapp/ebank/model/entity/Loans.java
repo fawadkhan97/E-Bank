@@ -34,5 +34,6 @@ public class Loans implements Serializable {
     private Double amountPaid;
     @Column(name = "updatedDate")
     private Date updatedDate;
-
+    @Column(name = "paidDate")
+    private Date paidDate;
 }

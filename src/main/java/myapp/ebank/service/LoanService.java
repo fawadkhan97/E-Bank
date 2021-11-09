@@ -56,6 +56,7 @@ public class LoanService {
      */
     public ResponseEntity<Object> addLoan(Loans loans) {
         try {
+            loans.setDate(DateTime.getDateTime());
             loanRepository.save(loans);
             return new ResponseEntity<>(loans, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
