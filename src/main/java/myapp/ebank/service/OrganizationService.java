@@ -127,7 +127,7 @@ public class OrganizationService {
             log.error(
                     "some error has occurred while trying to update organization,, in class OrganizationService and its function updateOrganization ",
                     e.getMessage());
-            return new ResponseEntity<>("organization could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("organization could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

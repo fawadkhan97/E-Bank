@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -24,10 +25,10 @@ public class ForeignExchangeRates implements Serializable {
     @NotBlank(message = "symbol is mandatory")
     @Column(name = "symbol")
     private String symbol;
-    @NotBlank(message = "buying rate is mandatory")
+    @NotNull(message = "buying rate is mandatory")
     @Column(name = "buying")
     private Double buying;
-    @NotBlank(message = "selling rate is mandatory")
+    @NotNull(message = "selling rate is mandatory")
     @Column(name = "selling")
     private Double selling;
     @Column(name = "date")

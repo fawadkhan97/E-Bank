@@ -10,14 +10,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/nationalReserves")
+@Validated
 public class NationalReserveController {
 
     private static final String defaultAuthValue = "nationalreserves12345";
@@ -106,7 +111,7 @@ public class NationalReserveController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addNationalReserves(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                                      @RequestBody NationalReserves nationalreserves) {
+                                                     @Valid @RequestBody NationalReserves nationalreserves) {
         // check authorization
         if (authValue != null) {
             if (authorize(authValue)) {
@@ -127,7 +132,7 @@ public class NationalReserveController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateNationalReserves(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                                         @RequestBody NationalReserves nationalreserves) {
+                                                       @Valid  @RequestBody NationalReserves nationalreserves) {
         if (authValue != null) {
             if (authorize(authValue)) {
                 return nationalReservesService.updateNationalReserves(nationalreserves);
@@ -158,8 +163,14 @@ public class NationalReserveController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ExceptionHandling.handleMethodArgumentNotValid(ex);
-    }
-}
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+}}

@@ -10,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/foreignExchangeRates")
+@Validated
 public class ForeignExchangeRateController {
     private static final String defaultAuthValue = "12345";
     final ForeignExchangeRateService foreignExchangeRateService;
@@ -60,7 +63,9 @@ public class ForeignExchangeRateController {
     }
 
 
-    /** get foreign rates from start date to  current date
+    /**
+     * get foreign rates from start date to  current date
+     *
      * @param startDate
      * @return
      */
@@ -71,6 +76,7 @@ public class ForeignExchangeRateController {
 
     /**
      * get foreign rates from start date to  end date
+     *
      * @param startDate
      * @param endDate
      * @return
@@ -88,8 +94,12 @@ public class ForeignExchangeRateController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addForeignExchangeRate(@RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
-        return foreignExchangeRateService.addForeignExchangeRate(foreignExchangeRates);
+    public ResponseEntity<Object> addForeignExchangeRate(@RequestHeader(value = "Authorization") String authValue,
+                                                         @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
+        if (authorize(authValue)) {
+            return foreignExchangeRateService.addForeignExchangeRate(foreignExchangeRates);
+        } else
+            return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -100,7 +110,7 @@ public class ForeignExchangeRateController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateForeignExchangeRate(@RequestHeader(value = "Authorization") String authValue,
-                                                            @RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
+                                                            @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
         if (authorize(authValue)) {
             return foreignExchangeRateService.updateForeignExchangeRate(foreignExchangeRates);
         } else
@@ -124,8 +134,15 @@ public class ForeignExchangeRateController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ExceptionHandling.handleMethodArgumentNotValid(ex);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

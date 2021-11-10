@@ -2,6 +2,7 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.repository.InterestRatesRepository;
+import myapp.ebank.util.DateTime;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -145,6 +146,7 @@ public class InterestRateService {
      */
     public ResponseEntity<Object> updateInterestRate(InterestRates interestRate) {
         try {
+            interestRate.setUpdatedDate(DateTime.getDateTime());
             interestRatesRepository.save(interestRate);
             return new ResponseEntity<>(interestRate, HttpStatus.OK);
         } catch (Exception e) {
@@ -152,7 +154,7 @@ public class InterestRateService {
             log.debug(
                     "some error has occurred while trying to update interestRate,, in class interestRateService and its function updateinterestRate ",
                     e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("InterestRate could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

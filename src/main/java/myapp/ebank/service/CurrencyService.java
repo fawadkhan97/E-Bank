@@ -101,7 +101,7 @@ public class CurrencyService {
                     "some error has occurred while trying to update currency,, in class CurrencyService and its function updateCurrency "
                     , e.getMessage());
 
-            return new ResponseEntity<>("currency could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("currency could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

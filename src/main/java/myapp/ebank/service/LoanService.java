@@ -87,7 +87,7 @@ public class LoanService {
             log.debug(
                     "some error has occurred while trying to update loan,, in class loanService and its function updateloan ",
                     e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("Loans could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

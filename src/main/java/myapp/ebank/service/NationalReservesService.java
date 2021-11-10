@@ -139,7 +139,7 @@ public class NationalReservesService {
             log.debug(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function add nationalreserves ", e.getMessage());
             System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
-            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("some error has occured  while trying to add National Reserves", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -161,7 +161,7 @@ public class NationalReservesService {
             log.debug(
                     "some error has occurred while trying to update nationalReserve,, in class NationalReservesService and its function updateNationalReserves ",
                     e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("National Reserves could not be Updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

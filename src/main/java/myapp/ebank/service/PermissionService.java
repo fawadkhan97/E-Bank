@@ -87,7 +87,7 @@ public class PermissionService {
             }
             return new ResponseEntity<>(permissions, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Could not add new permission , Permission already exist or ", HttpStatus.OK);
+            return new ResponseEntity<>("Could not add new permission , Permission already exist or some data fields might be missing ", HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + " \n " + e.getCause());
             log.debug(
@@ -110,7 +110,6 @@ public class PermissionService {
 
                 permission.setUpdatedDate(DateTime.getDateTime());
                 permissionRepository.save(permission);
-                permission.toString();
             }
             return new ResponseEntity<>(permissions, HttpStatus.OK);
         } catch (Exception e) {

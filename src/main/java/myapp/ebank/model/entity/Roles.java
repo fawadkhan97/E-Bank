@@ -22,7 +22,7 @@ public class Roles implements Serializable {
     private Date UpdatedDate;
     private boolean isActive;
 
-    @ManyToMany(targetEntity = Permissions.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Permissions.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinTable(name = "roles_permission", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {
             @JoinColumn(name = "permission_id")})
     private List<Permissions> permissions = new ArrayList<>();

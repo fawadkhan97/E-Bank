@@ -118,7 +118,7 @@ public class RoleService {
             log.error(
                     "some error has occurred while trying to update role,, in class RoleService and its function updateRole ",
                     e.getMessage());
-            return new ResponseEntity<>("Categories could not be Updated , Data maybe incorrect",
+            return new ResponseEntity<>("Roles could not be Updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

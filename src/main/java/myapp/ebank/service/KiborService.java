@@ -2,6 +2,7 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.repository.KiborRepository;
+import myapp.ebank.util.DateTime;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -140,7 +141,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> updateKiborRate(KiborRates kiborRate) {
         try {
-
+kiborRate.setUpdatedDate(DateTime.getDateTime());
             kiborRatesRepository.save(kiborRate);
             return new ResponseEntity<>(kiborRate, HttpStatus.OK);
         } catch (Exception e) {
@@ -148,7 +149,7 @@ public class KiborService {
 			log.debug(
 					"some error has occurred while trying to update kiborRate,, in class kiborRateService and its function updatekiborRate ",
 					e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Kibor rates could not be updated , Data maybe incorrect", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,8 +17,9 @@ public class Loans implements Serializable {
     @Id
     @GeneratedValue
     private long id;
+    @NotNull(message = "amount cannot be blank ")
     @Column(name = "loanAmount",nullable = false)
-    private int loanAmount;
+    private Double loanAmount;
     @Column(name = "description",nullable = false)
     private String description;
     @Column(name = "paidstatus")

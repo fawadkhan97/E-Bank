@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -36,6 +37,8 @@ public class UserService {
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
     private final Double interestRate = 0.045;
+    private final Double loanAmount = 5000000.0;
+    private final Double fundAmount = 10000000.0;
     int unpaidLoanCount = 0;
     private Date expirationTime;
 
@@ -184,15 +187,20 @@ public class UserService {
     public ResponseEntity<Object> updateUser(Users user) {
         try {
 
-            user.setUpdatedDate(DateTime.getDateTime());
-            userRepository.save(user);
-            user.toString();
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            Optional<Users> user1 = userRepository.findById(user.getId());
+            if (user1.isPresent()) {
+
+                user.setUpdatedDate(DateTime.getDateTime());
+                user.setCreatedDate(user1.get().getCreatedDate());
+                userRepository.save(user);
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else return new ResponseEntity<>("user is not present id might be in correct", HttpStatus.NOT_FOUND);
+
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-          /*  log.debug(
+            log.debug(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser ",
-                    e.getMessage());*/
+                    e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -298,37 +306,40 @@ public class UserService {
      */
     public ResponseEntity<Object> applyForLoan(Long id, Loans loan) {
         try {
-            Optional<Users> user = userRepository.findById(id);
-            if (user.isPresent() && user.get().isActive()) {
-                List<Loans> loans = new ArrayList<>(user.get().getLoans());
-                if (!loans.isEmpty()) {
-                    for (Loans loan1 : loans) {
-                        if (!loan1.getPaidStatus()) {
-                            unpaidLoanCount += 1;
+            if (loan.getAmountPaid() < loanAmount) {
+                Optional<Users> user = userRepository.findById(id);
+                if (user.isPresent() && user.get().isActive()) {
+                    List<Loans> loans = new ArrayList<>(user.get().getLoans());
+                    if (!loans.isEmpty()) {
+                        for (Loans loan1 : loans) {
+                            if (!loan1.getPaidStatus()) {
+                                unpaidLoanCount += 1;
+                            }
+                        }
+                        if (unpaidLoanCount > 2) {
+                            return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
                         }
                     }
-                    if (unpaidLoanCount > 2) {
-                        return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
-                    }
-                }
-                // log.info("user fetch and found from db by id  : ", user.toString());
-                loan.setDate(DateTime.getDateTime());
-                loan.setInterestRate(interestRate);
-                loan.setTotalAmountToBePaid(loan.getLoanAmount() + (interestRate * loan.getLoanAmount()));
-                loan.setDueDate(DateTime.getDueDate(5));
-                loan.setAmountPaid(0.0);
-                loan.setPaidStatus(false);
-                loan.setPaidDate(null);
+                    // log.info("user fetch and found from db by id  : ", user.toString());
+                    loan.setDate(DateTime.getDateTime());
+                    loan.setInterestRate(interestRate);
+                    loan.setTotalAmountToBePaid(loan.getLoanAmount() + (interestRate * loan.getLoanAmount()));
+                    loan.setDueDate(DateTime.getDueDate(5));
+                    loan.setAmountPaid(0.0);
+                    loan.setPaidStatus(false);
+                    loan.setPaidDate(null);
 
-                loans.add(loan);
-                user.get().setLoans(loans);
-                // save loan to db first then save user
-                loanRepository.save(loan);
-                userRepository.save(user.get());
-                return new ResponseEntity<>(loan, HttpStatus.OK);
-            } else
+                    loans.add(loan);
+                    user.get().setLoans(loans);
+                    // save loan to db first then save user
+                    loanRepository.save(loan);
+                    userRepository.save(user.get());
+                    return new ResponseEntity<>(loan, HttpStatus.OK);
+                } else
 //                log.info("no user found with id:", user.get().getId());
-                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+            } else
+                return new ResponseEntity<>("maximum allowed limit of loan is {loanAMount} ", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.info("an error has occured in userService method apply for loan", e.getMessage());
             System.out.println("error is : " + e.getCause() + "  " + e.getMessage());
@@ -337,6 +348,11 @@ public class UserService {
         }
     }
 
+    /**
+     * @param id
+     * @param loan
+     * @return
+     */
     public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
         boolean findLoanById = false;
         try {
@@ -384,23 +400,34 @@ public class UserService {
     public ResponseEntity<Object> applyForFunds(Long id, Funds funds) {
         try {
             Optional<Users> user = userRepository.findById(id);
-
-            if (user.isPresent() && user.get().isActive()) {
+            if (user.isPresent() && user.get().isActive() && user.get().getOrganization().getType().equalsIgnoreCase("government")) {
                 // check if user is  verified
-                if (user.get().getOrganization().getType().equalsIgnoreCase("government")) {
-                    List<Funds> fundsList = new ArrayList<>(user.get().getFunds());
+                List<Funds> fundsList = new ArrayList<>(user.get().getFunds());
+                if (funds.getAmount() > fundAmount) {
+                    funds.setCreatedDate(DateTime.getDateTime());
+                    funds.setApprovedStatus(false);
+                    fundsList.add(funds);
                     user.get().setFunds(fundsList);
                     userRepository.save(user.get());
-                } else
-                    return new ResponseEntity<>("only government departments can apply for funds", HttpStatus.METHOD_NOT_ALLOWED);
-                return new ResponseEntity<>(funds, HttpStatus.OK);
+                    return new ResponseEntity<>("Funds requested has been received..it will be process and its status will be updated soon", HttpStatus.OK);
+                }
+                funds.setCreatedDate(DateTime.getDateTime());
+                funds.setApprovedStatus(true);
+                fundsList.add(funds);
+                user.get().setFunds(fundsList);
+                userRepository.save(user.get());
+                return new ResponseEntity<>("funds has been approved ", HttpStatus.OK);
+            } else if (!user.get().getOrganization().getType().equalsIgnoreCase("government")) {
+                return new ResponseEntity<>("only government departments can apply for funds", HttpStatus.METHOD_NOT_ALLOWED);
             } else
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
     /**
@@ -411,12 +438,10 @@ public class UserService {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
-                // save chats and categories from user object
+                // save Funds and Loans from user object
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();
                 userFundsAndLoans.setFunds(user.get().getFunds());
                 userFundsAndLoans.setLoans(user.get().getLoans());
-                log.info("user chats and categories from db by id  : ", user.get().getId());
-
                 return new ResponseEntity<>(userFundsAndLoans, HttpStatus.OK);
             } else return new ResponseEntity<>("user may not exists for given id", HttpStatus.NOT_FOUND);
 

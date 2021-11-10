@@ -9,14 +9,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/interestRate")
+@Validated
 public class InterestRateController {
     private static final String defaultAuthValue = "12345";
     InterestRateService interestRateService;
@@ -87,7 +92,8 @@ public class InterestRateController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addInterestRate(@RequestHeader(value = "Authorization") String authValue, @RequestBody InterestRates interestRates) {
+    public ResponseEntity<Object> addInterestRate(@RequestHeader(value = "Authorization") String authValue,
+                                                 @Valid @RequestBody InterestRates interestRates) {
         if (authorize(authValue)) {
             return interestRateService.addInterestRate(interestRates);
         } else
@@ -102,7 +108,7 @@ public class InterestRateController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                     @RequestBody InterestRates interestRate) {
+                                                    @Valid @RequestBody InterestRates interestRate) {
         if (authorize(authValue)) {
             return interestRateService.updateInterestRate(interestRate);
         } else
@@ -126,8 +132,14 @@ public class InterestRateController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ExceptionHandling.handleMethodArgumentNotValid(ex);
-    }
-}
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+}}

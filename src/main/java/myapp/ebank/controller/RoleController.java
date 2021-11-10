@@ -9,9 +9,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +25,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/role")
+@Validated
 public class RoleController {
     private static final String defaultAuthValue = "12345";
     final private RoleService roleService;
@@ -87,7 +92,7 @@ public class RoleController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> saveRole(@RequestHeader(required = false, value = "Authorization") String authValue,
-                                           @RequestBody Roles role) {
+                                         @Valid @RequestBody Roles role) {
 
         if (authValue != null) {
             if (authorize(authValue)) {
@@ -109,7 +114,7 @@ public class RoleController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateRole(@RequestHeader("Authorization") String authValue,
-                                             @RequestBody List<Roles> roles) {
+                                            @Valid @RequestBody List<Roles> roles) {
 
         if (authorize(authValue)) {
             return roleService.updateRole(roles);
@@ -136,8 +141,15 @@ public class RoleController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ExceptionHandling.handleMethodArgumentNotValid(ex);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

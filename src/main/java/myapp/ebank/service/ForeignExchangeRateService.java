@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
@@ -127,6 +128,9 @@ public class ForeignExchangeRateService {
      */
     public ResponseEntity<Object> addForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates) {
         try {
+            for (ForeignExchangeRates foreignExchangeRates1 : foreignExchangeRates) {
+                foreignExchangeRates1.setCreatedDate(DateTime.getDateTime());
+            }
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
             return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
@@ -135,6 +139,7 @@ public class ForeignExchangeRateService {
         } catch (Exception e) {
             log.debug(
                     "some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function get dailyexchange rates ", e.getMessage());
+            log.debug("Is rollbackOnly: " + TransactionAspectSupport.currentTransactionStatus().isRollbackOnly());
 
             System.out.println("error occurred .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -159,7 +164,7 @@ public class ForeignExchangeRateService {
             log.debug(
                     "some error has occurred while trying to update foreignExchangeRate,, in class foreignExchangeRateService and its function updateforeignExchangeRate ",
                     e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("Foreign exchanges rate could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

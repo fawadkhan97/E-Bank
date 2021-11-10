@@ -2,6 +2,7 @@ package myapp.ebank.service;
 
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.repository.FundRepository;
+import myapp.ebank.util.DateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,7 @@ public class FundService {
     public ResponseEntity<Object> updateFund(Funds fund) {
         try {
 
+            fund.setUpdatedDate(DateTime.getDateTime());
             fundRepository.save(fund);
             return new ResponseEntity<>(fund, HttpStatus.OK);
         } catch (Exception e) {
@@ -59,7 +61,7 @@ public class FundService {
 			log.error(
 					"some error has occurred while trying to update fund,, in class fundService and its function updatefund ",
 					e.getMessage());
-            return new ResponseEntity<>("Chats could not be added , Data maybe incorrect",
+            return new ResponseEntity<>("Funds could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
