@@ -19,6 +19,7 @@ public class Permissions {
 	@NotBlank(message = "role_name is mandatory")
 	@Column(unique = true, nullable = false)
 	private String name;
+	@Column(name = "isActive")
 	private boolean isActive;
 	@Column(name = "createdDate")
 	private Date createdDate;

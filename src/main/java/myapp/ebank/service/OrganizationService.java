@@ -17,8 +17,8 @@ import java.util.Optional;
 
 @Service
 public class OrganizationService {
-    final private OrganizationRepository organizationRepository;
     private static final Logger log = LogManager.getLogger(OrganizationService.class);
+    final private OrganizationRepository organizationRepository;
 
     // Autowiring through constructor
     public OrganizationService(OrganizationRepository organizationRepository) {
@@ -29,11 +29,10 @@ public class OrganizationService {
      * @return List of organizations
      * @author Fawad khan
      */
-    // Get list of all organizations
     public ResponseEntity<Object> listAllOrganization() {
         try {
 
-            List<Organizations> organizations = organizationRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
+            List<Organizations> organizations = organizationRepository.findAllByActiveOrderByCreatedDateDesc(true);
             /* log.info("list of  organizations fetch from db are ", organizations);*/
             // check if list is empty
             if (organizations.isEmpty()) {
@@ -53,17 +52,17 @@ public class OrganizationService {
     }
 
     /**
+     *  get organization by specific id
      * @param id
      * @return
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    // get organization by specific id
     public ResponseEntity<Object> getOrganizationById(Long id) {
         try {
-            Optional<Organizations> organization = organizationRepository.findById(id);
+            Optional<Organizations> organization = organizationRepository.findByIdAndActive(id, true);
             if (organization.isPresent()) {
-               log.info("organization fetch and found from db by id  : ", organization.toString());
+                log.info("organization fetch and found from db by id  : ", organization.toString());
                 return new ResponseEntity<>(organization, HttpStatus.FOUND);
             } else {
                 log.info("no organization found with id:", organization.get().getId());
@@ -91,7 +90,7 @@ public class OrganizationService {
         try {
             Date date = DateTime.getDateTime();
             organization.setCreatedDate(date);
-            organization.setIsActive(true);
+            organization.setActive(true);
             // save organization to db
             organizationRepository.save(organization);
             return new ResponseEntity<>(organization, HttpStatus.OK);
@@ -140,10 +139,10 @@ public class OrganizationService {
      */
     public ResponseEntity<Object> deleteOrganization(Long id) {
         try {
-            Optional<Organizations> organization = organizationRepository.findById(id);
+            Optional<Organizations> organization = organizationRepository.findByIdAndActive(id, true);
             if (organization.isPresent()) {
                 // set status false
-                organization.get().setIsActive(false);
+                organization.get().setActive(false);
                 // set updated date
                 Date date = DateTime.getDateTime();
                 organization.get().setUpdatedDate(date);
@@ -152,7 +151,7 @@ public class OrganizationService {
             } else
                 return new ResponseEntity<>(": Organizations does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-           log.error(
+            log.error(
                     "some error has occurred while trying to Delete organization,, in class OrganizationService and its function deleteOrganization ",
                     e.getMessage(), e.getCause(), e);
             return new ResponseEntity<>("Organizations could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -1,14 +1,10 @@
 package myapp.ebank.controller;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.service.KiborService;
-import myapp.ebank.util.ExceptionHandling;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -75,9 +71,29 @@ public class KiborController {
      * @return
      */
     @GetMapping("/getByDateBetween")
-    public ResponseEntity<Object> getKiborRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+    public ResponseEntity<Object> getKiborRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
+                                                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
         return kiborRatesService.getKiborRateBetweenDates(startDate, endDate);
     }
+
+    /**
+     * @param id
+     * @return kiborRate object
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Object> getKiborRate(@PathVariable Long id) {
+        return kiborRatesService.getKiborRatesById(id);
+    }
+
+
+    /**
+     * @return list of Kibor rates
+     */
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllKiborRates() {
+        return kiborRatesService.listAllKiborRates();
+    }
+
 
     /**
      * save kibor rate
@@ -119,7 +135,6 @@ public class KiborController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteKiborRate(@RequestHeader(value = "Authorization") String authValue,
                                                   @PathVariable Long id) {
-
         if (authorize(authValue)) {
             return kiborRatesService.deleteKiborRate(id);
         } else

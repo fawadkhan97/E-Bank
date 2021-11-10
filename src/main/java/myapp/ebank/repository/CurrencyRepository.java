@@ -1,16 +1,13 @@
 package myapp.ebank.repository;
 
-import java.sql.Date;
-import java.util.List;
-
-import myapp.ebank.model.entity.ForeignExchangeRates;
+import myapp.ebank.model.entity.Currencies;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import myapp.ebank.model.entity.Currencies;
+import java.util.List;
 
 @Repository
 public interface CurrencyRepository extends JpaRepository<Currencies, Long> {
-	List<Currencies> findAllByisActiveOrderByCreatedDateDesc(boolean status);
+    List<Currencies> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
+
 }

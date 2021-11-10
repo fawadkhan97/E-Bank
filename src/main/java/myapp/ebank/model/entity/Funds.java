@@ -29,4 +29,7 @@ public class Funds implements Serializable {
     private Date updatedDate;
     @Column(name = "aprrovedStatus")
     private Boolean approvedStatus;
+    @Column(name = "isActive")
+    private boolean isActive;
+
 }

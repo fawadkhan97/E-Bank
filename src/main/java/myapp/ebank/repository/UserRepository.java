@@ -14,9 +14,9 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     Optional<Users> findByIdAndToken(Long id, int token);
 
-    Optional<Users> findByIdAndIsActive(Long id,Boolean isActive);
+    Optional<Users> findByIdAndActive(Long id,Boolean isActive);
 
-    List<Users> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
+    List<Users> findAllByActiveOrderByCreatedDateDesc(boolean status);
 
 
 }

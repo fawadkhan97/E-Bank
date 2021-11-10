@@ -36,4 +36,7 @@ public class InterestRates implements Serializable {
     private Date createdDate;
     @Column(name = "updatedDate")
     private Date updatedDate;
+    @Column(name = "isActive")
+    private boolean isActive;
+
 }

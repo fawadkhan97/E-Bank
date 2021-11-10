@@ -31,10 +31,11 @@ public class ForeignExchangeRates implements Serializable {
     @NotNull(message = "selling rate is mandatory")
     @Column(name = "selling")
     private Double selling;
-    @Column(name = "date")
-    private Date date;
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")
     private Date updatedDate;
+    @Column(name = "isActive")
+    private boolean isActive;
+
 }

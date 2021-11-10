@@ -20,7 +20,8 @@ public class Organizations implements Serializable {
     private String name;
     @NotBlank(message = "organization type is mandatory")
     private String type;
-    private Boolean isActive;
+    @Column(name = "isActive")
+    private boolean isActive;
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")

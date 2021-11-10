@@ -55,10 +55,9 @@ public class UserService {
      * @return List of users
      * @author Fawad khan
      */
-    // Get list of all users
     public ResponseEntity<Object> listAllUser() {
         try {
-            List<Users> users = userRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
+            List<Users> users = userRepository.findAllByActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -81,11 +80,10 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    // get user by specific id
     public ResponseEntity<Object> getUserById(Long id) {
         try {
-            Optional<Users> user = userRepository.findById(id);
-            if (user.isPresent() && user.get().isActive()) {
+            Optional<Users> user = userRepository.findByIdAndActive(id,true);
+            if (user.isPresent()) {
                 // check if user is verified
                 log.info("user fetch and found from db by id  : ", user.toString());
                 return new ResponseEntity<>(user, HttpStatus.FOUND);
@@ -186,10 +184,8 @@ public class UserService {
      */
     public ResponseEntity<Object> updateUser(Users user) {
         try {
-
             Optional<Users> user1 = userRepository.findById(user.getId());
             if (user1.isPresent()) {
-
                 user.setUpdatedDate(DateTime.getDateTime());
                 user.setCreatedDate(user1.get().getCreatedDate());
                 userRepository.save(user);
@@ -215,12 +211,11 @@ public class UserService {
      */
     public ResponseEntity<Object> deleteUser(Long id) {
         try {
-            Optional<Users> user = userRepository.findById(id);
+            Optional<Users> user = userRepository.findByIdAndActive(id,true);
             if (user.isPresent()) {
                 // set status false
                 user.get().setActive(false);
                 // set updated date
-
                 user.get().setUpdatedDate(DateTime.getDateTime());
                 userRepository.save(user.get());
                 return new ResponseEntity<>(" : Users deleted successfully", HttpStatus.OK);
@@ -228,7 +223,7 @@ public class UserService {
                 return new ResponseEntity<>(" : Users does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.debug(
-                    "some error has occurred while trying to Delete user,, in class UserService and its function deleteUser ",
+                    "some error has occurred while trying to Delete user, in class UserService and its function deleteUser ",
                     e.getMessage(), e.getCause(), e);
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
 
@@ -341,7 +336,7 @@ public class UserService {
             } else
                 return new ResponseEntity<>("maximum allowed limit of loan is {loanAMount} ", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            log.info("an error has occured in userService method apply for loan", e.getMessage());
+            log.info("an error has occurred in userService method apply for loan", e.getMessage());
             System.out.println("error is : " + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("Unable to approved loan, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
@@ -354,7 +349,7 @@ public class UserService {
      * @return
      */
     public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
-        boolean findLoanById = false;
+
         try {
             Optional<Users> user = userRepository.findById(id);
             Optional<Loans> fetchUserLoans = loanRepository.findById(loan.getId());
@@ -436,7 +431,7 @@ public class UserService {
      */
     public ResponseEntity<Object> getUserFundsAndLoans(Long id) {
         try {
-            Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
+            Optional<Users> user = userRepository.findByIdAndActive(id, true);
             if (user.isPresent()) {
                 // save Funds and Loans from user object
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();

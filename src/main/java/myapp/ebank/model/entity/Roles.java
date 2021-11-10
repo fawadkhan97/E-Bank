@@ -20,6 +20,7 @@ public class Roles implements Serializable {
     private Date createdDate;
     @Column(name = "updatedDate")
     private Date updatedDate;
+    @Column(name = "isActive")
     private boolean isActive;
 
     @ManyToMany(targetEntity = Permissions.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

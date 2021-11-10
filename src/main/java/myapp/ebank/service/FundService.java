@@ -77,15 +77,21 @@ public class FundService {
             Optional<Funds> fund = fundRepository.findById(id);
             if (fund.isPresent()) {
 
+                // set status false
+                fund.get().setActive(false);
+                // set updated date
+                java.util.Date date = DateTime.getDateTime();
+                fund.get().setUpdatedDate(date);
+                fundRepository.save(fund.get());
                 fundRepository.deleteById(id);
 
-                return new ResponseEntity<>("SMS: Funds deleted successfully", HttpStatus.OK);
+                return new ResponseEntity<>(" Funds deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("SMS: Funds does not exists ", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(" Funds does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
 			log.error(
 					"some error has occurred while trying to Delete fund,, in class fundService and its function deletefund ",
-					e.getMessage(), e.getCause(), e);
+					e.getMessage(), e.getCause());
             return new ResponseEntity<>("Funds could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

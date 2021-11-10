@@ -1,15 +1,11 @@
 package myapp.ebank.controller;
 
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.service.NationalReservesService;
-import myapp.ebank.util.ExceptionHandling;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -95,8 +91,27 @@ public class NationalReserveController {
      * @return
      */
     @GetMapping("/getByDateBetween")
-    public ResponseEntity<Object> getNationalReservesRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+    public ResponseEntity<Object> getNationalReservesRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
+                                                                           @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
         return nationalReservesService.getNationalReservesRateBetweenDates(startDate, endDate);
+    }
+
+    /**
+     * @param id
+     * @return nationalReserves object
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Object> getNationalReserves(@PathVariable Long id) {
+        return nationalReservesService.getNationalReservesById(id);
+    }
+
+
+    /**
+     * @return list of national reservess
+     */
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllNationalReserves() {
+        return nationalReservesService.listAllNationalReserves();
     }
 
 
@@ -111,7 +126,7 @@ public class NationalReserveController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addNationalReserves(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                                     @Valid @RequestBody NationalReserves nationalreserves) {
+                                                      @Valid @RequestBody NationalReserves nationalreserves) {
         // check authorization
         if (authValue != null) {
             if (authorize(authValue)) {
@@ -132,7 +147,7 @@ public class NationalReserveController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateNationalReserves(@RequestHeader(value = "Authorization", required = false) String authValue,
-                                                       @Valid  @RequestBody NationalReserves nationalreserves) {
+                                                         @Valid @RequestBody NationalReserves nationalreserves) {
         if (authValue != null) {
             if (authorize(authValue)) {
                 return nationalReservesService.updateNationalReserves(nationalreserves);
@@ -173,4 +188,5 @@ public class NationalReserveController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-}}
+    }
+}

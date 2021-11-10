@@ -31,7 +31,7 @@ public class PermissionService {
     public ResponseEntity<Object> getAllPermission() {
 
         try {
-            List<Permissions> permissions = permissionRepository.findAllByIsActive(true);
+            List<Permissions> permissions = permissionRepository.findAllByActiveOrderByCreatedDateDesc(true);
             if (!permissions.isEmpty()) {
                 return new ResponseEntity<>(permissions, HttpStatus.OK);
             } else
@@ -107,7 +107,6 @@ public class PermissionService {
     public ResponseEntity<Object> updatePermission(List<Permissions> permissions) {
         try {
             for (Permissions permission : permissions) {
-
                 permission.setUpdatedDate(DateTime.getDateTime());
                 permissionRepository.save(permission);
             }
@@ -129,9 +128,8 @@ public class PermissionService {
      */
     public ResponseEntity<String> deletePermission(Long id) {
         try {
-            Optional<Permissions> permission = permissionRepository.findById(id);
+            Optional<Permissions> permission = permissionRepository.findByIdAndActive(id,true);
             if (permission.isPresent()) {
-
                 // set status false
                 permission.get().setActive(false);
                 // set updated date

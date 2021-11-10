@@ -19,12 +19,11 @@ public interface InterestRatesRepository extends JpaRepository<InterestRates, Lo
     @Query(value = "SELECT * FROM interest_rates where date like CONCAT(:date,'%')", nativeQuery = true)
     Optional<InterestRates> findByDateLike(Date date);
 
-    @Query(value = "SELECT * from interest_rates where date >= :startDate", nativeQuery = true)
+    @Query(value = "SELECT * from interest_rates where date >= :startDate order by date asc", nativeQuery = true)
     Optional<InterestRates> findByStartDate(java.util.Date startDate);
 
-    @Query(value = "SELECT * from interest_rates where date BETWEEN :startDate AND :endDate", nativeQuery = true)
-    Optional<InterestRates> findByStartAndEndDate(java.util.Date startDate, java.util.Date endDate);
+    List<InterestRates> findByCreatedDateBetweenOrderByCreatedDateDesc(java.util.Date startDate, java.util.Date endDate);
 
-    List<InterestRates> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
+    List<InterestRates> findAllByActiveOrderByCreatedDateDesc(boolean status);
 
 }

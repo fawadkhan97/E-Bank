@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,12 +58,12 @@ public class Users implements Serializable {
     private List<Loans> loans = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "organization_id",nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     private Organizations organization;
 
-    @ManyToMany(targetEntity = Roles.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_id",nullable = false)}, inverseJoinColumns = {
-            @JoinColumn(name = "roles_id",nullable = false)})
+    @ManyToMany(targetEntity = Roles.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_id", nullable = false)}, inverseJoinColumns = {
+            @JoinColumn(name = "roles_id", nullable = false)})
     private List<Roles> roles = new ArrayList<>();
 
 

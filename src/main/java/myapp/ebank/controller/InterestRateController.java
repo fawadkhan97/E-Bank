@@ -1,14 +1,10 @@
 package myapp.ebank.controller;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.service.InterestRateService;
-import myapp.ebank.util.ExceptionHandling;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,9 +77,31 @@ public class InterestRateController {
      * @return
      */
     @GetMapping("/getByDateBetween")
-    public ResponseEntity<Object> getInterestRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+    public ResponseEntity<Object> getInterestRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
+                                                                   @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
         return interestRateService.getInterestRateBetweenDates(startDate, endDate);
     }
+
+
+    /**
+     * @param id
+     * @return interestRate object
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Object> getInterestRate(@PathVariable Long id) {
+        return interestRateService.getInterestRatesById(id);
+    }
+
+
+    /**
+     * @return list of interest rates
+     */
+    @GetMapping("/all")
+    public ResponseEntity<Object> getAllInterestRates() {
+        return interestRateService.listAllInterestRates();
+    }
+
+
 
     /**
      * save interest rate
@@ -93,7 +111,7 @@ public class InterestRateController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                 @Valid @RequestBody InterestRates interestRates) {
+                                                  @Valid @RequestBody InterestRates interestRates) {
         if (authorize(authValue)) {
             return interestRateService.addInterestRate(interestRates);
         } else
@@ -108,7 +126,7 @@ public class InterestRateController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                    @Valid @RequestBody InterestRates interestRate) {
+                                                     @Valid @RequestBody InterestRates interestRate) {
         if (authorize(authValue)) {
             return interestRateService.updateInterestRate(interestRate);
         } else
@@ -142,4 +160,5 @@ public class InterestRateController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-}}
+    }
+}

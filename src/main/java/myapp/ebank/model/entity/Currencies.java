@@ -18,9 +18,9 @@ public class Currencies implements Serializable {
     @Id
     @GeneratedValue
     private long id;
-    @NotBlank(message = "currency value is mandatory")
+    @NotNull(message = "currency value is mandatory")
     @Column(name = "value", unique = true)
-    private String value;
+    private int value;
     @NotBlank(message = "currency dimensions is mandatory")
     @Column(name = "dimensions")
     private String dimensions;

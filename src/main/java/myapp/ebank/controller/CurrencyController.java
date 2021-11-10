@@ -1,14 +1,13 @@
 package myapp.ebank.controller;
 
+import myapp.ebank.model.entity.Currencies;
+import myapp.ebank.service.CurrencyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import myapp.ebank.model.entity.Currencies;
-import myapp.ebank.service.CurrencyService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ public class CurrencyController {
         return defaultAuthValue.equals(authValue);
     }
 
+
     /**
      * get all currency notes
      *
@@ -45,6 +45,16 @@ public class CurrencyController {
 
 
     /**
+     * @param id
+     * @return currency object
+     */
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Object> getCurrency(@PathVariable Long id) {
+        return currencyService.getCurrencyById(id);
+    }
+
+
+    /**
      * @param authValue
      * @param currency
      * @return added currency object
@@ -53,7 +63,7 @@ public class CurrencyController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addCurrencies(@RequestHeader(value = "Authorization") String authValue,
-                                               @Valid @RequestBody Currencies currency) {
+                                                @Valid @RequestBody Currencies currency) {
         // check authorization
         if (authorize(authValue)) {
             return currencyService.saveCurrency(currency);
@@ -69,7 +79,7 @@ public class CurrencyController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateCurrency(@RequestHeader(value = "Authorization") String authValue,
-                                               @Valid  @RequestBody Currencies currency) {
+                                                 @Valid @RequestBody Currencies currency) {
         if (authorize(authValue)) {
             return currencyService.updateCurrency(currency);
         } else

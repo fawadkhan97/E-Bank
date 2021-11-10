@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -100,9 +101,9 @@ public class InterestRateService {
      */
     public ResponseEntity<Object> getInterestRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
         try {
-            Optional<InterestRates> interestRate = interestRatesRepository.findByStartAndEndDate(startDate, endDate);
-            if (interestRate.isPresent()) {
-                return new ResponseEntity<>(interestRate, HttpStatus.OK);
+            List<InterestRates> interestRates = interestRatesRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate);
+            if (!interestRates.isEmpty()) {
+                return new ResponseEntity<>(interestRates, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get Interest rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -111,6 +112,59 @@ public class InterestRateService {
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * @return List ofinterestRates
+     * @author Fawad khan
+     */
+    public ResponseEntity<Object> listAllInterestRates() {
+        try {
+            List<InterestRates> interestRates = interestRatesRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            // check if list is empty
+            if (interestRates.isEmpty()) {
+                return new ResponseEntity<>("  InterestRates are empty", HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(interestRates, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            log.info("some error has occurred trying to FetchinterestRates, in Class  InterestRatesService and its function listAllInterestRates ");
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+
+            return new ResponseEntity<>("InterestRates could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /**
+     * fetch record by id
+     *
+     * @param id
+     * @return
+     * @author fawad khan
+     */
+    public ResponseEntity<Object> getInterestRatesById(Long id) {
+        try {
+            Optional<InterestRates> interestRate = interestRatesRepository.findById(id);
+            if (interestRate.isPresent() && interestRate.get().isActive()) {
+                // check ifinterestRate is verified
+                log.info("interestRate fetch and found from db by id  : ", interestRate.toString());
+                return new ResponseEntity<>(interestRate, HttpStatus.FOUND);
+            } else {
+                log.info("nointerestRate found with id:", interestRate.get().getId());
+                return new ResponseEntity<>("could not foundinterestRate with given details....interestRate may not be verified", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.debug(
+                    "some error has occurred during fetching InterestRates by id , in class InterestRatesService and its function getInterestRatesById ",
+                    e.getMessage());
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+
+            return new ResponseEntity<>("Unable to find InterestRates, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 
     /**
@@ -139,6 +193,8 @@ public class InterestRateService {
     }
 
     /**
+     * update record
+     *
      * @param interestRate
      * @return
      * @author fawad khan
@@ -160,6 +216,8 @@ public class InterestRateService {
     }
 
     /**
+     * delete record
+     *
      * @param id
      * @return
      * @author fawad khan
@@ -169,16 +227,19 @@ public class InterestRateService {
         try {
             Optional<InterestRates> interestRate = interestRatesRepository.findById(id);
             if (interestRate.isPresent()) {
-
-                interestRatesRepository.deleteById(id);
-
-                return new ResponseEntity<>("SMS: InterestRates deleted successfully", HttpStatus.OK);
+                // set status false
+                interestRate.get().setActive(false);
+                // set updated date
+                java.util.Date date = DateTime.getDateTime();
+                interestRate.get().setUpdatedDate(date);
+                interestRatesRepository.save(interestRate.get());
+                return new ResponseEntity<>("InterestRates deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>("SMS: InterestRates does not exists ", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("InterestRates does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.debug(
                     "some error has occurred while trying to Delete interestRate,, in class interestRateService and its function deleteinterestRate ",
-                    e.getMessage(), e.getCause(), e);
+                    e.getMessage(), e.getCause());
             return new ResponseEntity<>("InterestRates could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

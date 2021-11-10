@@ -38,4 +38,7 @@ public class Loans implements Serializable {
     private Date updatedDate;
     @Column(name = "paidDate")
     private Date paidDate;
+    @Column(name = "isActive")
+    private boolean isActive;
+
 }

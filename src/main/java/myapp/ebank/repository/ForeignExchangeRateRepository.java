@@ -17,8 +17,8 @@ public interface ForeignExchangeRateRepository extends JpaRepository<ForeignExch
     @Query(value = "SELECT * from foreign_exchange_rates where date >= :startDate order by date asc", nativeQuery = true)
     List<ForeignExchangeRates> findByStartDateOrderByDateAsc(java.util.Date startDate);
 
-    List<ForeignExchangeRates> findByDateBetweenOrderByDateDesc(java.util.Date startDate, java.util.Date endDate);
+    List<ForeignExchangeRates> findByCreatedDateBetweenOrderByCreatedDateDesc(java.util.Date startDate, java.util.Date endDate);
 
-    List<Users> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
+    List<ForeignExchangeRates> findAllByActiveOrderByCreatedDateDesc(boolean status);
 
 }

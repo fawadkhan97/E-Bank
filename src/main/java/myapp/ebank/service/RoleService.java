@@ -37,7 +37,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> getAllRoles() {
         try {
-            List<Roles> roles = roleRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
+            List<Roles> roles = roleRepository.findAllByActiveOrderByCreatedDateDesc(true);
             // check if list is empty or not
             if (roles.isEmpty()) {
                 return new ResponseEntity<>("No roles found... ", HttpStatus.NOT_FOUND);
@@ -86,7 +86,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> getRoleById(Long id) {
         try {
-            Optional<Roles> role = roleRepository.findById(id);
+            Optional<Roles> role = roleRepository.findByIdAndActive(id,true);
             if (role.isPresent())
                 return new ResponseEntity<>(role, HttpStatus.FOUND);
             else
@@ -109,7 +109,6 @@ public class RoleService {
     public ResponseEntity<Object> updateRole(List<Roles> roles) {
         try {
             for (Roles role : roles) {
-
                 role.setCreatedDate(DateTime.getDateTime());
                 roleRepository.save(role);
             }
@@ -130,9 +129,8 @@ public class RoleService {
      */
     public ResponseEntity<Object> deleteRole(Long id) {
         try {
-            Optional<Roles> role = roleRepository.findById(id);
+            Optional<Roles> role = roleRepository.findByIdAndActive(id,true);
             if (role.isPresent()) {
-
                 // set status false
                 role.get().setActive(false);
                 // set updated date

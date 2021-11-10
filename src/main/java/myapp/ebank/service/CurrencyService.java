@@ -33,11 +33,10 @@ public class CurrencyService {
      */
     public ResponseEntity<Object> getAllCurrencies() {
         try {
-
             //check police record from e-police using feign client
        /*     String currency = feignPoliceRecordService.getByid(1);
             System.out.println("currency is " + currency);*/
-            List<Currencies> issuedCurrencies = currencyRepository.findAllByisActiveOrderByCreatedDateDesc(true);
+            List<Currencies> issuedCurrencies = currencyRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (issuedCurrencies.isEmpty()) {
                 return new ResponseEntity<>("No data available ..... ", HttpStatus.NOT_FOUND);
@@ -49,6 +48,35 @@ public class CurrencyService {
                     "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies ", e.getMessage());
             return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * fetch record by id
+     *
+     * @param id
+     * @return
+     * @author fawad khan
+     */
+    public ResponseEntity<Object> getCurrencyById(Long id) {
+        try {
+            Optional<Currencies> currency = currencyRepository.findById(id);
+            if (currency.isPresent() && currency.get().getIsActive()) {
+                // check if currency is verified
+                log.info("currency fetch and found from db by id  : ", currency.toString());
+                return new ResponseEntity<>(currency, HttpStatus.FOUND);
+            } else {
+                log.info("no currency found with id:", currency.get().getId());
+                return new ResponseEntity<>("could not found currency with given details.... currency may not be verified", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.debug(
+                    "some error has occurred during fetching Currency by id , in class CurrencyService and its function getCurrencyById ",
+                    e.getMessage());
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            return new ResponseEntity<>("Unable to find Currency, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     /**

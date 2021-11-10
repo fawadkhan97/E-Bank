@@ -1,7 +1,9 @@
 package myapp.ebank.service;
 
 import myapp.ebank.model.entity.NationalReserves;
+import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
+import myapp.ebank.util.DateTime;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -105,8 +108,8 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> getNationalReservesRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
         try {
-            Optional<NationalReserves> interestRate = nationalReservesRepository.findByStartAndEndDate(startDate, endDate);
-            if (interestRate.isPresent()) {
+            List<NationalReserves> interestRate = nationalReservesRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate);
+            if (!interestRate.isEmpty()) {
                 return new ResponseEntity<>(interestRate, HttpStatus.OK);
             } else
                 return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
@@ -119,6 +122,59 @@ public class NationalReservesService {
         }
     }
 
+    /**
+     * @return List of nationalReserves
+     * @author Fawad khan
+     */
+    public ResponseEntity<Object> listAllNationalReserves() {
+        try {
+            List<NationalReserves> nationalReserves = nationalReservesRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            // check if list is empty
+            if (nationalReserves.isEmpty()) {
+                return new ResponseEntity<>("  NationalReserves are empty", HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            log.info("some error has occurred trying to Fetch nationalReserves, in Class  NationalReservesService and its function listAllNationalReserves ");
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+
+            return new ResponseEntity<>("NationalReserves could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /**
+     * fetch record by id
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
+     */
+    public ResponseEntity<Object> getNationalReservesById(Long id) {
+        try {
+            Optional<NationalReserves> nationalReserve = nationalReservesRepository.findById(id);
+            if (nationalReserve.isPresent() && nationalReserve.get().isActive()) {
+                // check if nationalReserve is verified
+                log.info("nationalReserve fetch and found from db by id  : ", nationalReserve.toString());
+                return new ResponseEntity<>(nationalReserve, HttpStatus.FOUND);
+            } else {
+                log.info("no nationalReserve found with id:", nationalReserve.get().getId());
+                return new ResponseEntity<>("could not found nationalReserve with given details.... nationalReserve may not be verified", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            log.debug(
+                    "some error has occurred during fetching NationalReserves by id , in class NationalReservesService and its function getNationalReservesById ",
+                    e.getMessage());
+            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+
+            return new ResponseEntity<>("Unable to find NationalReserves, an error has occurred",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+    }
 
     /**
      * save  National Reserves
@@ -145,6 +201,7 @@ public class NationalReservesService {
     }
 
     /**
+     * update national reserves
      * @param nationalReserves
      * @return
      * @author fawad khan
@@ -167,14 +224,20 @@ public class NationalReservesService {
     }
 
     /**
+     * delete data
      * @param id
      * @return ResponseEntity<Object>
      * @author fawad khan
      */
     public ResponseEntity<Object> deleteNationalReserves(Long id) {
         try {
-            Optional<NationalReserves> nationalReserve = nationalReservesRepository.findById(id);
+            Optional<NationalReserves> nationalReserve = nationalReservesRepository.findByIdAndActive(id,true);
             if (nationalReserve.isPresent()) {
+                // set status false
+                nationalReserve.get().setActive(false);
+                // set updated date
+                java.util.Date date = DateTime.getDateTime();
+                nationalReserve.get().setUpdatedDate(date);
                 nationalReservesRepository.save(nationalReserve.get());
                 return new ResponseEntity<>(" NationalReserves deleted successfully", HttpStatus.OK);
             } else
