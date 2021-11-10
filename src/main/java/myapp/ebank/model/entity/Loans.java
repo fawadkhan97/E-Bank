@@ -24,8 +24,6 @@ public class Loans implements Serializable {
     private String description;
     @Column(name = "paidstatus")
     private Boolean paidStatus;
-    @Column(name = "date")
-    private Date date;
     @Column(name = "dueDate")
     private Date dueDate;
     @Column(name = "insterestRate")
@@ -34,6 +32,8 @@ public class Loans implements Serializable {
     private Double totalAmountToBePaid;
     @Column(name = "amountPaid")
     private Double amountPaid;
+    @Column(name = "createdDate")
+    private Date createdDate;
     @Column(name = "updatedDate")
     private Date updatedDate;
     @Column(name = "paidDate")

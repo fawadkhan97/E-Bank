@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organizations, Long> {
 
-    List<Organizations> findAllByisActive(boolean status);
+    List<Organizations> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
 
 }

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -20,12 +21,11 @@ public class NationalReserves implements Serializable {
     private long id;
     @NotBlank(message = "ForeignReserves is mandatory")
     @Column(name = "ForeignReserves")
-    private String foreignReserves;
+    private Double foreignReserves;
     @NotBlank(message = "GoldReserves is mandatory")
     @Column(name = "GoldReserves")
-    private String goldReserves;
-    @Column(name = "date")
-    private String date;
+    private Double goldReserves;
+    @NotNull(message = "National Reserves rates created date is mandatory")
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")

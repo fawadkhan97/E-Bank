@@ -37,7 +37,7 @@ public class CurrencyService {
             //check police record from e-police using feign client
        /*     String currency = feignPoliceRecordService.getByid(1);
             System.out.println("currency is " + currency);*/
-            List<Currencies> issuedCurrencies = currencyRepository.findAllByisActive(true);
+            List<Currencies> issuedCurrencies = currencyRepository.findAllByisActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (issuedCurrencies.isEmpty()) {
                 return new ResponseEntity<>("No data available ..... ", HttpStatus.NOT_FOUND);
@@ -59,9 +59,8 @@ public class CurrencyService {
      */
     public ResponseEntity<Object> saveCurrency(Currencies currency) {
         try {
-
             Date date = DateTime.getDateTime();
-            currency.setIssuedDate(date);
+            currency.setCreatedDate(date);
             currency.setIsActive(true);
             currency.setUpdatedDate(null);
             // save currency to db
@@ -128,9 +127,9 @@ public class CurrencyService {
                 return new ResponseEntity<>("  Currency does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
 
-              log.error(
-              "some error has occurred while trying to Delete currency,, in class CurrencyService and its function deleteCurrency "
-              , e.getMessage(), e.getCause(), e);
+            log.error(
+                    "some error has occurred while trying to Delete currency,, in class CurrencyService and its function deleteCurrency "
+                    , e.getMessage(), e.getCause(), e);
 
             return new ResponseEntity<>("Currency could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 

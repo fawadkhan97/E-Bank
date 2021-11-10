@@ -82,7 +82,7 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/getByDateBetween")
-    public ResponseEntity<Object> getForeignExchangeRateByStartAndEndDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date endDate) {
+    public ResponseEntity<Object> getForeignExchangeRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") java.util.Date startDate, @RequestParam("endDate") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
         return foreignExchangeRateService.getForeignExchangeRateBetweenDates(startDate, endDate);
     }
 

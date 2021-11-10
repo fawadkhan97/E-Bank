@@ -37,7 +37,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> getAllRoles() {
         try {
-            List<Roles> roles = roleRepository.findAllByisActive(true);
+            List<Roles> roles = roleRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty or not
             if (roles.isEmpty()) {
                 return new ResponseEntity<>("No roles found... ", HttpStatus.NOT_FOUND);

@@ -47,29 +47,6 @@ public class LoanService {
         }
     }
 
-
-    /**
-     * add loans
-     *
-     * @param loans
-     * @return
-     */
-    public ResponseEntity<Object> addLoan(Loans loans) {
-        try {
-            loans.setDate(DateTime.getDateTime());
-            loanRepository.save(loans);
-            return new ResponseEntity<>(loans, HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
-            return new ResponseEntity<>("Data already exists .. duplicates not allowed ", HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
-            return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-
-    }
-
     /**
      * @param loan
      * @return

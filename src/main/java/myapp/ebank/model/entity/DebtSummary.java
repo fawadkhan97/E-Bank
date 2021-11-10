@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -21,10 +22,10 @@ public class DebtSummary implements Serializable {
     @Column(name = "totalDebtandLiabilities")
     private Double totalDebtAndLiabilities;
     @NotNull(message = "{DebtSummary.grossPublicDebt.invalid}")
-    @Column(name = "GrossPublciDebt")
+    @Column(name = "grossPublciDebt")
     private Double grossPublicDebt;
     @NotNull(message = "{DebtSummary.totalGovernmentDebt.invalid}")
-    @Column(name = "TotalGovernmentDebt")
+    @Column(name = "totalGovernmentDebt")
     private Double totalGovernmentDebt;
     @NotNull(message = "{DebtSummary.totalExternalDebtAndLiabilities.invalid}")
     @Column(name = "TotalExternalDebtAndLiabilities")
@@ -32,9 +33,9 @@ public class DebtSummary implements Serializable {
     @NotNull(message = "{DebtSummary.commodityOperationAndPSEDebt.invalid}")
     @Column(name = "commodityOperationAndPSEDebt")
     private Double commodityOperationAndPSEDebt;
-    @NotNull(message = "{DebtSummary.fiscalYear.invalid}")
-    @Column(name = "FiscalYear")
-    private java.sql.Date fiscalYear;
+    @NotBlank(message = "{DebtSummary.fiscalYear.invalid}")
+    @Column(name = "fiscalYear")
+    private String fiscalYear;
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")

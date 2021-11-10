@@ -58,7 +58,7 @@ public class UserService {
     // Get list of all users
     public ResponseEntity<Object> listAllUser() {
         try {
-            List<Users> users = userRepository.findAllByIsActive(true);
+            List<Users> users = userRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -321,7 +321,7 @@ public class UserService {
                         }
                     }
                     // log.info("user fetch and found from db by id  : ", user.toString());
-                    loan.setDate(DateTime.getDateTime());
+                    loan.setCreatedDate(DateTime.getDateTime());
                     loan.setInterestRate(interestRate);
                     loan.setTotalAmountToBePaid(loan.getLoanAmount() + (interestRate * loan.getLoanAmount()));
                     loan.setDueDate(DateTime.getDueDate(5));

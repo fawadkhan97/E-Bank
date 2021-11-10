@@ -12,5 +12,5 @@ import myapp.ebank.model.entity.Currencies;
 
 @Repository
 public interface CurrencyRepository extends JpaRepository<Currencies, Long> {
-	List<Currencies> findAllByisActive(boolean status);
+	List<Currencies> findAllByisActiveOrderByCreatedDateDesc(boolean status);
 }

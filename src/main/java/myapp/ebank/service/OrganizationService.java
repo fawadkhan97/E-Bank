@@ -33,7 +33,7 @@ public class OrganizationService {
     public ResponseEntity<Object> listAllOrganization() {
         try {
 
-            List<Organizations> organizations = organizationRepository.findAllByisActive(true);
+            List<Organizations> organizations = organizationRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             /* log.info("list of  organizations fetch from db are ", organizations);*/
             // check if list is empty
             if (organizations.isEmpty()) {

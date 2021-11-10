@@ -19,6 +19,7 @@ public class Funds implements Serializable {
     private long id;
     @NotNull(message = "funds amount cannot be blank")
     @Column(nullable = false)
+
     private Double amount;
     @NotBlank(message = "funds description is mandatory is mandatory")
     private String description;
@@ -27,5 +28,5 @@ public class Funds implements Serializable {
     @Column(name = "updatedDate")
     private Date updatedDate;
     @Column(name = "aprrovedStatus")
-    private Boolean ApprovedStatus;
+    private Boolean approvedStatus;
 }

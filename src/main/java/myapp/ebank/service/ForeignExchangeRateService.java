@@ -83,7 +83,7 @@ public class ForeignExchangeRateService {
      */
     public ResponseEntity<Object> getForeignExchangeRateByStartDate(@RequestParam java.util.Date startDate) {
         try {
-            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByStartDate(startDate);
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByStartDateOrderByDateAsc(startDate);
             if (!foreignExchangeRate.isEmpty()) {
                 //        System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);
@@ -106,7 +106,7 @@ public class ForeignExchangeRateService {
      */
     public ResponseEntity<Object> getForeignExchangeRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
         try {
-            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByStartAndEndDate(startDate, endDate);
+            List<ForeignExchangeRates> foreignExchangeRate = foreignExchangeRateRepository.findByDateBetweenOrderByDateDesc(startDate, endDate);
             if (!foreignExchangeRate.isEmpty()) {
                 //        System.out.println("foreignExchange rate is " + foreignExchangeRate.get().getCurrency() + " " + foreignExchangeRate.get().getBuying());
                 return new ResponseEntity<>(foreignExchangeRate, HttpStatus.OK);

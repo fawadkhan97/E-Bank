@@ -16,10 +16,10 @@ public class Roles implements Serializable {
     private Long id;
     @Column(name = "name", nullable = false, unique = true)
     private String name;
-    @Column(name = "CreatedDate")
-    private Date CreatedDate;
-    @Column(name = "UpdatedDate")
-    private Date UpdatedDate;
+    @Column(name = "createdDate")
+    private Date createdDate;
+    @Column(name = "updatedDate")
+    private Date updatedDate;
     private boolean isActive;
 
     @ManyToMany(targetEntity = Permissions.class, cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

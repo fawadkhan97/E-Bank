@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -29,9 +30,9 @@ public class Currencies implements Serializable {
     @NotBlank(message = "note_description is mandatory")
     @Column(name = "note_description")
     private String noteDescription;
-    @NotBlank(message = "currency issuedDate is mandatory")
-    @Column(name = "issuedDate")
-    private Date issuedDate;
+    @NotNull(message = "currency createdDate is mandatory")
+    @Column(name = "createdDate")
+    private Date createdDate;
     @Column(name = "updatedDate")
     private Date updatedDate;
     @Column(name = "isActive")
