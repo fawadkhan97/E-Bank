@@ -30,7 +30,7 @@ import java.util.Map;
 public class ForeignExchangeRateController {
     private static final String defaultAuthValue = "12345";
     final ForeignExchangeRateService foreignExchangeRateService;
-    private static final Logger log = LogManager.getLogger(CurrencyService.class);
+    private static final Logger log = LogManager.getLogger(ForeignExchangeRates.class);
 
     public ForeignExchangeRateController(ForeignExchangeRateService foreignExchangeRateService) {
         this.foreignExchangeRateService = foreignExchangeRateService;
@@ -159,11 +159,5 @@ public class ForeignExchangeRateController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({javax.validation.ConstraintViolationException.class, InvalidFormatException.class, HttpMessageNotReadableException.class, MissingRequestHeaderException.class, MissingPathVariableException.class})
-    public ResponseEntity<Object> inputValidationException(Exception e) {
-        log.info(
-                "some error has occurred trying to add foreign exchange rates list, in Class foreignExchangeController and its function addForeignExchangeRate see logs for more details "+ e.getMessage());
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
-    }
 }

@@ -43,7 +43,7 @@ public class NationalReservesService {
 
         } catch (Exception e) {
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function get dailynational reserves ", e.getMessage());
             return new ResponseEntity<>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -68,7 +68,7 @@ public class NationalReservesService {
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println("some error has occured " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreserves by date ", e.getMessage());
 
             return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -91,7 +91,7 @@ public class NationalReservesService {
             } else
                 return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreservesbystartingdate ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -113,7 +113,7 @@ public class NationalReservesService {
             } else
                 return new ResponseEntity<>("Could not get NationalReserves  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function getnationalreserves between dates ", e.getMessage());
 
             System.out.println("some error has occurred " + e.getCause());
@@ -163,7 +163,7 @@ public class NationalReservesService {
                 return new ResponseEntity<>("could not found nationalReserve with given details.... nationalReserve may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred during fetching NationalReserves by id , in class NationalReservesService and its function getNationalReservesById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -192,7 +192,7 @@ public class NationalReservesService {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function add nationalreserves ", e.getMessage());
             System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occured  while trying to add National Reserves", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -215,7 +215,7 @@ public class NationalReservesService {
             return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred while trying to update nationalReserve,, in class NationalReservesService and its function updateNationalReserves ",
                     e.getMessage());
             return new ResponseEntity<>("National Reserves could not be Updated , Data maybe incorrect",
@@ -243,7 +243,7 @@ public class NationalReservesService {
             } else
                 return new ResponseEntity<>(" NationalReserves does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-       log.debug(
+       log.info(
                     "some error has occurred while trying to Delete nationalReserve,, in class NationalReservesService and its function deleteNationalReserves ",
                     e.getMessage(), e.getCause());
             return new ResponseEntity<>("NationalReserves could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

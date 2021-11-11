@@ -93,7 +93,7 @@ public class RoleService {
             else
                 return new ResponseEntity<>("could not found role , Check id", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred during fetching Role by id , in class RoleService and its function getRoleById ",
                     e);
             return new ResponseEntity<>("Unable to find Role, an error has occurred", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -115,7 +115,7 @@ public class RoleService {
             }
             return new ResponseEntity<>(roles, HttpStatus.OK);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred while trying to update role,, in class RoleService and its function updateRole ",
                     e.getMessage());
             return new ResponseEntity<>("Roles could not be Updated , Data maybe incorrect",
@@ -141,7 +141,7 @@ public class RoleService {
             } else
                 return new ResponseEntity<>("Role does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-           log.error(
+           log.info(
                     "some error has occurred while trying to Delete role,, in class RoleService and its function deleteRole ",
                     e.getMessage(), e.getCause(), e);
             return new ResponseEntity<>("Role could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

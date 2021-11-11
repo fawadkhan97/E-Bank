@@ -43,7 +43,7 @@ public class CurrencyService {
             } else
                 return new ResponseEntity<>(issuedCurrencies, HttpStatus.OK);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies ", e.getMessage());
             return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -68,7 +68,7 @@ public class CurrencyService {
                 return new ResponseEntity<>("could not found currency with given details.... currency may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred during fetching Currency by id , in class CurrencyService and its function getCurrencyById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());

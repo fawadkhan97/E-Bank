@@ -38,7 +38,7 @@ public class LoanService {
                 return new ResponseEntity<>(loans, HttpStatus.OK);
             }
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch loans, in Class  LoanService and its function listAllLoan ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -60,7 +60,7 @@ public class LoanService {
                 return new ResponseEntity<>(loan, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred while trying to update loan,, in class loanService and its function updateloan ",
                     e.getMessage());
             return new ResponseEntity<>("Loans could not be updated , Data maybe incorrect",
@@ -88,7 +88,7 @@ public class LoanService {
             } else
                 return new ResponseEntity<>("Loans does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred while trying to Delete loan, in class loanService and its function deleteloan ",
                     e.getMessage(), e.getCause());
             return new ResponseEntity<>("Loans could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

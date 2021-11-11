@@ -39,7 +39,7 @@ public class PermissionService {
 
         } catch (Exception e) {
             System.out.println(e.getMessage() + " \n " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch Permissions, in Class  PermissionService and its function getALLPermissions ",
                     e.getCause(), e.getMessage());
             return new ResponseEntity<>(" Could not fetch permissions due to some error",
@@ -61,7 +61,7 @@ public class PermissionService {
             else
                 return new ResponseEntity<>("could not found permission , Check id", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred during fetching Permission by id , in class PermissionService and its function getPermissionById ",
                     e);
 
@@ -91,7 +91,7 @@ public class PermissionService {
             return new ResponseEntity<>("Could not add new permission , Permission already exist or some data fields might be missing ", HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + " \n " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred trying to add Permissions, in Class  PermissionService and its function savePermissions ",
                     e.getCause(), e.getMessage());
             return new ResponseEntity<>("Could not add permissions due to some  error",
@@ -113,7 +113,7 @@ public class PermissionService {
             }
             return new ResponseEntity<>(permissions, HttpStatus.OK);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred while trying to update permission,, in class PermissionService and its function updatePermission ",
                     e.getMessage());
             return new ResponseEntity<>("Permissions could not be Updated , Data maybe incorrect",
@@ -141,7 +141,7 @@ public class PermissionService {
                 return new ResponseEntity<>("Permission does not exists ", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Delete Permissions, in Class  PermissionService and its function deletePermissions ",
                     e.getCause(), e.getMessage());
             return new ResponseEntity<>("Permission could not be Deleted..Due to some error.....",

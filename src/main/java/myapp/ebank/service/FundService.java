@@ -36,7 +36,7 @@ public class FundService {
                 return new ResponseEntity<>(funds, HttpStatus.OK);
             }
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred trying to Fetch funds, in Class  FundService and its function listAllFunds ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -52,14 +52,12 @@ public class FundService {
      */
     public ResponseEntity<Object> updateFund(Funds fund) {
         try {
-
             fund.setUpdatedDate(DateTime.getDateTime());
-
             fundRepository.save(fund);
             return new ResponseEntity<>(fund, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-			log.error(
+			log.info(
 					"some error has occurred while trying to update fund,, in class fundService and its function updatefund ",
 					e.getMessage());
             return new ResponseEntity<>("Funds could not be updated , Data maybe incorrect",
@@ -90,7 +88,7 @@ public class FundService {
             } else
                 return new ResponseEntity<>(" Funds does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-			log.error(
+			log.info(
 					"some error has occurred while trying to Delete fund,, in class fundService and its function deletefund ",
 					e.getMessage(), e.getCause());
             return new ResponseEntity<>("Funds could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

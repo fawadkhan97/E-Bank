@@ -48,7 +48,7 @@ public class ForeignExchangeRateService {
                 return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
-            log.debug("some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function getDailyExchangeRates ", e.getMessage());
+            log.info("some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function getDailyExchangeRates ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -69,7 +69,7 @@ public class ForeignExchangeRateService {
             } else
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function getExchangeRatesByDate ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -92,7 +92,7 @@ public class ForeignExchangeRateService {
             } else
                 return new ResponseEntity<>("Could not get foreign rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function getRxchangeRatesByStartingDate ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -115,7 +115,7 @@ public class ForeignExchangeRateService {
             } else
                 return new ResponseEntity<>("Could not get foreign rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function getForeignExchangeRatesBetweenDates ", e.getMessage());
             System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -165,7 +165,7 @@ public class ForeignExchangeRateService {
                 return new ResponseEntity<>("could not found foreignExchangeRate with given details.... foreignExchangeRate may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred during fetching ForeignExchangeRates by id , in class ForeignExchangeRatesService and its function getForeignExchangeRatesById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -192,15 +192,15 @@ public class ForeignExchangeRateService {
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
             return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
         } catch (ConstraintViolationException e) {
-            log.debug("an error has occured while adding rates...", e.getMessage(), e.getCause());
+            log.info("an error has occured while adding rates...", e.getMessage(), e.getCause());
             return new ResponseEntity<>("data maybe incorrect please check again..", HttpStatus.NOT_ACCEPTABLE);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred trying to Fetch exchange rates, in Class ForeignexchangeRateService and its function get dailyexchange rates ", e.getMessage());
-            log.debug("Is rollbackOnly: " + TransactionAspectSupport.currentTransactionStatus().isRollbackOnly());
+            log.info("Is rollbackOnly: " + TransactionAspectSupport.currentTransactionStatus().isRollbackOnly());
 
             System.out.println("error occurred .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -224,7 +224,7 @@ public class ForeignExchangeRateService {
             return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred while trying to update foreignExchangeRate,, in class foreignExchangeRateService and its function updateforeignExchangeRate ",
                     e.getMessage());
             return new ResponseEntity<>("Foreign exchanges rate could not be updated , Data maybe incorrect",
@@ -254,7 +254,7 @@ public class ForeignExchangeRateService {
             } else
                 return new ResponseEntity<>(" ForeignExchangeRate does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred while trying to Delete foreignExchangeRate,, in class foreignExchangeRateService and its function deleteforeignExchangeRate ",
                     e.getMessage(), e.getCause());
             return new ResponseEntity<>("ForeignExchangeRate could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);

@@ -41,7 +41,7 @@ public class OrganizationService {
                 return new ResponseEntity<>(organizations, HttpStatus.OK);
             }
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred trying to Fetch organizations, in Class  OrganizationService and its function listAllOrganization ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -70,7 +70,7 @@ public class OrganizationService {
             }
         } catch (Exception e) {
 
-            log.error(
+            log.info(
                     "some error has occurred during fetching Organizations by id , in class OrganizationService and its function getOrganizationById ",
                     e.getMessage());
 
@@ -98,7 +98,7 @@ public class OrganizationService {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred while trying to save organization,, in class OrganizationService and its function saveOrganization ",
                     e.getMessage());
             System.out.println("error is " + e.getMessage() + "  " + e.getCause());
@@ -123,7 +123,7 @@ public class OrganizationService {
             return new ResponseEntity<>(organization, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.error(
+            log.info(
                     "some error has occurred while trying to update organization,, in class OrganizationService and its function updateOrganization ",
                     e.getMessage());
             return new ResponseEntity<>("organization could not be updated , Data maybe incorrect",
@@ -151,7 +151,7 @@ public class OrganizationService {
             } else
                 return new ResponseEntity<>(": Organizations does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error(
+            log.info(
                     "some error has occurred while trying to Delete organization,, in class OrganizationService and its function deleteOrganization ",
                     e.getMessage(), e.getCause(), e);
             return new ResponseEntity<>("Organizations could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
