@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -84,10 +85,10 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @Valid @RequestBody Users user) {
+                                          @Valid @RequestBody Users user , HttpServletRequest httpServletRequest) {
         // check authorization
         if (authorize(authValue)) {
-            return userService.saveUser(user);
+            return userService.saveUser(user,httpServletRequest);
         } else {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
         }
