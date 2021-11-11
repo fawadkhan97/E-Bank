@@ -1,0 +1,216 @@
+2021-11-11 16:00:01,884 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.0.Final
+2021-11-11 16:00:01,978 INFO o.s.b.StartupInfoLogger [main] Starting EbankApplication using Java 11.0.13 on LTI-TRAINING-02 with PID 8016 (F:\E-Bank\target\classes started by fawad khan in F:\E-Bank)
+2021-11-11 16:00:01,978 INFO o.s.b.SpringApplication [main] No active profile set, falling back to default profiles: default
+2021-11-11 16:00:04,119 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-11-11 16:00:04,291 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 160 ms. Found 11 JPA repository interfaces.
+2021-11-11 16:00:04,713 INFO o.s.c.c.s.GenericScope [main] BeanFactory id=61183a38-0d6d-34f8-8f10-2431c46a9702
+2021-11-11 16:00:05,338 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2021-11-11 16:00:05,353 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2021-11-11 16:00:05,353 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2021-11-11 16:00:05,353 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.53]
+2021-11-11 16:00:05,588 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2021-11-11 16:00:05,588 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 3501 ms
+2021-11-11 16:00:05,806 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-11-11 16:00:05,885 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-11-11 16:00:06,072 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-11-11 16:00:06,103 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration boolean -> org.hibernate.type.BooleanType@65015a49
+2021-11-11 16:00:06,103 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration boolean -> org.hibernate.type.BooleanType@65015a49
+2021-11-11 16:00:06,103 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Boolean -> org.hibernate.type.BooleanType@65015a49
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration numeric_boolean -> org.hibernate.type.NumericBooleanType@47e60b71
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration true_false -> org.hibernate.type.TrueFalseType@1eb9d69a
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration yes_no -> org.hibernate.type.YesNoType@77f4038c
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration byte -> org.hibernate.type.ByteType@2ecdcfe3
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration byte -> org.hibernate.type.ByteType@2ecdcfe3
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Byte -> org.hibernate.type.ByteType@2ecdcfe3
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration character -> org.hibernate.type.CharacterType@2110684a
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration char -> org.hibernate.type.CharacterType@2110684a
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Character -> org.hibernate.type.CharacterType@2110684a
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration short -> org.hibernate.type.ShortType@3f80d8c
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration short -> org.hibernate.type.ShortType@3f80d8c
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Short -> org.hibernate.type.ShortType@3f80d8c
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration integer -> org.hibernate.type.IntegerType@212e39ee
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration int -> org.hibernate.type.IntegerType@212e39ee
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Integer -> org.hibernate.type.IntegerType@212e39ee
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration long -> org.hibernate.type.LongType@4f552aa2
+2021-11-11 16:00:06,119 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration long -> org.hibernate.type.LongType@4f552aa2
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Long -> org.hibernate.type.LongType@4f552aa2
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration float -> org.hibernate.type.FloatType@1c411474
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration float -> org.hibernate.type.FloatType@1c411474
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Float -> org.hibernate.type.FloatType@1c411474
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration double -> org.hibernate.type.DoubleType@4df7b4ac
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration double -> org.hibernate.type.DoubleType@4df7b4ac
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Double -> org.hibernate.type.DoubleType@4df7b4ac
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration big_decimal -> org.hibernate.type.BigDecimalType@57b130f6
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.math.BigDecimal -> org.hibernate.type.BigDecimalType@57b130f6
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration big_integer -> org.hibernate.type.BigIntegerType@3b2c8bda
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.math.BigInteger -> org.hibernate.type.BigIntegerType@3b2c8bda
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration string -> org.hibernate.type.StringType@61836cd9
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.String -> org.hibernate.type.StringType@61836cd9
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration nstring -> org.hibernate.type.StringNVarcharType@556aed22
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration ncharacter -> org.hibernate.type.CharacterNCharType@19e801b5
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration url -> org.hibernate.type.UrlType@5ad40184
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.net.URL -> org.hibernate.type.UrlType@5ad40184
+2021-11-11 16:00:06,135 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration Duration -> org.hibernate.type.DurationType@707f4647
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.Duration -> org.hibernate.type.DurationType@707f4647
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration Instant -> org.hibernate.type.InstantType@43778371
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.Instant -> org.hibernate.type.InstantType@43778371
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration LocalDateTime -> org.hibernate.type.LocalDateTimeType@144440f5
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.LocalDateTime -> org.hibernate.type.LocalDateTimeType@144440f5
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration LocalDate -> org.hibernate.type.LocalDateType@2b9ecd05
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.LocalDate -> org.hibernate.type.LocalDateType@2b9ecd05
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration LocalTime -> org.hibernate.type.LocalTimeType@7c682e26
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.LocalTime -> org.hibernate.type.LocalTimeType@7c682e26
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@22429a11
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.OffsetDateTime -> org.hibernate.type.OffsetDateTimeType@22429a11
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration OffsetTime -> org.hibernate.type.OffsetTimeType@1df06ecd
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.OffsetTime -> org.hibernate.type.OffsetTimeType@1df06ecd
+2021-11-11 16:00:06,150 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@3f4964f2
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.time.ZonedDateTime -> org.hibernate.type.ZonedDateTimeType@3f4964f2
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration date -> org.hibernate.type.DateType@3516b881
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.Date -> org.hibernate.type.DateType@3516b881
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration time -> org.hibernate.type.TimeType@35524549
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.Time -> org.hibernate.type.TimeType@35524549
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration timestamp -> org.hibernate.type.TimestampType@145fe8ab
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.Timestamp -> org.hibernate.type.TimestampType@145fe8ab
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.Date -> org.hibernate.type.TimestampType@145fe8ab
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration dbtimestamp -> org.hibernate.type.DbTimestampType@5960f17
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration calendar -> org.hibernate.type.CalendarType@32513dea
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.Calendar -> org.hibernate.type.CalendarType@32513dea
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.GregorianCalendar -> org.hibernate.type.CalendarType@32513dea
+2021-11-11 16:00:06,166 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration calendar_date -> org.hibernate.type.CalendarDateType@7fb82f73
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration calendar_time -> org.hibernate.type.CalendarTimeType@93f15f6
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration locale -> org.hibernate.type.LocaleType@6ffbf0ac
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.Locale -> org.hibernate.type.LocaleType@6ffbf0ac
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration currency -> org.hibernate.type.CurrencyType@1592e540
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.Currency -> org.hibernate.type.CurrencyType@1592e540
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration timezone -> org.hibernate.type.TimeZoneType@2b1d1a5
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.TimeZone -> org.hibernate.type.TimeZoneType@2b1d1a5
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration class -> org.hibernate.type.ClassType@3d98729a
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Class -> org.hibernate.type.ClassType@3d98729a
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration uuid-binary -> org.hibernate.type.UUIDBinaryType@ace2408
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.util.UUID -> org.hibernate.type.UUIDBinaryType@ace2408
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration uuid-char -> org.hibernate.type.UUIDCharType@5178345d
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration binary -> org.hibernate.type.BinaryType@34bf66af
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration byte[] -> org.hibernate.type.BinaryType@34bf66af
+2021-11-11 16:00:06,181 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration [B -> org.hibernate.type.BinaryType@34bf66af
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration wrapper-binary -> org.hibernate.type.WrapperBinaryType@2bd4780c
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration Byte[] -> org.hibernate.type.WrapperBinaryType@2bd4780c
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration [Ljava.lang.Byte; -> org.hibernate.type.WrapperBinaryType@2bd4780c
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration row_version -> org.hibernate.type.RowVersionType@8b1202a
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration image -> org.hibernate.type.ImageType@32646ecf
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration characters -> org.hibernate.type.CharArrayType@73234691
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration char[] -> org.hibernate.type.CharArrayType@73234691
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration [C -> org.hibernate.type.CharArrayType@73234691
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration wrapper-characters -> org.hibernate.type.CharacterArrayType@2fea9a7b
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration [Ljava.lang.Character; -> org.hibernate.type.CharacterArrayType@2fea9a7b
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration Character[] -> org.hibernate.type.CharacterArrayType@2fea9a7b
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration text -> org.hibernate.type.TextType@27fc0217
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration ntext -> org.hibernate.type.NTextType@c1a74d
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration blob -> org.hibernate.type.BlobType@f42336c
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.Blob -> org.hibernate.type.BlobType@f42336c
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration materialized_blob -> org.hibernate.type.MaterializedBlobType@40013051
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration clob -> org.hibernate.type.ClobType@69bca406
+2021-11-11 16:00:06,197 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.Clob -> org.hibernate.type.ClobType@69bca406
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration nclob -> org.hibernate.type.NClobType@22a63740
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.sql.NClob -> org.hibernate.type.NClobType@22a63740
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration materialized_clob -> org.hibernate.type.MaterializedClobType@65ad2b42
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration materialized_nclob -> org.hibernate.type.MaterializedNClobType@2419fe6f
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration serializable -> org.hibernate.type.SerializableType@5be69f7e
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration object -> org.hibernate.type.ObjectType@45e69324
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration java.lang.Object -> org.hibernate.type.ObjectType@45e69324
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_date -> org.hibernate.type.AdaptedImmutableType@41a8f0d8
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_time -> org.hibernate.type.AdaptedImmutableType@30133a11
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_timestamp -> org.hibernate.type.AdaptedImmutableType@2168def
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_dbtimestamp -> org.hibernate.type.AdaptedImmutableType@3639b04
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_calendar -> org.hibernate.type.AdaptedImmutableType@5cb8580
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_calendar_date -> org.hibernate.type.AdaptedImmutableType@2ca1e49a
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_binary -> org.hibernate.type.AdaptedImmutableType@1aee6d14
+2021-11-11 16:00:06,213 DEBUG o.h.t.BasicTypeRegistry [main] Adding type registration imm_serializable -> org.hibernate.type.AdaptedImmutableType@54a6ef6
+2021-11-11 16:00:06,275 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2021-11-11 16:00:06,869 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2021-11-11 16:00:06,900 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2021-11-11 16:00:07,010 DEBUG o.h.t.s.TypeConfiguration [main] Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@6b630d4b] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@70aa03c0]
+2021-11-11 16:00:07,728 DEBUG o.h.t.s.TypeConfiguration [main] Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@6b630d4b] to SessionFactoryImpl [org.hibernate.internal.SessionFactoryImpl@4a3383dc]
+2021-11-11 16:00:08,588 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-11-11 16:00:08,588 TRACE o.h.t.s.TypeConfiguration [main] Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@4a3383dc] for TypeConfiguration
+2021-11-11 16:00:08,603 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-11-11 16:00:09,260 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-11-11 16:00:09,416 INFO o.s.c.o.FeignClientFactoryBean [main] For 'e-police-system' URL not provided. Will try picking an instance via load-balancing.
+2021-11-11 16:00:10,682 INFO s.d.s.w.PropertySourcedRequestMappingHandlerMapping [main] Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2021-11-11 16:00:11,541 INFO o.s.c.n.e.c.DiscoveryClientOptionalArgsConfiguration [main] Eureka HTTP Client uses RestTemplate.
+2021-11-11 16:00:11,994 WARN o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger [main] Spring Cloud LoadBalancer is currently working with the default cache. You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2021-11-11 16:00:12,119 INFO o.s.c.n.e.InstanceInfoFactory [main] Setting initial instance status as: STARTING
+2021-11-11 16:00:12,166 INFO c.n.d.DiscoveryClient [main] Initializing Eureka in region us-east-1
+2021-11-11 16:00:12,182 INFO c.n.d.s.r.a.ConfigClusterResolver [main] Resolving eureka endpoints via configuration
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Disable delta property : false
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Single vip registry refresh property : null
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Force full registry fetch : false
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Application is null : false
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Registered Applications size is zero : true
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Application version is -1: true
+2021-11-11 16:00:12,213 INFO c.n.d.DiscoveryClient [main] Getting all instance registry info from the eureka server
+2021-11-11 16:00:12,713 INFO c.n.d.DiscoveryClient [main] The response status is 200
+2021-11-11 16:00:12,729 INFO c.n.d.DiscoveryClient [main] Starting heartbeat executor: renew interval is: 10
+2021-11-11 16:00:12,729 INFO c.n.d.InstanceInfoReplicator [main] InstanceInfoReplicator onDemand update allowed rate per min is 4
+2021-11-11 16:00:12,744 INFO c.n.d.DiscoveryClient [main] Discovery Client initialized at timestamp 1636628412729 with initial instances count: 0
+2021-11-11 16:00:12,744 INFO o.s.c.n.e.s.EurekaServiceRegistry [main] Registering application E-BANK with eureka with status UP
+2021-11-11 16:00:12,744 INFO c.n.d.DiscoveryClient$3 [main] Saw local status change event StatusChangeEvent [timestamp=1636628412744, current=UP, previous=STARTING]
+2021-11-11 16:00:12,744 INFO c.n.d.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_E-BANK/LTI-TRAINING-02.d-p-s.com:e-bank:8080: registering service...
+2021-11-11 16:00:12,744 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2021-11-11 16:00:12,791 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2021-11-11 16:00:12,791 INFO o.s.c.n.e.s.EurekaAutoServiceRegistration [main] Updating port to 8080
+2021-11-11 16:00:12,838 INFO c.n.d.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_E-BANK/LTI-TRAINING-02.d-p-s.com:e-bank:8080 - registration status: 204
+2021-11-11 16:00:13,166 INFO s.d.s.w.p.DocumentationPluginsBootstrapper [main] Context refreshed
+2021-11-11 16:00:13,198 INFO s.d.s.w.p.DocumentationPluginsBootstrapper [main] Found 1 custom documentation plugin(s)
+2021-11-11 16:00:13,276 INFO s.d.s.w.s.ApiListingReferenceScanner [main] Scanning for api listing references
+2021-11-11 16:00:13,744 INFO o.s.b.StartupInfoLogger [main] Started EbankApplication in 13.391 seconds (JVM running for 17.821)
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Disable delta property : false
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Single vip registry refresh property : null
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Force full registry fetch : false
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Application is null : false
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Registered Applications size is zero : true
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Application version is -1: false
+2021-11-11 16:00:42,745 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] Getting all instance registry info from the eureka server
+2021-11-11 16:00:42,761 INFO c.n.d.DiscoveryClient [DiscoveryClient-CacheRefreshExecutor-0] The response status is 200
+2021-11-11 16:01:48,266 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-11-11 16:01:48,266 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2021-11-11 16:01:48,270 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 4 ms
+2021-11-11 16:05:12,256 INFO c.n.d.s.r.a.ConfigClusterResolver [AsyncResolver-bootstrap-executor-0] Resolving eureka endpoints via configuration
+2021-11-11 16:06:17,114 DEBUG o.h.e.j.s.SqlStatementLogger [http-nio-8080-exec-2] 
+    select
+        next_val as id_val 
+    from
+        hibernate_sequence for update
+            
+2021-11-11 16:06:17,141 DEBUG o.h.e.j.s.SqlStatementLogger [http-nio-8080-exec-2] 
+    update
+        hibernate_sequence 
+    set
+        next_val= ? 
+    where
+        next_val=?
+2021-11-11 16:06:17,315 DEBUG o.h.e.j.s.SqlStatementLogger [http-nio-8080-exec-2] 
+    insert 
+    into
+        users
+        (age, cnic, created_date, dob, email, full_name, is_active, organization_id, password, phone_number, token, updated_date, user_name, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2021-11-11 16:06:17,323 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [1] as [INTEGER] - [24]
+2021-11-11 16:06:17,324 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [2] as [VARCHAR] - [21321]
+2021-11-11 16:06:17,326 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [3] as [TIMESTAMP] - [Thu Nov 11 16:06:17 PKT 2021]
+2021-11-11 16:06:17,331 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [4] as [VARCHAR] - [23-11-1997]
+2021-11-11 16:06:17,331 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [5] as [VARCHAR] - [fawadmalik97@gmail.com]
+2021-11-11 16:06:17,331 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [6] as [VARCHAR] - [fawad]
+2021-11-11 16:06:17,332 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [7] as [BOOLEAN] - [false]
+2021-11-11 16:06:17,334 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [8] as [BIGINT] - [1]
+2021-11-11 16:06:17,335 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [9] as [VARCHAR] - [fawad]
+2021-11-11 16:06:17,336 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [10] as [VARCHAR] - [+92213129301]
+2021-11-11 16:06:17,336 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [11] as [INTEGER] - [351706]
+2021-11-11 16:06:17,337 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [12] as [TIMESTAMP] - [null]
+2021-11-11 16:06:17,337 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [13] as [VARCHAR] - [fawad60]
+2021-11-11 16:06:17,338 TRACE o.h.t.d.s.BasicBinder [http-nio-8080-exec-2] binding parameter [14] as [BIGINT] - [12]
+2021-11-11 16:06:17,412 WARN o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-2] SQL Error: 1062, SQLState: 23000
+2021-11-11 16:06:17,412 ERROR o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-2] Duplicate entry '21321' for key 'UK_liw8prp235fqaqf988dkosm48'
+2021-11-11 16:10:12,285 INFO c.n.d.s.r.a.ConfigClusterResolver [AsyncResolver-bootstrap-executor-0] Resolving eureka endpoints via configuration
+2021-11-11 16:15:12,302 INFO c.n.d.s.r.a.ConfigClusterResolver [AsyncResolver-bootstrap-executor-0] Resolving eureka endpoints via configuration

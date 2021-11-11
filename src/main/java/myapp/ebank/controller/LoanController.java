@@ -49,7 +49,7 @@ public class LoanController {
             return new ResponseEntity<>(" Not authorize", HttpStatus.UNAUTHORIZED);
     }
 
-     /**
+    /**
      * @param authValue
      * @param loan
      * @return
@@ -57,12 +57,13 @@ public class LoanController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateLoan(@RequestHeader(value = "Authorization") String authValue,
-                                          @Valid @RequestBody Loans loan) {
+                                             @Valid @RequestBody Loans loan) {
         if (authorize(authValue)) {
             return loanService.updateLoan(loan);
         } else
             return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
     }
+
     /**
      * @param authValue
      * @param id
@@ -72,31 +73,9 @@ public class LoanController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteLoan(@RequestHeader(value = "Authorization") String authValue,
                                              @PathVariable Long id) {
-
         if (authorize(authValue)) {
             return loanService.deleteLoan(id);
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-}
-
-    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
-    public ResponseEntity<Object> inputValidationException(Exception e) {
-
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
-    }
-
 }

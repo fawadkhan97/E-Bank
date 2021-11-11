@@ -28,8 +28,7 @@ public class ExceptionHandling {
     @ExceptionHandler({javax.validation.ConstraintViolationException.class, InvalidFormatException.class, HttpMessageNotReadableException.class, MissingRequestHeaderException.class, MissingPathVariableException.class, HttpRequestMethodNotSupportedException.class})
     public ResponseEntity<Object> inputValidationException(Exception e) {
 
-        log.info(
-                "some error has occurred see logs for more details ....\n " + e.getMessage());
+        log.info("some error has occurred see logs for more details ....\n ", e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
     }
