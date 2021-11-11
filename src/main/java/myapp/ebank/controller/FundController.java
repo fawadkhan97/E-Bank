@@ -82,22 +82,5 @@ public class FundController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
-    public ResponseEntity<Object> inputValidationException(Exception e) {
 
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-
-    }
 }

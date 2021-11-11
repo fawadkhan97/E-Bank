@@ -1,14 +1,21 @@
 package myapp.ebank.controller;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import myapp.ebank.model.entity.ForeignExchangeRates;
+import myapp.ebank.service.CurrencyService;
 import myapp.ebank.service.ForeignExchangeRateService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,6 +30,7 @@ import java.util.Map;
 public class ForeignExchangeRateController {
     private static final String defaultAuthValue = "12345";
     final ForeignExchangeRateService foreignExchangeRateService;
+    private static final Logger log = LogManager.getLogger(CurrencyService.class);
 
     public ForeignExchangeRateController(ForeignExchangeRateService foreignExchangeRateService) {
         this.foreignExchangeRateService = foreignExchangeRateService;
@@ -151,22 +159,11 @@ public class ForeignExchangeRateController {
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class,javax.validation.ConstraintViolationException.class})
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
-
-
-    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+    @ExceptionHandler({javax.validation.ConstraintViolationException.class, InvalidFormatException.class, HttpMessageNotReadableException.class, MissingRequestHeaderException.class, MissingPathVariableException.class})
     public ResponseEntity<Object> inputValidationException(Exception e) {
+        log.info(
+                "some error has occurred trying to add foreign exchange rates list, in Class foreignExchangeController and its function addForeignExchangeRate see logs for more details "+ e.getMessage());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
     }
 }

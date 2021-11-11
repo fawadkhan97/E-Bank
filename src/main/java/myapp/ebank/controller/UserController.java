@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -245,8 +246,7 @@ public class UserController {
     }
 
     @ExceptionHandler(javax.validation.ConstraintViolationException.class)
-    public ResponseEntity<Object> inputValidationException(Exception e) {
-
+    public ResponseEntity<Object> inputValidationException(ConstraintViolationException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
     }

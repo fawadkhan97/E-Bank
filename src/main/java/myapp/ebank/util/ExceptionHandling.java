@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ExceptionHandling {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class, IllegalStateException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, org.springframework.http.converter.HttpMessageNotReadableException.class, IllegalStateException.class, InvalidFormatException.class, DataIntegrityViolationException.class})
     public static ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -25,10 +25,11 @@ public class ExceptionHandling {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
-
-    public static ResponseEntity<Object> handleHttpMessageNotReadAbleException(HttpMessageNotReadableException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//
+    public static ResponseEntity<Object> handleHttpMessageNotReadAbleException(org.springframework.http.converter.HttpMessageNotReadableException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
+
 
 }
 
