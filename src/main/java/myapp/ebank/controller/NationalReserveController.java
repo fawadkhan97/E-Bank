@@ -21,7 +21,7 @@ import java.util.Map;
 @Validated
 public class NationalReserveController {
 
-    private static final String defaultAuthValue = "nationalreserves12345";
+    private static final String defaultAuthValue = "12345";
     final NationalReservesService nationalReservesService;
 
     public NationalReserveController(NationalReservesService nationalReservesService) {

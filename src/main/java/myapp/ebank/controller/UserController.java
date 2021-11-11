@@ -25,7 +25,6 @@ import java.util.Map;
 @Validated
 public class UserController {
     private static final String defaultAuthValue = "12345";
-    private static final Logger log = LogManager.getLogger(UserController.class);
     final UserService userService;
     final LoanService loanService;
 

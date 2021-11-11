@@ -61,17 +61,16 @@ public class CurrencyService {
             Optional<Currencies> currency = currencyRepository.findById(id);
             if (currency.isPresent() && currency.get().getIsActive()) {
                 // check if currency is verified
-                log.info("currency fetch and found from db by id  : ", currency.toString());
+                log.info("currency fetch and found from db by id  : "+ currency.toString());
                 return new ResponseEntity<>(currency, HttpStatus.FOUND);
             } else {
-                log.info("no currency found with id:", currency.get().getId());
+                log.info("no currency found with id .."+ currency.get().getId());
                 return new ResponseEntity<>("could not found currency with given details.... currency may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             log.info(
-                    "some error has occurred during fetching Currency by id , in class CurrencyService and its function getCurrencyById ",
+                    "some error has occurred during fetching Currency by id , in class CurrencyService and its function getCurrencyById "+
                     e.getMessage());
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>("Unable to find Currency, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

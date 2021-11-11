@@ -9,6 +9,7 @@ import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.DateTime;
 import myapp.ebank.util.EmailUtil;
 import myapp.ebank.util.SMSUtil;
+import myapp.ebank.util.exceptionshandling.ErrorResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.PropertyValueException;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -91,7 +93,7 @@ public class UserService {
                 return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -118,7 +120,7 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            log.debug(
+            log.info(
                     "some error has occurred during fetching Users by username , in class UserService and its function getUserByName ",
                     e.getMessage());
             return new ResponseEntity<>("Unable to Login either password or username might be incorrect",
@@ -133,7 +135,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> saveUser(Users user) throws HttpMessageNotReadableException {
+    public ResponseEntity<Object> saveUser(Users user) {
         try {
             //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
             //   System.out.println("record is from kamran :" + criminalRecord);
@@ -146,34 +148,22 @@ public class UserService {
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
             user.setToken(token);
             // save user to db
-
             userRepository.save(user);
             // send email token to user email and save in db
             emailUtil.sendMail(user.getEmail(), token);
             // send sms token to user email and save in db
             smsUtil.sendSMS(user.getPhoneNumber(), token);
             return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (HttpMessageNotReadableException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InvalidDataAccessApiUsageException | TransientPropertyValueException e) {
-            System.out.println(e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("organization with given id does not exist or organization is not provided", HttpStatus.NOT_ACCEPTABLE);
-        } catch (PropertyValueException e) {
-            System.out.println(e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("some required fields might be null", HttpStatus.NOT_ACCEPTABLE);
         } catch (DataIntegrityViolationException e) {
-            System.out.println(e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>(" Some Data field maybe missing or Data already exists   ", HttpStatus.NOT_ACCEPTABLE);
+            log.info("error is " + Objects.requireNonNull(e.getRootCause()).getMessage());
+            return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage()), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            log.debug(
-                    "some error has occurred while trying to save user,, in class UserService and its function saveUser ",
-                    e.getMessage());
-            System.out.println("error is " + e.getMessage() + "  " + e.getCause());
+            log.info(
+                    "some error has occurred while trying to save user,, in class UserService and its function saveUser " +
+                            e.getMessage());
             return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -189,7 +179,7 @@ public class UserService {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
-            log.debug(
+            log.info(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -217,7 +207,7 @@ public class UserService {
             } else
                 return new ResponseEntity<>(" : Users does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred while trying to Delete user, in class UserService and its function deleteUser ",
                     e.getMessage(), e.getCause(), e);
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
@@ -439,7 +429,7 @@ public class UserService {
 
 
         } catch (Exception e) {
-            log.debug(
+            log.info(
                     "some error has occurred during fetching User by id , in class UserService and its function getUserFundsAndLoans ",
                     e.getMessage());
             System.out.println(e.getMessage() + " " + e.getCause());

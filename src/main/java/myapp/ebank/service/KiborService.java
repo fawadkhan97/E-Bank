@@ -43,7 +43,7 @@ public class KiborService {
                 return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println("error has occured " + e.getMessage() + " " + e.getCause());
-            log.info("some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getDailyKiborRates ", e.getMessage());
+            log.info("some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getDailyKiborRates " + e.getMessage());
             return new ResponseEntity<>("some error has occured ...", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -63,8 +63,7 @@ public class KiborService {
                 return new ResponseEntity<>("Could not get today rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getKiborRatesByDate ", e.getMessage());
-            System.out.println("some error has occured " + e.getCause());
+                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getKiborRatesByDate " + e.getMessage());
             return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -84,9 +83,8 @@ public class KiborService {
                 return new ResponseEntity<>("Could not get Kibor rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getRxchangeRatesByStartingDate ", e.getMessage());
+                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getRxchangeRatesByStartingDate " + e.getMessage());
 
-            System.out.println("some error has occurred " + e.getCause());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -107,8 +105,7 @@ public class KiborService {
                 return new ResponseEntity<>("Could not get Kibor rate ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getKiborRatesBetweenDates ", e.getMessage());
-            System.out.println("some error has occurred " + e.getCause());
+                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getKiborRatesBetweenDates " + e.getMessage());
             return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -127,8 +124,7 @@ public class KiborService {
                 return new ResponseEntity<>(kiborRates, HttpStatus.OK);
             }
         } catch (Exception e) {
-            log.info("some error has occurred trying to Fetch kiborRates, in Class  KiborRatesService and its function listAllKiborRates ");
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            log.info("some error has occurred trying to Fetch kiborRates, in Class  KiborRatesService and its function listAllKiborRates " + e.getMessage());
 
             return new ResponseEntity<>("KiborRates could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -147,18 +143,16 @@ public class KiborService {
             Optional<KiborRates> kiborRate = kiborRatesRepository.findById(id);
             if (kiborRate.isPresent() && kiborRate.get().isActive()) {
                 // check if kiborRate is verified
-                log.info("kiborRate fetch and found from db by id  : ", kiborRate.toString());
+                log.info("kiborRate fetch and found from db by id  : "+ kiborRate.toString());
                 return new ResponseEntity<>(kiborRate, HttpStatus.FOUND);
             } else {
-                log.info("no kiborRate found with id:", kiborRate.get().getId());
+                log.info("no kiborRate found with id:"+ kiborRate.get().getId());
                 return new ResponseEntity<>("could not found kiborRate with given details.... kiborRate may not be verified", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             log.info(
-                    "some error has occurred during fetching KiborRates by id , in class KiborRatesService and its function getKiborRatesById ",
+                    "some error has occurred during fetching KiborRates by id , in class KiborRatesService and its function getKiborRatesById "+
                     e.getMessage());
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
-
             return new ResponseEntity<>("Unable to find KiborRates, an error has occurred",
                     HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -182,8 +176,7 @@ public class KiborService {
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function get dailyKibor rates ", e.getMessage());
-            System.out.println("error occured .." + e.getCause() + "  " + e.getMessage());
+                    "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function get dailyKibor rates "+ e.getMessage());
             return new ResponseEntity<>("some error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -202,7 +195,7 @@ public class KiborService {
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
             log.info(
-                    "some error has occurred while trying to update kiborRate,, in class kiborRateService and its function updatekiborRate ",
+                    "some error has occurred while trying to update kiborRate,, in class kiborRateService and its function updatekiborRate "+
                     e.getMessage());
             return new ResponseEntity<>("Kibor rates could not be updated , Data maybe incorrect", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -229,8 +222,8 @@ public class KiborService {
                 return new ResponseEntity<>("KiborRates does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred while trying to Delete kiborRate,, in class kiborRateService and its function deletekiborRate ",
-                    e.getMessage(), e.getCause());
+                    "some error has occurred while trying to Delete kiborRate,, in class kiborRateService and its function deletekiborRate "+
+                    e.getMessage()+ e.getCause());
             return new ResponseEntity<>("KiborRates could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
