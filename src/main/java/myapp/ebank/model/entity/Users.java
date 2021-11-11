@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,8 @@ public class Users implements Serializable {
     @NotBlank(message = "password is mandatory")
     private String password;
     @Column(name = "age")
+    @Min(value=1, message = "age should be greater than 0")
+    @Digits(integer = 3, fraction = 0)
     private int age;
     @Column(name = "dob")
     private String dob;

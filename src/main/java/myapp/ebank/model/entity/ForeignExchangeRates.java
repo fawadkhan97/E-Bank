@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -27,10 +28,10 @@ public class ForeignExchangeRates implements Serializable {
     private String symbol;
     @NotNull(message = "buying rate is mandatory")
     @Column(name = "buying")
-    private Double buying;
+     private Double buying;
     @NotNull(message = "selling rate is mandatory")
     @Column(name = "selling")
-    private Double selling;
+     private Double selling;
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "updatedDate")

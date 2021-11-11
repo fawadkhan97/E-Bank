@@ -90,4 +90,13 @@ public class LoanController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
-}}
+}
+
+    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+    public ResponseEntity<Object> inputValidationException(Exception e) {
+
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+
+    }
+
+}

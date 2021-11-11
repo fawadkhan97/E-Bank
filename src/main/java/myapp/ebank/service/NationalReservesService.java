@@ -1,7 +1,6 @@
 package myapp.ebank.service;
 
 import myapp.ebank.model.entity.NationalReserves;
-import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
 import myapp.ebank.util.DateTime;
 import myapp.ebank.util.SqlDate;
@@ -128,7 +127,7 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> listAllNationalReserves() {
         try {
-            List<NationalReserves> nationalReserves = nationalReservesRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<NationalReserves> nationalReserves = nationalReservesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (nationalReserves.isEmpty()) {
                 return new ResponseEntity<>("  NationalReserves are empty", HttpStatus.NOT_FOUND);
@@ -186,6 +185,7 @@ public class NationalReservesService {
         try {
             Date currentDate = SqlDate.getDateInSqlFormat();
             nationalReserves.setUpdatedDate(currentDate);
+            nationalReserves.setActive(true);
             nationalReservesRepository.save(nationalReserves);
             return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
@@ -231,7 +231,7 @@ public class NationalReservesService {
      */
     public ResponseEntity<Object> deleteNationalReserves(Long id) {
         try {
-            Optional<NationalReserves> nationalReserve = nationalReservesRepository.findByIdAndActive(id,true);
+            Optional<NationalReserves> nationalReserve = nationalReservesRepository.findByIdAndIsActive(id,true);
             if (nationalReserve.isPresent()) {
                 // set status false
                 nationalReserve.get().setActive(false);

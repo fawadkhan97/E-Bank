@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @Repository
 public interface KiborRepository extends JpaRepository<KiborRates, Long> {
-    List<KiborRates> findAllByActiveOrderByCreatedDateDesc(boolean status);
+    List<KiborRates> findAllByIsActiveOrderByCreatedDateDesc(boolean status);
 
-    Optional<KiborRates> findByIdAndActive(long id, Boolean isActive);
+    Optional<KiborRates> findByIdAndIsActive(long id, Boolean isActive);
 
-    @Query(value = "SELECT * FROM kibor_rates where date like CONCAT(:date,'%')", nativeQuery = true)
+    @Query(value = "SELECT * FROM kibor_rates where created_date like CONCAT(:date,'%')", nativeQuery = true)
     Optional<KiborRates> findByDateLike(Date date);
 
-    @Query(value = "SELECT * from kibor_rates where date >= :startDate order by date desc", nativeQuery = true)
+    @Query(value = "SELECT * from kibor_rates where created_date >= :startDate order by created_date desc", nativeQuery = true)
     Optional<KiborRates> findByStartDate(java.util.Date startDate);
 
     List<KiborRates> findByCreatedDateBetweenOrderByCreatedDateDesc(java.util.Date startDate, java.util.Date endDate);

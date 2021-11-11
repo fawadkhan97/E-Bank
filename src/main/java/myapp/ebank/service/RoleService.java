@@ -37,7 +37,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> getAllRoles() {
         try {
-            List<Roles> roles = roleRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<Roles> roles = roleRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty or not
             if (roles.isEmpty()) {
                 return new ResponseEntity<>("No roles found... ", HttpStatus.NOT_FOUND);
@@ -64,6 +64,7 @@ public class RoleService {
     public ResponseEntity<Object> addRole(Roles role) {
         try {
             role.setCreatedDate(DateTime.getDateTime());
+            role.setActive(true);
             roleRepository.save(role);
             return new ResponseEntity<>(role, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
@@ -86,7 +87,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> getRoleById(Long id) {
         try {
-            Optional<Roles> role = roleRepository.findByIdAndActive(id,true);
+            Optional<Roles> role = roleRepository.findByIdAndIsActive(id,true);
             if (role.isPresent())
                 return new ResponseEntity<>(role, HttpStatus.FOUND);
             else
@@ -129,7 +130,7 @@ public class RoleService {
      */
     public ResponseEntity<Object> deleteRole(Long id) {
         try {
-            Optional<Roles> role = roleRepository.findByIdAndActive(id,true);
+            Optional<Roles> role = roleRepository.findByIdAndIsActive(id,true);
             if (role.isPresent()) {
                 // set status false
                 role.get().setActive(false);

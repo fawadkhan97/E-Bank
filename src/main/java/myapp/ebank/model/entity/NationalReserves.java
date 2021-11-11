@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -19,10 +20,10 @@ public class NationalReserves implements Serializable {
     @Id
     @GeneratedValue
     private long id;
-    @NotBlank(message = "ForeignReserves is mandatory")
+    @NotNull(message = "ForeignReserves is mandatory")
     @Column(name = "ForeignReserves")
     private Double foreignReserves;
-    @NotBlank(message = "GoldReserves is mandatory")
+    @NotNull(message = "GoldReserves is mandatory")
     @Column(name = "GoldReserves")
     private Double goldReserves;
     @NotNull(message = "National Reserves rates created date is mandatory")

@@ -2,6 +2,7 @@ package myapp.ebank.controller;
 
 import myapp.ebank.model.entity.ForeignExchangeRates;
 import myapp.ebank.service.ForeignExchangeRateService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -151,7 +152,7 @@ public class ForeignExchangeRateController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class,javax.validation.ConstraintViolationException.class})
     public Map<String, String> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -161,5 +162,11 @@ public class ForeignExchangeRateController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+
+
+    @ExceptionHandler(javax.validation.ConstraintViolationException.class)
+    public ResponseEntity<Object> inputValidationException(Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -27,10 +28,13 @@ public class Loans implements Serializable {
     @Column(name = "dueDate")
     private Date dueDate;
     @Column(name = "insterestRate")
+    @Min(value=1, message = "value should be greater than 0")
     private Double interestRate;
     @Column(name = "totalAmountToBePaid")
+    @Min(value=1, message = "value should be greater than 0")
     private Double totalAmountToBePaid;
     @Column(name = "amountPaid")
+    @Min(value=1, message = "value should be greater than 0")
     private Double amountPaid;
     @Column(name = "createdDate")
     private Date createdDate;

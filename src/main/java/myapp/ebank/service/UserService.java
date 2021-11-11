@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -57,7 +56,7 @@ public class UserService {
      */
     public ResponseEntity<Object> listAllUser() {
         try {
-            List<Users> users = userRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<Users> users = userRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (users.isEmpty()) {
                 return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
@@ -82,7 +81,7 @@ public class UserService {
      */
     public ResponseEntity<Object> getUserById(Long id) {
         try {
-            Optional<Users> user = userRepository.findByIdAndActive(id,true);
+            Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
                 // check if user is verified
                 log.info("user fetch and found from db by id  : ", user.toString());
@@ -147,6 +146,7 @@ public class UserService {
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
             user.setToken(token);
             // save user to db
+
             userRepository.save(user);
             // send email token to user email and save in db
             emailUtil.sendMail(user.getEmail(), token);
@@ -184,14 +184,9 @@ public class UserService {
      */
     public ResponseEntity<Object> updateUser(Users user) {
         try {
-            Optional<Users> user1 = userRepository.findById(user.getId());
-            if (user1.isPresent()) {
-                user.setUpdatedDate(DateTime.getDateTime());
-                user.setCreatedDate(user1.get().getCreatedDate());
-                userRepository.save(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            } else return new ResponseEntity<>("user is not present id might be in correct", HttpStatus.NOT_FOUND);
-
+            user.setUpdatedDate(DateTime.getDateTime());
+            userRepository.save(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
             log.debug(
@@ -211,7 +206,7 @@ public class UserService {
      */
     public ResponseEntity<Object> deleteUser(Long id) {
         try {
-            Optional<Users> user = userRepository.findByIdAndActive(id,true);
+            Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
                 // set status false
                 user.get().setActive(false);
@@ -323,6 +318,7 @@ public class UserService {
                     loan.setAmountPaid(0.0);
                     loan.setPaidStatus(false);
                     loan.setPaidDate(null);
+                    loan.setActive(true);
 
                     loans.add(loan);
                     user.get().setLoans(loans);
@@ -358,7 +354,7 @@ public class UserService {
                 for (Loans loan1 : loansList) {
                     // check if user contain  the loan specified
                     if (loan1.getId() == loan.getId() && !loan1.getPaidStatus()) {
-                        double paidAmount = loan.getAmountPaid() - loan1.getTotalAmountToBePaid();
+                        Double paidAmount = loan.getAmountPaid() - loan1.getTotalAmountToBePaid();
                         if (paidAmount > 0 || paidAmount < 0) {
                             return new ResponseEntity<>("paid amount is not equal to amount to be paid , please enter correct amount and try again", HttpStatus.FORBIDDEN);
                         }
@@ -407,6 +403,7 @@ public class UserService {
                     return new ResponseEntity<>("Funds requested has been received..it will be process and its status will be updated soon", HttpStatus.OK);
                 }
                 funds.setCreatedDate(DateTime.getDateTime());
+                funds.setActive(true);
                 funds.setApprovedStatus(true);
                 fundsList.add(funds);
                 user.get().setFunds(fundsList);
@@ -431,7 +428,7 @@ public class UserService {
      */
     public ResponseEntity<Object> getUserFundsAndLoans(Long id) {
         try {
-            Optional<Users> user = userRepository.findByIdAndActive(id, true);
+            Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
                 // save Funds and Loans from user object
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();

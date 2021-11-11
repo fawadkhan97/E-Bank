@@ -54,6 +54,7 @@ public class FundService {
         try {
 
             fund.setUpdatedDate(DateTime.getDateTime());
+
             fundRepository.save(fund);
             return new ResponseEntity<>(fund, HttpStatus.OK);
         } catch (Exception e) {

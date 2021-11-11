@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -19,10 +20,10 @@ public class KiborRates implements Serializable {
     private long id;
     @NotNull(message = "bid rate is mandatory")
     @Column(name = "bid")
-    private Double bid;
+     private Double bid;
     @NotNull(message = "offer rate is mandatory")
     @Column(name = "offer")
-    private Double offer;
+     private Double offer;
     @NotNull(message = "interest rates createdDate is mandatory")
     @Column(name = "created_date")
     private Date createdDate;

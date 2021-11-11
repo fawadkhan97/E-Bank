@@ -43,7 +43,6 @@ public class CurrencyService {
             } else
                 return new ResponseEntity<>(issuedCurrencies, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println("error occurred is ..." + e.getCause() + "  " + e.getMessage());
             log.debug(
                     "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies ", e.getMessage());
             return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -122,8 +121,6 @@ public class CurrencyService {
             currency.toString();
             return new ResponseEntity<>(currency, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage() + "  " + e.getCause());
-
             log.error(
                     "some error has occurred while trying to update currency,, in class CurrencyService and its function updateCurrency "
                     , e.getMessage());

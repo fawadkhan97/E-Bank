@@ -120,7 +120,7 @@ public class InterestRateService {
      */
     public ResponseEntity<Object> listAllInterestRates() {
         try {
-            List<InterestRates> interestRates = interestRatesRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<InterestRates> interestRates = interestRatesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (interestRates.isEmpty()) {
                 return new ResponseEntity<>("  InterestRates are empty", HttpStatus.NOT_FOUND);
@@ -176,6 +176,7 @@ public class InterestRateService {
     public ResponseEntity<Object> addInterestRate(InterestRates interestRates) {
 
         try {
+            interestRates.setActive(true);
             interestRatesRepository.save(interestRates);
             return new ResponseEntity<Object>(interestRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {

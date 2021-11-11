@@ -1,7 +1,6 @@
 package myapp.ebank.service;
 
 import myapp.ebank.model.entity.ForeignExchangeRates;
-import myapp.ebank.model.entity.ForeignExchangeRates;
 import myapp.ebank.repository.ForeignExchangeRateRepository;
 import myapp.ebank.util.DateTime;
 import myapp.ebank.util.SqlDate;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.ConstraintViolationException;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +29,7 @@ public class ForeignExchangeRateService {
         this.foreignExchangeRateRepository = foreignExchangeRateRepository;
     }
 
-    
-    
+
     /**
      * get daily foreignExchange rate
      *
@@ -60,7 +59,7 @@ public class ForeignExchangeRateService {
      * get foreignExchange Rate for specific Date
      *
      * @param date
-     * @return  foreign exchange list
+     * @return foreign exchange list
      */
     public ResponseEntity<Object> getForeignExchangeRateByDate(Date date) {
         try {
@@ -129,7 +128,7 @@ public class ForeignExchangeRateService {
      */
     public ResponseEntity<Object> listAllForeignExchangeRates() {
         try {
-            List<ForeignExchangeRates> foreignExchangeRates = foreignExchangeRateRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<ForeignExchangeRates> foreignExchangeRates = foreignExchangeRateRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (foreignExchangeRates.isEmpty()) {
                 return new ResponseEntity<>("  ForeignExchangeRates are empty", HttpStatus.NOT_FOUND);
@@ -148,6 +147,7 @@ public class ForeignExchangeRateService {
 
     /**
      * fetch record by id
+     *
      * @param id
      * @return
      * @author fawad khan
@@ -186,10 +186,14 @@ public class ForeignExchangeRateService {
     public ResponseEntity<Object> addForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates) {
         try {
             for (ForeignExchangeRates foreignExchangeRates1 : foreignExchangeRates) {
-                foreignExchangeRates1.setCreatedDate(DateTime.getDateTime());
+              //  foreignExchangeRates1.setCreatedDate(DateTime.getDateTime());
+                foreignExchangeRates1.setActive(true);
             }
             foreignExchangeRateRepository.saveAll(foreignExchangeRates);
             return new ResponseEntity<>(foreignExchangeRates, HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            log.debug("an error has occured while adding rates...", e.getMessage(), e.getCause());
+            return new ResponseEntity<>("data maybe incorrect please check again..", HttpStatus.NOT_ACCEPTABLE);
         } catch (DataIntegrityViolationException e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
@@ -205,6 +209,7 @@ public class ForeignExchangeRateService {
 
     /**
      * update rates
+     *
      * @param foreignExchangeRates
      * @return
      * @author fawad khan
@@ -229,6 +234,7 @@ public class ForeignExchangeRateService {
 
     /**
      * delete foreign exchanges
+     *
      * @param id
      * @return
      * @author fawad khan

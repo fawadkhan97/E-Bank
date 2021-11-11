@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -19,8 +20,7 @@ public class Funds implements Serializable {
     private long id;
     @NotNull(message = "funds amount cannot be blank")
     @Column(nullable = false)
-
-    private Double amount;
+     private Double amount;
     @NotBlank(message = "funds description is mandatory is mandatory")
     private String description;
     @Column(name = "createdDate")

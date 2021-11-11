@@ -32,7 +32,7 @@ public class OrganizationService {
     public ResponseEntity<Object> listAllOrganization() {
         try {
 
-            List<Organizations> organizations = organizationRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<Organizations> organizations = organizationRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             /* log.info("list of  organizations fetch from db are ", organizations);*/
             // check if list is empty
             if (organizations.isEmpty()) {
@@ -60,7 +60,7 @@ public class OrganizationService {
      */
     public ResponseEntity<Object> getOrganizationById(Long id) {
         try {
-            Optional<Organizations> organization = organizationRepository.findByIdAndActive(id, true);
+            Optional<Organizations> organization = organizationRepository.findByIdAndIsActive(id, true);
             if (organization.isPresent()) {
                 log.info("organization fetch and found from db by id  : ", organization.toString());
                 return new ResponseEntity<>(organization, HttpStatus.FOUND);
@@ -139,7 +139,7 @@ public class OrganizationService {
      */
     public ResponseEntity<Object> deleteOrganization(Long id) {
         try {
-            Optional<Organizations> organization = organizationRepository.findByIdAndActive(id, true);
+            Optional<Organizations> organization = organizationRepository.findByIdAndIsActive(id, true);
             if (organization.isPresent()) {
                 // set status false
                 organization.get().setActive(false);

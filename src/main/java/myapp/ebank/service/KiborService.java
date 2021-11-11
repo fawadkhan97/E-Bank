@@ -119,7 +119,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> listAllKiborRates() {
         try {
-            List<KiborRates> kiborRates = kiborRatesRepository.findAllByActiveOrderByCreatedDateDesc(true);
+            List<KiborRates> kiborRates = kiborRatesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (kiborRates.isEmpty()) {
                 return new ResponseEntity<>("  KiborRates are empty", HttpStatus.NOT_FOUND);
@@ -174,6 +174,7 @@ public class KiborService {
      */
     public ResponseEntity<Object> addKiborRate(KiborRates kiborRates) {
         try {
+            kiborRates.setActive(true);
             kiborRatesRepository.save(kiborRates);
             return new ResponseEntity<>(kiborRates, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
