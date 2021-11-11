@@ -12,13 +12,9 @@ import myapp.ebank.util.SMSUtil;
 import myapp.ebank.util.exceptionshandling.ErrorResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.PropertyValueException;
-import org.hibernate.TransientPropertyValueException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -135,7 +131,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> saveUser(Users user) {
+    public ResponseEntity<Object> saveUser(Users user, HttpServletRequest request) {
         try {
             //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
             //   System.out.println("record is from kamran :" + criminalRecord);
@@ -155,12 +151,12 @@ public class UserService {
             smsUtil.sendSMS(user.getPhoneNumber(), token);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
+            System.out.println("error msg sout is " + e.getMessage());
             log.info("error is " + Objects.requireNonNull(e.getRootCause()).getMessage());
-            return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage()), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage(), request.getRequestURI()), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
-            log.info(
-                    "some error has occurred while trying to save user,, in class UserService and its function saveUser " +
-                            e.getMessage());
+            log.info("some error has occurred while trying to save user,, in class UserService and its function saveUser " +
+                    e.getMessage());
             return new ResponseEntity<>("User could not be added , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }

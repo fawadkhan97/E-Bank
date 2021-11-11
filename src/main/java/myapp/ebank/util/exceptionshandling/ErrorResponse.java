@@ -24,14 +24,13 @@ public class ErrorResponse {
 
     private String path;
 
-    HttpServletRequest request;
 
 
-    public ErrorResponse(HttpStatus httpStatus, String message) {
+    public ErrorResponse(HttpStatus httpStatus, String message,String path) {
         timestamp = LocalDateTime.now();
         this.code = httpStatus.value();
         this.status = httpStatus;
-        this.path = request.getRequestURI();
+        this.path = path;
         this.message = message;
     }
 
