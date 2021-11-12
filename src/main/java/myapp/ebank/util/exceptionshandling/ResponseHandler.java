@@ -8,10 +8,11 @@ import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
-public class ErrorResponse {
+public class ResponseHandler {
     // customizing timestamp serialization format
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
@@ -24,15 +25,26 @@ public class ErrorResponse {
 
     private String path;
 
+    private Object data;
 
 
-    public ErrorResponse(HttpStatus httpStatus, String message,String path) {
+    public ResponseHandler(HttpStatus httpStatus, String message, String path) {
         timestamp = LocalDateTime.now();
         this.code = httpStatus.value();
         this.status = httpStatus;
         this.path = path;
         this.message = message;
     }
+
+    public ResponseHandler(HttpStatus httpStatus, Object data, String path) {
+        timestamp = LocalDateTime.now();
+        this.code = httpStatus.value();
+        this.status = httpStatus;
+        this.path = path;
+        this.data = data;
+    }
+
+
 
 
 }

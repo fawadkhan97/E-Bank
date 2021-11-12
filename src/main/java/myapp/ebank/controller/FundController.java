@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -35,7 +36,7 @@ public class FundController {
      * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllFunds(@RequestHeader(value = "Authorization") String authValue) {
+    public ResponseEntity<Object> getAllFunds(@RequestHeader(value = "Authorization") String authValue, HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return fundService.listAllFunds();
         } else
@@ -51,7 +52,7 @@ public class FundController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateFund(@RequestHeader(value = "Authorization") String authValue,
-                                           @Valid @RequestBody Funds fund) {
+                                           @Valid @RequestBody Funds fund,HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return fundService.updateFund(fund);
         } else
@@ -66,7 +67,7 @@ public class FundController {
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteFund(@RequestHeader(value = "Authorization") String authValue,
-                                             @PathVariable Long id) {
+                                             @PathVariable Long id,HttpServletRequest httpServletRequest) {
 
         if (authorize(authValue)) {
             return fundService.deleteFund(id);

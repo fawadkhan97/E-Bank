@@ -29,14 +29,14 @@ public class ExceptionHandling {
             log.info("field is " + fieldName + " " + errorDefaultMessage);
         });
         log.info("an error has occured ....." + e.getClass()+errorResult);
-        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseHandler(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({RuntimeException.class, MissingRequestValueException.class, InputMismatchException.class})
-    public ResponseEntity<ErrorResponse> inputValidationException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ResponseHandler> inputValidationException(Exception e, HttpServletRequest request) {
         log.info("some error has occurred see logs for more details ....general exception is \n " + e.toString() + request.getRequestURI());
-        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseHandler(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
 }

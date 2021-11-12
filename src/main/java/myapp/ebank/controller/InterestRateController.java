@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class InterestRateController {
      * @return
      */
     @GetMapping("/dailyRates")
-    public ResponseEntity<Object> getDailyInterestRate() {
+    public ResponseEntity<Object> getDailyInterestRate( HttpServletRequest httpServletRequest) {
         return interestRateService.getDailyInterestRate();
     }
 
@@ -54,7 +55,7 @@ public class InterestRateController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date) {
+    public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date, HttpServletRequest httpServletRequest) {
         return interestRateService.getInterestRateByDate(date);
     }
 
@@ -65,7 +66,7 @@ public class InterestRateController {
      * @return
      */
     @GetMapping("/getByStartDate")
-    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
+    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, HttpServletRequest httpServletRequest) {
         return interestRateService.getInterestRateByStartDate(startDate);
     }
 
@@ -78,7 +79,7 @@ public class InterestRateController {
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getInterestRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
-                                                                   @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
+                                                                   @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate, HttpServletRequest httpServletRequest) {
         return interestRateService.getInterestRateBetweenDates(startDate, endDate);
     }
 
@@ -88,7 +89,7 @@ public class InterestRateController {
      * @return interestRate object
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getInterestRate(@PathVariable Long id) {
+    public ResponseEntity<Object> getInterestRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
         return interestRateService.getInterestRatesById(id);
     }
 
@@ -97,7 +98,7 @@ public class InterestRateController {
      * @return list of interest rates
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllInterestRates() {
+    public ResponseEntity<Object> getAllInterestRates(HttpServletRequest httpServletRequest) {
         return interestRateService.listAllInterestRates();
     }
 
@@ -111,7 +112,7 @@ public class InterestRateController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                  @Valid @RequestBody InterestRates interestRates) {
+                                                  @Valid @RequestBody InterestRates interestRates, HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return interestRateService.addInterestRate(interestRates);
         } else
@@ -126,7 +127,7 @@ public class InterestRateController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                     @Valid @RequestBody InterestRates interestRate) {
+                                                     @Valid @RequestBody InterestRates interestRate, HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return interestRateService.updateInterestRate(interestRate);
         } else
@@ -141,7 +142,7 @@ public class InterestRateController {
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteInterestRate(@RequestHeader(value = "Authorization") String authValue,
-                                                     @PathVariable Long id) {
+                                                     @PathVariable Long id, HttpServletRequest httpServletRequest) {
 
         if (authorize(authValue)) {
             return interestRateService.deleteInterestRate(id);

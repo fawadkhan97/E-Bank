@@ -9,7 +9,7 @@ import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.DateTime;
 import myapp.ebank.util.EmailUtil;
 import myapp.ebank.util.SMSUtil;
-import myapp.ebank.util.exceptionshandling.ErrorResponse;
+import myapp.ebank.util.exceptionshandling.ResponseHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,21 +52,20 @@ public class UserService {
      * @return List of users
      * @author Fawad khan
      */
-    public ResponseEntity<Object> listAllUser() {
+    public ResponseEntity<Object> listAllUser(HttpServletRequest httpServletRequest) {
         try {
             List<Users> users = userRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (users.isEmpty()) {
-                return new ResponseEntity<>("  Users are empty", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ResponseHandler(HttpStatus.NOT_FOUND, "  Users are empty", httpServletRequest.getRequestURI()), HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(users, HttpStatus.OK);
+                return new ResponseEntity<>(new ResponseHandler(HttpStatus.OK, users, httpServletRequest.getRequestURI()), HttpStatus.OK);
             }
 
         } catch (Exception e) {
-            log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser ");
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+            log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser \t" + e.getMessage() + e.getCause());
+            return new ResponseEntity<>(new ResponseHandler(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found", httpServletRequest.getRequestURI()), HttpStatus.INTERNAL_SERVER_ERROR);
 
-            return new ResponseEntity<>("Users could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -77,25 +76,23 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> getUserById(Long id) {
+    public ResponseEntity<Object> getUserById(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
                 // check if user is verified
-                log.info("user fetch and found from db by id  : ", user.toString());
-                return new ResponseEntity<>(user, HttpStatus.FOUND);
+                log.info("user fetch and found from db by id  : " + user.toString());
+                return new ResponseEntity<>(new ResponseHandler(HttpStatus.OK, user, httpServletRequest.getRequestURI()), HttpStatus.OK);
             } else {
-                log.info("no user found with id:", user.get().getId());
-                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
+                log.info("no user found with id:", id);
+                return new ResponseEntity<>(new ResponseHandler(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified", httpServletRequest.getRequestURI()), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
             log.info(
-                    "some error has occurred during fetching Users by id , in class UserService and its function getUserById ",
-                    e.getMessage());
-            System.out.println("error is" + e.getCause() + " " + e.getMessage());
+                    "some error has occurred during fetching Users by id , in class UserService and its function getUserById " +
+                            e.getMessage() + e.getCause());
+            return new ResponseEntity<>(new ResponseHandler(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found", httpServletRequest.getRequestURI()), HttpStatus.INTERNAL_SERVER_ERROR);
 
-            return new ResponseEntity<>("Unable to find Users, an error has occurred",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -151,14 +148,13 @@ public class UserService {
             smsUtil.sendSMS(user.getPhoneNumber(), token);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
-            System.out.println("error msg sout is " + e.getMessage());
             log.info("error is " + Objects.requireNonNull(e.getRootCause()).getMessage());
-            return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage(), request.getRequestURI()), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(new ResponseHandler(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage(), request.getRequestURI()), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             log.info("some error has occurred while trying to save user,, in class UserService and its function saveUser " +
                     e.getMessage());
-            return new ResponseEntity<>("User could not be added , Data maybe incorrect",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseHandler(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request.getRequestURI()), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
@@ -168,7 +164,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> updateUser(Users user) {
+    public ResponseEntity<Object> updateUser(Users user, HttpServletRequest request) {
         try {
             user.setUpdatedDate(DateTime.getDateTime());
             userRepository.save(user);
@@ -179,8 +175,8 @@ public class UserService {
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser ",
                     e.getMessage());
             System.out.println("error is" + e.getCause() + " " + e.getMessage());
-            return new ResponseEntity<>("User could not be added , Data maybe incorrect",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new ResponseHandler(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request.getRequestURI()), HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
     }
 
@@ -190,7 +186,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> deleteUser(Long id) {
+    public ResponseEntity<Object> deleteUser(Long id, HttpServletRequest request) {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
@@ -221,7 +217,7 @@ public class UserService {
      * @author fawad khan
      * @createdDate 14-oct-2021
      */
-    public ResponseEntity<Object> verifyUser(Long id, int token) {
+    public ResponseEntity<Object> verifyUser(Long id, int token, HttpServletRequest request) {
         try {
             Optional<Users> user = userRepository.findByIdAndToken(id, token);
             Date date = DateTime.getDateTime();
@@ -251,7 +247,7 @@ public class UserService {
      * @param id
      * @return
      */
-    public ResponseEntity<Object> sendToken(Long id) {
+    public ResponseEntity<Object> sendToken(Long id, HttpServletRequest request) {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent()) {
@@ -280,7 +276,7 @@ public class UserService {
      * @param loan
      * @return
      */
-    public ResponseEntity<Object> applyForLoan(Long id, Loans loan) {
+    public ResponseEntity<Object> applyForLoan(Long id, Loans loan, HttpServletRequest request) {
         try {
             if (loan.getAmountPaid() < loanAmount) {
                 Optional<Users> user = userRepository.findById(id);
@@ -330,7 +326,7 @@ public class UserService {
      * @param loan
      * @return
      */
-    public ResponseEntity<Object> depositLoan(Long id, Loans loan) {
+    public ResponseEntity<Object> depositLoan(Long id, Loans loan, HttpServletRequest request) {
 
         try {
             Optional<Users> user = userRepository.findById(id);
@@ -374,7 +370,7 @@ public class UserService {
      * @param funds
      * @return
      */
-    public ResponseEntity<Object> applyForFunds(Long id, Funds funds) {
+    public ResponseEntity<Object> applyForFunds(Long id, Funds funds, HttpServletRequest request) {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent() && user.get().isActive() && user.get().getOrganization().getType().equalsIgnoreCase("government")) {
@@ -412,7 +408,7 @@ public class UserService {
      * @param id
      * @return
      */
-    public ResponseEntity<Object> getUserFundsAndLoans(Long id) {
+    public ResponseEntity<Object> getUserFundsAndLoans(Long id, HttpServletRequest request) {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {

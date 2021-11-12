@@ -18,6 +18,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/dailyRates")
-    public ResponseEntity<Object> getDailyForeignExchangeRate() {
+    public ResponseEntity<Object> getDailyForeignExchangeRate( HttpServletRequest httpServletRequest) {
         return foreignExchangeRateService.getDailyForeignExchangeRate();
     }
 
@@ -63,7 +64,7 @@ public class ForeignExchangeRateController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam Date date) {
+    public ResponseEntity<Object> getForeignExchangeRateByDate(@RequestParam Date date,HttpServletRequest httpServletRequest) {
         return foreignExchangeRateService.getForeignExchangeRateByDate(date);
     }
 
@@ -88,7 +89,7 @@ public class ForeignExchangeRateController {
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getForeignExchangeRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
-                                                                          @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
+                                                                          @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate,HttpServletRequest httpServletRequest) {
 
         return foreignExchangeRateService.getForeignExchangeRateBetweenDates(startDate, endDate);
     }
@@ -99,7 +100,7 @@ public class ForeignExchangeRateController {
      * @return foreignExchangeRate object
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getForeignExchangeRate(@PathVariable Long id) {
+    public ResponseEntity<Object> getForeignExchangeRate(@PathVariable Long id,HttpServletRequest httpServletRequest) {
         return foreignExchangeRateService.getForeignExchangeRatesById(id);
     }
 
@@ -108,7 +109,7 @@ public class ForeignExchangeRateController {
      * @return list of foreign exchange rates
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllForeignExchangeRates() {
+    public ResponseEntity<Object> getAllForeignExchangeRates(HttpServletRequest httpServletRequest) {
         return foreignExchangeRateService.listAllForeignExchangeRates();
     }
 
@@ -121,7 +122,7 @@ public class ForeignExchangeRateController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addForeignExchangeRate(@RequestHeader(value = "Authorization") String authValue,
-                                                         @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
+                                                         @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates,HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return foreignExchangeRateService.addForeignExchangeRate(foreignExchangeRates);
         } else
@@ -136,7 +137,7 @@ public class ForeignExchangeRateController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateForeignExchangeRate(@RequestHeader(value = "Authorization") String authValue,
-                                                            @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates) {
+                                                            @Valid @RequestBody List<ForeignExchangeRates> foreignExchangeRates,HttpServletRequest httpServletRequest) {
         if (authorize(authValue)) {
             return foreignExchangeRateService.updateForeignExchangeRate(foreignExchangeRates);
         } else
@@ -151,7 +152,7 @@ public class ForeignExchangeRateController {
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteForeignExchangeRate(@RequestHeader(value = "Authorization") String authValue,
-                                                            @PathVariable Long id) {
+                                                            @PathVariable Long id,HttpServletRequest httpServletRequest) {
 
         if (authorize(authValue)) {
             return foreignExchangeRateService.deleteForeignExchangeRate(id);
