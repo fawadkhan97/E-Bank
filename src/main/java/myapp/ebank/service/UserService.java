@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +29,12 @@ import java.util.*;
  * createdDate 27-oct-2021
  */
 @Service
-public class UserService {
+public class UserService  {
     private static final Logger log = LogManager.getLogger(UserService.class);
     final LoanRepository loanRepository;
     final FeignPoliceRecordService feignPoliceRecordService;
     private final UserRepository userRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
     private final Double interestRate = 0.045;
@@ -42,11 +45,12 @@ public class UserService {
 
 
     // Autowiring through constructor
-    public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository, FeignPoliceRecordService feignPoliceRecordService) {
+    public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository, FeignPoliceRecordService feignPoliceRecordService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.emailUtil = emailUtil;
         this.loanRepository = loanRepository;
         this.feignPoliceRecordService = feignPoliceRecordService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     /**
@@ -103,7 +107,7 @@ public class UserService {
      */
     public ResponseEntity<Object> getUserByNameAndPassword(String userName, String password) {
         try {
-            Optional<Users> user = userRepository.findByUserNameAndPassword(userName, password);
+            Optional<Users> user = userRepository.findByUserName(userName);
             if (user.isPresent() && user.get().isActive())
                 return new ResponseEntity<>("login success", HttpStatus.OK);
             else
@@ -134,6 +138,7 @@ public class UserService {
             user.setCreatedDate(date);
             user.setUpdatedDate(null);
             user.setActive(false);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             Random rndkey = new Random(); // Generating a random number
             int token = rndkey.nextInt(999999); // Generating a random email token of 6 digits
             user.setToken(token);

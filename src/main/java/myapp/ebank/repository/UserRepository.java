@@ -10,7 +10,7 @@ import myapp.ebank.model.entity.Users;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
-    Optional<Users> findByUserNameAndPassword(String userName, String password);
+    Optional<Users> findByUserName(String userName);
 
     Optional<Users> findByIdAndToken(Long id, int token);
 

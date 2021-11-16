@@ -3,11 +3,13 @@ package myapp.ebank.controller;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
+import myapp.ebank.repository.UserRepository;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
 import myapp.ebank.util.ResponseMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +27,15 @@ public class UserController {
     final UserService userService;
     final LoanService loanService;
 
+
     public UserController(UserService userService, LoanService loanService) {
         this.userService = userService;
         this.loanService = loanService;
     }
+
+
+
+
 
     /**
      * check user is authorized or not
