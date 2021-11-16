@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.Date;
-import static myapp.ebank.configuration.SecurityConfiguration.*;
+
+import static myapp.ebank.constant.SecurityConstants.EXPIRATION_TIME;
+import static myapp.ebank.constant.SecurityConstants.KEY;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -35,7 +37,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse res) throws AuthenticationException {
         try {
             Users user = new ObjectMapper().readValue(req.getInputStream(), Users.class);
-
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUserName(),
                             user.getPassword(), new ArrayList<>())

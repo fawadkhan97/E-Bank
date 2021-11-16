@@ -15,7 +15,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,18 +32,18 @@ import java.util.*;
  * createdDate 27-oct-2021
  */
 @Service
-public class UserService  {
+public class UserService implements UserDetailsService {
     private static final Logger log = LogManager.getLogger(UserService.class);
     final LoanRepository loanRepository;
     final FeignPoliceRecordService feignPoliceRecordService;
     private final UserRepository userRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailUtil emailUtil;
     private final SMSUtil smsUtil = new SMSUtil();
     private final Double interestRate = 0.045;
     private final Double loanAmount = 5000000.0;
     private final Double fundAmount = 10000000.0;
     int unpaidLoanCount = 0;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     private Date expirationTime;
 
 
@@ -75,6 +78,21 @@ public class UserService  {
     }
 
     /**
+     * @param userName
+     * @return
+     * @throws UsernameNotFoundException
+     */
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        Optional<Users> user = userRepository.findByUserName(userName);
+        if (user.isPresent()) {
+            return new User(user.get().getUserName(), user.get().getPassword(), new ArrayList<>());
+        } else
+            log.info("exception occurred in load by username parameter is {}", userName);
+        throw new UsernameNotFoundException("user not found " + userName);
+    }
+
+    /**
      * @param id
      * @return
      * @author fawad khan
@@ -100,28 +118,6 @@ public class UserService  {
 
     }
 
-    /**
-     * @param userName
-     * @param password
-     * @return user
-     */
-    public ResponseEntity<Object> getUserByNameAndPassword(String userName, String password) {
-        try {
-            Optional<Users> user = userRepository.findByUserName(userName);
-            if (user.isPresent() && user.get().isActive())
-                return new ResponseEntity<>("login success", HttpStatus.OK);
-            else
-                return new ResponseEntity<>("incorrect login details, Login failed", HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            log.info("error is  {} .... {}", e.getMessage(), e.getCause());
-            log.info(
-                    "some error has occurred during fetching Users by username , in class UserService and its function getUserByName {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>("Unable to Login either password or username might be incorrect",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
 
     /**
      * @param user

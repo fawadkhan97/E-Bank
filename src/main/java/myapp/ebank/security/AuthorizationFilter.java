@@ -12,10 +12,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
+
+import static myapp.ebank.constant.SecurityConstants.HEADER_NAME;
+import static myapp.ebank.constant.SecurityConstants.KEY;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -35,7 +36,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         UsernamePasswordAuthenticationToken authentication = authenticate(request);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
@@ -50,10 +50,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
             if (user != null) {
                 return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }else{
-                return  null;
+            } else {
+                return null;
             }
 
         }
         return null;
     }
+}

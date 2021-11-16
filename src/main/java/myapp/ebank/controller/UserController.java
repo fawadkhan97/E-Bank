@@ -9,6 +9,7 @@ import myapp.ebank.service.UserService;
 import myapp.ebank.util.ResponseMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -48,18 +49,13 @@ public class UserController {
     }
 
     /**
+     *
      * @param userName
-     * @param password
      * @return
-     * @Author "Fawad"
-     * @Description "Login it takes username and password from frontend then check
-     * from database by calling object with email"
-     * @createdDate 27-oct-2021
      */
-    @GetMapping("/login")
-    public ResponseEntity<Object> login(@RequestParam(value = "username") String userName,
-                                        @RequestParam(value = "password") String password) {
-        return userService.getUserByNameAndPassword(userName, password);
+    @PostMapping("/login")
+    public UserDetails login(@RequestParam(value = "username") String userName ){
+        return userService.loadUserByUsername(userName);
     }
 
     /**
