@@ -10,6 +10,11 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "roles",
+        indexes = {
+                @Index(name = "date_index", columnList = "createdDate"),
+                @Index(name = "isActive_index", columnList = "isActive")})
+
 public class Roles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

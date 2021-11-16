@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,9 +90,9 @@ public class ForeignExchangeRateController {
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getForeignExchangeRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
-                                                                          @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate,HttpServletRequest httpServletRequest) {
+                                                                          @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate,HttpServletRequest httpServletRequest) throws ParseException {
 
-        return foreignExchangeRateService.getForeignExchangeRateBetweenDates(startDate, endDate);
+        return foreignExchangeRateService.getForeignExchangeRateBetweenDates(startDate, endDate ,httpServletRequest);
     }
 
 

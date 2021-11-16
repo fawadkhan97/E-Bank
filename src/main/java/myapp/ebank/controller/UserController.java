@@ -5,7 +5,7 @@ import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
-import myapp.ebank.util.exceptionshandling.ResponseHandler;
+import myapp.ebank.util.ResponseMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
 
 
 @RestController
@@ -20,7 +21,7 @@ import javax.validation.Valid;
 @Validated
 public class UserController {
     private static final String defaultAuthValue = "12345";
-    private String notAuthorize = "Not Authorize";
+    private final String notAuthorize = "Not Authorize";
     final UserService userService;
     final LoanService loanService;
 
@@ -63,12 +64,12 @@ public class UserController {
      * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllUsers(@RequestHeader(value = "Authorization") String authValue, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> getAllUsers(@RequestHeader(value = "Authorization") String authValue, HttpServletRequest httpServletRequest) throws ParseException {
 
         if (authorize(authValue)) {
             return userService.listAllUser(httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -80,12 +81,12 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) {
+                                          @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         // check authorization
         if (authorize(authValue)) {
             return userService.saveUser(user, httpServletRequest);
         } else {
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -96,12 +97,15 @@ public class UserController {
      */
     @PostMapping("/{id}/sendToken")
     public ResponseEntity<Object> sendToken(@RequestHeader(value = "Authorization") String authValue,
-                                            @PathVariable Long id, HttpServletRequest httpServletRequest) {
+                                            @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
+
         if (authorize(authValue)) {
             return userService.sendToken(id, httpServletRequest);
         } else {
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
         }
+
+
     }
 
     /**
@@ -111,7 +115,7 @@ public class UserController {
      * @createdDate 14-oct-2021
      */
     @GetMapping("/verify")
-    public ResponseEntity<Object> verifyUser(@RequestHeader(value = "id") Long userid,
+    public ResponseEntity<Object> verifyUser(@RequestHeader(value = "userid") Long userid,
                                              @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) {
         return userService.verifyUser(userid, token, httpServletRequest);
     }
@@ -124,12 +128,12 @@ public class UserController {
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @PathVariable Long id, HttpServletRequest httpServletRequest) {
+                                          @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
 
         if (authorize(authValue)) {
-            return userService.getUserById(id,httpServletRequest);
+            return userService.getUserById(id, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -140,11 +144,11 @@ public class UserController {
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateUser(@RequestHeader(value = "Authorization") String authValue,
-                                             @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) {
+                                             @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.updateUser(user, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -157,11 +161,11 @@ public class UserController {
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteUser(@RequestHeader(value = "Authorization") String authValue,
-                                             @PathVariable Long id, HttpServletRequest httpServletRequest) {
+                                             @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.deleteUser(id, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -172,11 +176,11 @@ public class UserController {
      * @return
      */
     @PostMapping("/{userid}/applyForLoan")
-    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.applyForLoan(userid, loan, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -187,13 +191,11 @@ public class UserController {
      * @return
      */
     @PostMapping("/{userid}/depositLoan")
-    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.depositLoan(userid, loan, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
-
-
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
     }
 
     /**
@@ -203,11 +205,11 @@ public class UserController {
      * @return
      */
     @PostMapping("/{userid}/applyForFunds")
-    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.applyForFunds(userid, funds, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
 
     }
 
@@ -217,11 +219,11 @@ public class UserController {
      * @return
      */
     @GetMapping("/{userid}/getFundsAndLoans")
-    public ResponseEntity<Object> getUserFundsAndLoans(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> getUserFundsAndLoans(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, HttpServletRequest httpServletRequest) throws ParseException {
         if (authorize(authValue)) {
             return userService.getUserFundsAndLoans(userid, httpServletRequest);
         } else
-            return new ResponseEntity<>(new ResponseHandler(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI()), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
 
     }
 }

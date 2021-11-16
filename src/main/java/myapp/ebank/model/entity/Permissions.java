@@ -1,9 +1,6 @@
 package myapp.ebank.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
@@ -12,6 +9,11 @@ import java.util.Date;
 
 @Entity
 @Data
+@Table(name = "permissions",
+		indexes = {
+				@Index(name = "date_index", columnList = "createdDate"),
+				@Index(name = "isActive_index", columnList = "isActive")})
+
 public class Permissions {
 	@Id
 	@GeneratedValue

@@ -14,8 +14,8 @@ import myapp.ebank.model.entity.InterestRates;
 @Repository
 public interface InterestRatesRepository extends JpaRepository<InterestRates, Long> {
 
-    @Query(value = "SELECT * FROM interest_rates where created_date like CONCAT(:date,'%')", nativeQuery = true)
-    Optional<InterestRates> findByDateLike(Date date);
+    @Query(value = "SELECT * FROM interest_rates where created_date like CONCAT(:date,'%') order by created_date desc  limit 1", nativeQuery = true)
+    Optional<InterestRates> findByDateLikeLimit1(Date date);
 
     @Query(value = "SELECT * from interest_rates where created_date >= :startDate order by created_date asc", nativeQuery = true)
     Optional<InterestRates> findByStartDate(java.util.Date startDate);

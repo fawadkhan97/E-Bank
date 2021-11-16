@@ -1,9 +1,6 @@
 package myapp.ebank.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +11,11 @@ import java.util.Date;
 
 @Data
 @Entity
+@Table(name = "kiborrates",
+        indexes = {
+                @Index(name = "date_index", columnList = "created_date"),
+                @Index(name = "isActive_index", columnList = "isActive")})
+
 public class KiborRates implements Serializable {
     @Id
     @GeneratedValue

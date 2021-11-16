@@ -45,12 +45,10 @@ public class DateTime {
      * @throws ParseException
      * @author Fawad
      */
-    public static String getDateInString() throws ParseException {
+    public static String getDateInString() {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar cal = Calendar.getInstance();
-        String date = formatter.format(cal.getTime());
-
-        return date;
+        return formatter.format(cal.getTime());
     }
 
     /**

@@ -3,6 +3,7 @@ package myapp.ebank.service;
 import myapp.ebank.model.entity.InterestRates;
 import myapp.ebank.repository.InterestRatesRepository;
 import myapp.ebank.util.DateTime;
+import myapp.ebank.util.ResponseMapping;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,20 +34,19 @@ public class InterestRateService {
      *
      * @return InterestRate Object
      */
-    public ResponseEntity<Object> getDailyInterestRate() {
+    public ResponseEntity<Object> getDailyInterestRate(HttpServletRequest httpServletRequest) throws ParseException {
         try {
             Date currentDate = SqlDate.getDateInSqlFormat();
-            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(currentDate);
+            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLikeLimit1(currentDate);
             if (interestRates.isPresent()) {
-                System.out.println("interest rate is " + interestRates.get().getInterestRate());
-                return new ResponseEntity<>(interestRates, HttpStatus.OK);
+                log.info("interest rate is " + interestRates.get().getInterestRate());
+                return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.OK, "found today interest exchange rates ", httpServletRequest.getRequestURI(), interestRates), HttpStatus.OK);
             } else
-                return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.NOT_FOUND, "\"Could not get today rate...", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("some error has occurred trying to Fetch Interest rates, in Class InterestRateService and its function getDailyInterestRates " + e.getMessage());
-            return new ResponseEntity<Object>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**
@@ -55,7 +57,7 @@ public class InterestRateService {
      */
     public ResponseEntity<Object> getInterestRateByDate(Date date) {
         try {
-            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLike(date);
+            Optional<InterestRates> interestRates = interestRatesRepository.findByDateLikeLimit1(date);
             if (interestRates.isPresent()) {
                 return new ResponseEntity<>(interestRates, HttpStatus.OK);
             } else
@@ -179,7 +181,7 @@ public class InterestRateService {
             return new ResponseEntity<>(" Some Data field maybe missing or Data already exists  ", HttpStatus.CONFLICT);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch Interest rates, in Class InterestRateService and its function get dailyInterest rates "+ e.getMessage());
+                    "some error has occurred trying to Fetch Interest rates, in Class InterestRateService and its function get dailyInterest rates " + e.getMessage());
             System.out.println("error occurred .." + e.getCause() + "  " + e.getMessage());
             return new ResponseEntity<>("some error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -203,8 +205,8 @@ public class InterestRateService {
         } catch (Exception e) {
             System.out.println(e.getMessage() + "  " + e.getCause());
             log.info(
-                    "some error has occurred while trying to update interestRate,, in class interestRateService and its function updateinterestRate "+
-                    e.getMessage());
+                    "some error has occurred while trying to update interestRate,, in class interestRateService and its function updateinterestRate " +
+                            e.getMessage());
             return new ResponseEntity<>("InterestRate could not be updated , Data maybe incorrect",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -233,8 +235,8 @@ public class InterestRateService {
                 return new ResponseEntity<>("InterestRates does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred while trying to Delete interestRate,, in class interestRateService and its function deleteinterestRate "+
-                    e.getMessage(), e.getCause());
+                    "some error has occurred while trying to Delete interestRate,, in class interestRateService and its function deleteinterestRate " +
+                            e.getMessage(), e.getCause());
             return new ResponseEntity<>("InterestRates could not be Deleted.......", HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

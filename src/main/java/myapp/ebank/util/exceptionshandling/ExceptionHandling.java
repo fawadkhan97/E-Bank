@@ -1,5 +1,6 @@
 package myapp.ebank.util.exceptionshandling;
 
+import myapp.ebank.util.ResponseMapping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -10,8 +11,11 @@ import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
@@ -19,24 +23,31 @@ import java.util.Objects;
 public class ExceptionHandling {
     private static final Logger log = LogManager.getLogger(ExceptionHandling.class);
 
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<Object> ParsingException(ParseException e, HttpServletRequest request) throws ParseException {
+        log.info("some error has occurred see logs for more details ....parsing exception is \n " + e.toString() + request.getRequestURI());
+        return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public static ResponseEntity<Object> handleException(MethodArgumentNotValidException e, HttpServletRequest request) {
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public static ResponseEntity<Object> handleException(MethodArgumentNotValidException e, HttpServletRequest request) throws ParseException {
         String errorResult = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorDefaultMessage = error.getDefaultMessage();
             log.info("field is " + fieldName + " " + errorDefaultMessage);
         });
-        log.info("an error has occured ....." + e.getClass()+errorResult);
-        return new ResponseEntity<>(new ResponseHandler(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI()), HttpStatus.BAD_REQUEST);
+        log.info("an error has occured ....." + e.getClass() + errorResult);
+        return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({RuntimeException.class, MissingRequestValueException.class, InputMismatchException.class})
-    public ResponseEntity<ResponseHandler> inputValidationException(Exception e, HttpServletRequest request) {
+    @ExceptionHandler({RuntimeException.class, MissingRequestValueException.class, InputMismatchException.class, NonUniqueResultException.class})
+    public ResponseEntity<Object> inputValidationException(Exception e, HttpServletRequest request) throws ParseException {
         log.info("some error has occurred see logs for more details ....general exception is \n " + e.toString() + request.getRequestURI());
-        return new ResponseEntity<>(new ResponseHandler(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
 }

@@ -16,6 +16,10 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
+@Table(name = "users",
+        indexes = {
+                @Index(name = "date_index", columnList = "createdDate"),
+                @Index(name = "isActive_index", columnList = "isActive")})
 public class Users implements Serializable {
     @Id
     @GeneratedValue
@@ -32,14 +36,14 @@ public class Users implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     @NotBlank(message = "email is mandatory")
     private String email;
-    @Column(name = "CNIC", unique = true, nullable = false)
+    @Column(name = "cnic", unique = true, nullable = false)
     @NotBlank(message = "cnic is mandatory")
     private String cnic;
     @Column(name = "password", nullable = false)
     @NotBlank(message = "password is mandatory")
     private String password;
     @Column(name = "age")
-    @Min(value=1, message = "age should be greater than 0")
+    @Min(value = 1, message = "age should be greater than 0")
     @Digits(integer = 3, fraction = 0)
     private int age;
     @Column(name = "dob")

@@ -10,6 +10,11 @@ import java.util.Date;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
+@Table(name = "organizations",
+        indexes = {
+                @Index(name = "date_index", columnList = "createdDate"),
+                @Index(name = "isActive_index", columnList = "isActive")})
+
 public class Organizations implements Serializable {
 
     @Id

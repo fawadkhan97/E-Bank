@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,8 +45,8 @@ public class InterestRateController {
      * @return
      */
     @GetMapping("/dailyRates")
-    public ResponseEntity<Object> getDailyInterestRate( HttpServletRequest httpServletRequest) {
-        return interestRateService.getDailyInterestRate();
+    public ResponseEntity<Object> getDailyInterestRate(HttpServletRequest httpServletRequest) throws ParseException {
+        return interestRateService.getDailyInterestRate(httpServletRequest);
     }
 
     /**
@@ -103,7 +104,6 @@ public class InterestRateController {
     }
 
 
-
     /**
      * save interest rate
      *
@@ -149,7 +149,6 @@ public class InterestRateController {
         } else
             return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
     }
-
 
 
 }
