@@ -1,3 +1,4 @@
+
 package myapp.ebank.util;
 
 
@@ -14,14 +15,13 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+/*
 @Component
 public class JwtToken implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
     public static final long JWT_TOKEN_VALIDITY = 6*30*30;
-
     @Value("${jwt.secret}")
     private String secret;
 
@@ -75,3 +75,4 @@ public class JwtToken implements Serializable {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
+*/

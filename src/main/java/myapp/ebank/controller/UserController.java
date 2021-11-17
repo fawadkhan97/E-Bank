@@ -34,10 +34,6 @@ public class UserController {
         this.loanService = loanService;
     }
 
-
-
-
-
     /**
      * check user is authorized or not
      *
@@ -49,17 +45,15 @@ public class UserController {
     }
 
     /**
-     *
      * @param userName
      * @return
      */
     @PostMapping("/login")
-    public UserDetails login(@RequestParam(value = "username") String userName ){
+    public UserDetails login(@RequestHeader String userName, @RequestHeader String password) {
         return userService.loadUserByUsername(userName);
     }
 
     /**
-     * @param authValue
      * @return list of users
      * @Author "Fawad khan"
      * @Description "Display all user from db in a list if present which can be then
@@ -67,12 +61,8 @@ public class UserController {
      * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllUsers(@RequestHeader(value = "Authorization") String authValue, HttpServletRequest httpServletRequest) throws ParseException {
-
-        if (authorize(authValue)) {
-            return userService.listAllUser(httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.listAllUser(httpServletRequest);
     }
 
     /**
