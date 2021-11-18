@@ -1,4 +1,4 @@
-package myapp.ebank.configuration;
+package myapp.ebank.util.exceptionshandling;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -3,14 +3,11 @@ package myapp.ebank.controller;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
-import myapp.ebank.repository.UserRepository;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
-import myapp.ebank.util.ResponseMapping;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +21,9 @@ import java.text.ParseException;
 @Validated
 public class UserController {
     private static final String defaultAuthValue = "12345";
-    private final String notAuthorize = "Not Authorize";
     final UserService userService;
     final LoanService loanService;
+    private final String notAuthorize = "Not Authorize";
 
 
     public UserController(UserService userService, LoanService loanService) {
@@ -37,7 +34,6 @@ public class UserController {
     /**
      * check user is authorized or not
      *
-     * @param authValue
      * @return
      */
     public Boolean authorize(String authValue) {
@@ -60,45 +56,34 @@ public class UserController {
      * displayed on screen"
      * @createdDate 27-oct-2021
      */
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
     public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
         return userService.listAllUser(httpServletRequest);
     }
 
     /**
-     * @param authValue
      * @param user
      * @return added user object
      * @author Fawad khan
      * @createdDate 27-oct-2021
      */
+    @PreAuthorize("hasRole('user')")
     @PostMapping("/add")
-    public ResponseEntity<Object> addUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         // check authorization
-        if (authorize(authValue)) {
-            return userService.saveUser(user, httpServletRequest);
-        } else {
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
-        }
+        return userService.saveUser(user, httpServletRequest);
+
     }
 
     /**
-     * @param authValue
      * @param id
      * @createdDate 31-oct-2021
      */
+    @PreAuthorize("hasRole('user')")
     @PostMapping("/{id}/sendToken")
-    public ResponseEntity<Object> sendToken(@RequestHeader(value = "Authorization") String authValue,
-                                            @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-
-        if (authorize(authValue)) {
-            return userService.sendToken(id, httpServletRequest);
-        } else {
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
-        }
-
-
+    public ResponseEntity<Object> sendToken(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.sendToken(id, httpServletRequest);
     }
 
     /**
@@ -107,6 +92,7 @@ public class UserController {
      * @return String of User verified or not
      * @createdDate 14-oct-2021
      */
+    @PreAuthorize("hasRole('user')")
     @GetMapping("/verify")
     public ResponseEntity<Object> verifyUser(@RequestHeader(value = "userid") Long userid,
                                              @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) {
@@ -114,109 +100,81 @@ public class UserController {
     }
 
     /**
-     * @param authValue
      * @param id
      * @return user object
      * @createdDate 27-oct-2021
      */
+    @PreAuthorize("hasRole('admin')")
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getUser(@RequestHeader(value = "Authorization") String authValue,
-                                          @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-
-        if (authorize(authValue)) {
-            return userService.getUserById(id, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.getUserById(id, httpServletRequest);
     }
 
     /**
-     * @param authValue
      * @param user
      * @return
      * @createdDate 27-oct-2021
      */
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping("/update")
-    public ResponseEntity<Object> updateUser(@RequestHeader(value = "Authorization") String authValue,
-                                             @Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.updateUser(user, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
+
+        return userService.updateUser(user, httpServletRequest);
 
     }
 
 
     /**
-     * @param authValue
      * @param id
      * @return
      * @createdDate 27-oct-2021
      */
+    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Object> deleteUser(@RequestHeader(value = "Authorization") String authValue,
-                                             @PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.deleteUser(id, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.deleteUser(id, httpServletRequest);
 
     }
 
     /**
-     * @param authValue
      * @param userid
      * @param loan
      * @return
      */
     @PostMapping("/{userid}/applyForLoan")
     public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.applyForLoan(userid, loan, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+        return userService.applyForLoan(userid, loan, httpServletRequest);
 
     }
 
     /**
-     * @param authValue
      * @param userid
      * @param loan
      * @return
      */
     @PostMapping("/{userid}/depositLoan")
     public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.depositLoan(userid, loan, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+        return userService.depositLoan(userid, loan, httpServletRequest);
     }
 
     /**
-     * @param authValue
      * @param userid
      * @param funds
      * @return
      */
     @PostMapping("/{userid}/applyForFunds")
     public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.applyForFunds(userid, funds, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+        return userService.applyForFunds(userid, funds, httpServletRequest);
 
     }
 
     /**
-     * @param authValue
      * @param userid
      * @return
      */
     @GetMapping("/{userid}/getFundsAndLoans")
     public ResponseEntity<Object> getUserFundsAndLoans(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, HttpServletRequest httpServletRequest) throws ParseException {
-        if (authorize(authValue)) {
-            return userService.getUserFundsAndLoans(userid, httpServletRequest);
-        } else
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.UNAUTHORIZED, notAuthorize, httpServletRequest.getRequestURI(), null), HttpStatus.UNAUTHORIZED);
+        return userService.getUserFundsAndLoans(userid, httpServletRequest);
 
     }
 }

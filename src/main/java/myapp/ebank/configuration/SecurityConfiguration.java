@@ -3,11 +3,11 @@ package myapp.ebank.configuration;
 import myapp.ebank.security.AuthenticationFilter;
 import myapp.ebank.security.AuthorizationFilter;
 import myapp.ebank.service.UserService;
+import myapp.ebank.util.exceptionshandling.AuthenticationExceptionHandling;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,9 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-
-import static myapp.ebank.constant.SecurityConstants.SIGN_UP_URL;
 
 @Configuration
 @EnableWebSecurity
@@ -41,6 +38,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_WHITELIST = {
             //Sign up url
             "/user/add",
+            "/organization/add",
+            "/permission/add",
+            "/role/add",
+
 
             // -- Swagger UI v2
             "/v2/api-docs",

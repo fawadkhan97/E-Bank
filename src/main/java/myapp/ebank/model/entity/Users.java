@@ -65,11 +65,11 @@ public class Users implements Serializable {
     @JoinColumn(name = "user_id")
     private List<Loans> loans = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organizations organization;
 
-    @ManyToMany(targetEntity = Roles.class, fetch = FetchType.LAZY)
+    @ManyToMany(targetEntity = Roles.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "roles_id", nullable = false)})
     private List<Roles> roles = new ArrayList<>();

@@ -3,6 +3,7 @@ package myapp.ebank.service;
 import myapp.ebank.model.dto.UserFundsAndLoans;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
+import myapp.ebank.model.entity.Roles;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.repository.LoanRepository;
 import myapp.ebank.repository.UserRepository;
@@ -15,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -86,7 +89,11 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Optional<Users> user = userRepository.findByUserName(userName);
         if (user.isPresent()) {
-            return new User(user.get().getUserName(), user.get().getPassword(), new ArrayList<>());
+            Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+            for (Roles role : user.get().getRoles()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            }
+            return new User(user.get().getUserName(), user.get().getPassword(), grantedAuthorities);
         } else
             log.info("exception occurred in load by username parameter is {}", userName);
         throw new UsernameNotFoundException("user not found " + userName);

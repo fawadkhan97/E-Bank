@@ -3,6 +3,7 @@ package myapp.ebank.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import myapp.ebank.model.entity.Roles;
 import myapp.ebank.model.entity.Users;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,23 +11,26 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import static myapp.ebank.constant.SecurityConstants.*;
+import static myapp.ebank.constant.SecurityConstants.EXPIRATION_TIME;
+import static myapp.ebank.constant.SecurityConstants.SECRET;
 
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final AuthenticationManager authenticationManager;
     private static final Logger log = LogManager.getLogger(AuthenticationFilter.class);
+    private final AuthenticationManager authenticationManager;
 
 
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -40,12 +44,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             Users userCredential = new ObjectMapper()
                     .readValue(req.getInputStream(), Users.class);
-
+            Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+            for (Roles role : userCredential.getRoles()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            }
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             userCredential.getUserName(),
                             userCredential.getPassword(),
-                            new ArrayList<>())
+                            grantedAuthorities
+                    )
             );
         } catch (IOException e) {
             throw new RuntimeException(e);
