@@ -33,28 +33,28 @@ public class ExceptionHandling {
         e.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorDefaultMessage = error.getDefaultMessage();
-            log.info("field is " + fieldName + " " + errorDefaultMessage);
+            log.info("field is {}, error is {}", fieldName, errorDefaultMessage);
         });
-        log.info("an error has occured ....." + e.getClass() + errorResult);
+        log.info("an error has occured .{} , {}", e.getClass(), errorResult);
         return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({ParseException.class, AuthenticationException.class})
     public static ResponseEntity<Object> parsingException(Exception e, HttpServletRequest request) throws ParseException {
-        log.info("some error has occurred see logs for more details ....parsing exception is \n " + e.toString() + request.getRequestURI());
+        log.info("some error has occurred see logs for more details ....parsing exception is {}..{}..{}", e.getClass(), e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({TokenExpiredException.class, JWTDecodeException.class, JWTVerificationException.class})
     public static ResponseEntity<Object> jwtException(Exception e, HttpServletRequest request) throws ParseException {
-        log.info("some error has occurred see logs for more details ....parsing exception is {}....{} ", e.toString(), request.getRequestURI());
+        log.info("some error has occurred see logs for more details ....parsing exception is {} : {} uri is {} ", e.getClass(), e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({RuntimeException.class, MissingRequestValueException.class, InputMismatchException.class, NonUniqueResultException.class})
     public static ResponseEntity<Object> inputValidationException(Exception e, HttpServletRequest request) throws ParseException {
-        log.info("some error has occurred see logs for more details ....general exception is \n " + e.toString() + request.getRequestURI());
+        log.info("some error has occurred see logs for more details ....general exception is {} : {} uri is {} ", e.getClass(), e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 

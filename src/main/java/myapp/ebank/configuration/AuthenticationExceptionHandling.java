@@ -1,6 +1,5 @@
 package myapp.ebank.configuration;
 
-import myapp.ebank.security.AuthenticationFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.AuthenticationException;
