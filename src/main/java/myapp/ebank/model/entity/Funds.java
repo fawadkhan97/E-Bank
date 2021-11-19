@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "foreignexchangerates",
+@Table(name = "funds",
         indexes = {
                 @Index(name = "date_index", columnList = "createdDate"),
                 @Index(name = "isActive_index", columnList = "isActive")})

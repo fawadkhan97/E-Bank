@@ -20,10 +20,8 @@ import java.text.ParseException;
 @RequestMapping("/user")
 @Validated
 public class UserController {
-    private static final String defaultAuthValue = "12345";
     final UserService userService;
     final LoanService loanService;
-    private final String notAuthorize = "Not Authorize";
 
 
     public UserController(UserService userService, LoanService loanService) {
@@ -31,14 +29,6 @@ public class UserController {
         this.loanService = loanService;
     }
 
-    /**
-     * check user is authorized or not
-     *
-     * @return
-     */
-    public Boolean authorize(String authValue) {
-        return defaultAuthValue.equals(authValue);
-    }
 
     /**
      * @param userName
@@ -56,7 +46,7 @@ public class UserController {
      * displayed on screen"
      * @createdDate 27-oct-2021
      */
-    @PreAuthorize("hasRole('admin')")
+  // @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
     public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
         return userService.listAllUser(httpServletRequest);
@@ -68,7 +58,7 @@ public class UserController {
      * @author Fawad khan
      * @createdDate 27-oct-2021
      */
-    @PreAuthorize("hasRole('user')")
+  //  @PreAuthorize("hasRole('user')")
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         // check authorization
@@ -104,7 +94,7 @@ public class UserController {
      * @return user object
      * @createdDate 27-oct-2021
      */
-    @PreAuthorize("hasRole('admin')")
+   // @PreAuthorize("hasRole('admin')")
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.getUserById(id, httpServletRequest);

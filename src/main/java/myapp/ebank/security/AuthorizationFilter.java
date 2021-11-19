@@ -6,16 +6,20 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import lombok.SneakyThrows;
+import myapp.ebank.model.entity.Users;
+import myapp.ebank.service.UserService;
 import myapp.ebank.util.ResponseMapping;
 import myapp.ebank.util.exceptionshandling.ExceptionHandling;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,6 +35,8 @@ import static myapp.ebank.constant.SecurityConstants.*;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
+   @Autowired
+    UserService userService;
     public AuthorizationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
@@ -67,8 +73,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                         .getSubject();
 
                 if (user != null) {
+                    UserDetails userDetails = userService.loadUserByUsername(user);
                     // new arraylist means authorities
-                    return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                    log.info("user is {}", user);
+                    return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
                 }
 
                 return null;

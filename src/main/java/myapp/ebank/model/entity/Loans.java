@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "loanrates",
+@Table(name = "loan",
         indexes = {
                 @Index(name = "date_index", columnList = "createdDate"),
                 @Index(name = "isActive_index", columnList = "isActive")})

@@ -72,7 +72,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
 
-        log.info("token genreated is : {}", body);
+        log.info("token generated is : {}", body);
         res.getWriter().write(body);
         res.getWriter().flush();
     }

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Data
 @Table(name = "users",
@@ -65,10 +64,12 @@ public class Users implements Serializable {
     @JoinColumn(name = "user_id")
     private List<Loans> loans = new ArrayList<>();
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "organization_id", nullable = false)
     private Organizations organization;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(targetEntity = Roles.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "roles_id", nullable = false)})
