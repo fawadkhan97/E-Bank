@@ -1,12 +1,19 @@
 package myapp.ebank.controller;
 
+import myapp.ebank.model.dto.AuthenticationRequest;
+import myapp.ebank.model.dto.AuthenticationResponse;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
+import myapp.ebank.util.JwtTokenUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,23 +27,44 @@ import java.text.ParseException;
 @RequestMapping("/user")
 @Validated
 public class UserController {
-    final UserService userService;
-    final LoanService loanService;
+    final private UserService userService;
+    final private LoanService loanService;
+     private AuthenticationManager authenticationManager;
+    final private JwtTokenUtil jwtTokenUtil;
 
-
-    public UserController(UserService userService, LoanService loanService) {
+    public UserController(UserService userService, LoanService loanService, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
         this.userService = userService;
         this.loanService = loanService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
 
     /**
-     * @param userName
+     * @param authenticationRequest
      * @return
      */
     @PostMapping("/login")
-    public UserDetails login(@RequestHeader String userName, @RequestHeader String password) {
-        return userService.loadUserByUsername(userName);
+    public ResponseEntity<Object> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+
+        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
+
+        final String token = jwtTokenUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(token));
+
+    }
+
+    private void authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
+        }
     }
 
     /**
@@ -46,7 +74,7 @@ public class UserController {
      * displayed on screen"
      * @createdDate 27-oct-2021
      */
-  // @PreAuthorize("hasRole('admin')")
+    // @PreAuthorize("hasRole('admin')")
     @GetMapping("/all")
     public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
         return userService.listAllUser(httpServletRequest);
@@ -58,7 +86,7 @@ public class UserController {
      * @author Fawad khan
      * @createdDate 27-oct-2021
      */
-  //  @PreAuthorize("hasRole('user')")
+    //  @PreAuthorize("hasRole('user')")
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         // check authorization
@@ -94,7 +122,7 @@ public class UserController {
      * @return user object
      * @createdDate 27-oct-2021
      */
-   // @PreAuthorize("hasRole('admin')")
+    // @PreAuthorize("hasRole('admin')")
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.getUserById(id, httpServletRequest);

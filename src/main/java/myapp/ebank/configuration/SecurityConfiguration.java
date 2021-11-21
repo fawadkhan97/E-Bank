@@ -1,13 +1,13 @@
 package myapp.ebank.configuration;
 
-import myapp.ebank.security.AuthenticationFilter;
-import myapp.ebank.security.AuthorizationFilter;
+import myapp.ebank.security.JwtRequestFilter;
 import myapp.ebank.service.UserService;
 import myapp.ebank.util.exceptionshandling.AuthenticationExceptionHandling;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -24,18 +26,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private static final Logger log = LogManager.getLogger(SecurityConfiguration.class);
-    AuthenticationExceptionHandling authenticationExceptionHandling;
-
-    public SecurityConfiguration(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationExceptionHandling authenticationExceptionHandling) {
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.authenticationExceptionHandling = authenticationExceptionHandling;
-    }
-
     private static final String[] AUTH_WHITELIST = {
+           //login
+            "/user/login",
             //Sign up url
             "/user/add",
             "/organization/add",
@@ -57,20 +51,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**"
             // other public endpoints of your API may be appended to this array
     };
+    final JwtRequestFilter jwtRequestFilter;
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    AuthenticationExceptionHandling authenticationExceptionHandling;
 
+    public SecurityConfiguration(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, AuthenticationExceptionHandling authenticationExceptionHandling, JwtRequestFilter jwtRequestFilter) {
+        this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.authenticationExceptionHandling = authenticationExceptionHandling;
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
+        http.cors().and().csrf().disable()
+                .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/**").hasAuthority("admin")
+                .antMatchers("/user/all;").hasAuthority("admin")
+                .antMatchers("/user/update", "/user/add").hasAuthority("user")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationExceptionHandling)
                 .and()
-                .addFilter(new AuthenticationFilter(authenticationManager()))
-                .addFilter(new AuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
 
@@ -85,6 +90,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
 }

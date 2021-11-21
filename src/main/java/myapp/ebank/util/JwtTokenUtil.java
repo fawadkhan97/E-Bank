@@ -3,27 +3,32 @@ package myapp.ebank.util;
 
 
 import java.io.Serializable;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
+import io.jsonwebtoken.io.Encoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-/*
+
+import javax.crypto.SecretKey;
+
 @Component
-public class JwtToken implements Serializable {
+public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
     public static final long JWT_TOKEN_VALIDITY = 6*30*30;
-    @Value("${jwt.secret}")
-    private String secret;
+   // @Value("${jwt.secret}")
+    SecretKey key =Keys.secretKeyFor(SignatureAlgorithm.HS512);;
+    private final String secret = Encoders.BASE64.encode(key.getEncoded());
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -75,4 +80,4 @@ public class JwtToken implements Serializable {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }
-*/
+
