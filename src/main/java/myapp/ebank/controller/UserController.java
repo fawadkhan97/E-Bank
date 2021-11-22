@@ -9,12 +9,12 @@ import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
 import myapp.ebank.util.JwtTokenUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +24,7 @@ import java.text.ParseException;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("user")
 @Validated
 public class UserController {
     final private UserService userService;
@@ -74,9 +74,9 @@ public class UserController {
      * displayed on screen"
      * @createdDate 27-oct-2021
      */
-    // @PreAuthorize("hasRole('admin')")
+
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest, OAuth2Authentication authentication) throws ParseException {
         return userService.listAllUser(httpServletRequest);
     }
 
@@ -86,7 +86,6 @@ public class UserController {
      * @author Fawad khan
      * @createdDate 27-oct-2021
      */
-    //  @PreAuthorize("hasRole('user')")
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
         // check authorization
@@ -98,7 +97,6 @@ public class UserController {
      * @param id
      * @createdDate 31-oct-2021
      */
-    @PreAuthorize("hasRole('user')")
     @PostMapping("/{id}/sendToken")
     public ResponseEntity<Object> sendToken(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.sendToken(id, httpServletRequest);
@@ -110,7 +108,6 @@ public class UserController {
      * @return String of User verified or not
      * @createdDate 14-oct-2021
      */
-    @PreAuthorize("hasRole('user')")
     @GetMapping("/verify")
     public ResponseEntity<Object> verifyUser(@RequestHeader(value = "userid") Long userid,
                                              @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) {
@@ -122,7 +119,6 @@ public class UserController {
      * @return user object
      * @createdDate 27-oct-2021
      */
-    // @PreAuthorize("hasRole('admin')")
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.getUserById(id, httpServletRequest);
@@ -133,7 +129,6 @@ public class UserController {
      * @return
      * @createdDate 27-oct-2021
      */
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PutMapping("/update")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
 
@@ -147,7 +142,6 @@ public class UserController {
      * @return
      * @createdDate 27-oct-2021
      */
-    @PreAuthorize("hasRole('admin')")
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.deleteUser(id, httpServletRequest);

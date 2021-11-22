@@ -92,7 +92,11 @@ public class UserService implements UserDetailsService {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             for (Roles role : user.get().getRoles()) {
                 grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+                log.info("granted authorities are:  {}", role.getName());
+
             }
+            log.info("granted authorities are:  {}", grantedAuthorities);
+
             return new User(user.get().getUserName(), user.get().getPassword(), grantedAuthorities);
         } else
             log.info("exception occurred in load by username parameter is {}", userName);
