@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +26,9 @@ public class FundService {
     /**
      * @return List of funds
      * @author Fawad khan
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> listAllFunds() {
+    public ResponseEntity<Object> listAllFunds(HttpServletRequest httpServletRequest) {
         try {
             List<Funds> funds = fundRepository.findAll();
             // check if list is empty
@@ -44,11 +46,12 @@ public class FundService {
 
     /**
      * @param fund
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 01-nov-2021
      */
-    public ResponseEntity<Object> updateFund(Funds fund) {
+    public ResponseEntity<Object> updateFund(Funds fund, HttpServletRequest httpServletRequest) {
         try {
             fund.setUpdatedDate(DateTime.getDateTime());
             fundRepository.save(fund);
@@ -64,11 +67,12 @@ public class FundService {
 
     /**
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 01-nov-2021
      */
-    public ResponseEntity<Object> deleteFund(Long id) {
+    public ResponseEntity<Object> deleteFund(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<Funds> fund = fundRepository.findById(id);
             if (fund.isPresent()) {

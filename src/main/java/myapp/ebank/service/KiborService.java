@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +32,9 @@ public class KiborService {
      * get daily kibor rates
      *
      * @return
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> dailyKiborRates() {
+    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) {
         try {
             Date currentDate = SqlDate.getDateInSqlFormat();
             Optional<KiborRates> kiborRates = kiborRatesRepository.findByDateLike(currentDate);
@@ -52,9 +54,10 @@ public class KiborService {
      * get kibor Rate for specific Date
      *
      * @param date
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getKiborRateByDate(Date date) {
+    public ResponseEntity<Object> getKiborRateByDate(Date date, HttpServletRequest httpServletRequest) {
         try {
             Optional<KiborRates> Kibor = kiborRatesRepository.findByDateLike(date);
             if (Kibor.isPresent()) {
@@ -72,9 +75,10 @@ public class KiborService {
      * find between specific date range by starting date
      *
      * @param startDate
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam java.util.Date startDate) {
+    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam java.util.Date startDate, HttpServletRequest httpServletRequest) {
         try {
             Optional<KiborRates> kiborRate = kiborRatesRepository.findByStartDate(startDate);
             if (kiborRate.isPresent()) {
@@ -94,9 +98,10 @@ public class KiborService {
      *
      * @param startDate
      * @param endDate
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getKiborRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+    public ResponseEntity<Object> getKiborRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate, HttpServletRequest httpServletRequest) {
         try {
             List<KiborRates> kiborRate = kiborRatesRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate);
             if (!kiborRate.isEmpty()) {
@@ -113,8 +118,9 @@ public class KiborService {
     /**
      * @return List of kiborRates
      * @author Fawad khan
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> listAllKiborRates() {
+    public ResponseEntity<Object> listAllKiborRates(HttpServletRequest httpServletRequest) {
         try {
             List<KiborRates> kiborRates = kiborRatesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
@@ -135,10 +141,11 @@ public class KiborService {
      * fetch record by id
      *
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      */
-    public ResponseEntity<Object> getKiborRatesById(Long id) {
+    public ResponseEntity<Object> getKiborRatesById(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<KiborRates> kiborRate = kiborRatesRepository.findById(id);
             if (kiborRate.isPresent() && kiborRate.get().isActive()) {
@@ -164,9 +171,10 @@ public class KiborService {
      * save kibor rates
      *
      * @param kiborRates
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> addKiborRate(KiborRates kiborRates) {
+    public ResponseEntity<Object> addKiborRate(KiborRates kiborRates, HttpServletRequest httpServletRequest) {
         try {
             kiborRates.setActive(true);
             kiborRatesRepository.save(kiborRates);
@@ -183,11 +191,12 @@ public class KiborService {
 
     /**
      * @param kiborRate
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> updateKiborRate(KiborRates kiborRate) {
+    public ResponseEntity<Object> updateKiborRate(KiborRates kiborRate, HttpServletRequest httpServletRequest) {
         try {
             kiborRate.setUpdatedDate(DateTime.getDateTime());
             kiborRatesRepository.save(kiborRate);
@@ -203,11 +212,12 @@ public class KiborService {
 
     /**
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> deleteKiborRate(Long id) {
+    public ResponseEntity<Object> deleteKiborRate(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<KiborRates> kiborRate = kiborRatesRepository.findById(id);
             if (kiborRate.isPresent()) {

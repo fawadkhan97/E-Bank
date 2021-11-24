@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,8 +31,9 @@ public class CurrencyService {
      * get all active currencies
      *
      * @return
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> getAllCurrencies() {
+    public ResponseEntity<Object> getAllCurrencies(HttpServletRequest httpServletRequest) {
         try {
             //check police record from e-police using feign client
        /*     String currency = feignPoliceRecordService.getByid(1);
@@ -53,10 +55,11 @@ public class CurrencyService {
      * fetch record by id
      *
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      */
-    public ResponseEntity<Object> getCurrencyById(Long id) {
+    public ResponseEntity<Object> getCurrencyById(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<Currencies> currency = currencyRepository.findById(id);
             if (currency.isPresent() && currency.get().getIsActive()) {
@@ -79,11 +82,12 @@ public class CurrencyService {
 
     /**
      * @param currency
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> saveCurrency(Currencies currency) {
+    public ResponseEntity<Object> saveCurrency(Currencies currency, HttpServletRequest httpServletRequest) {
         try {
             Date date = DateTime.getDateTime();
             currency.setCreatedDate(date);
@@ -108,11 +112,12 @@ public class CurrencyService {
 
     /**
      * @param currency
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 29-oct-2021
      */
-    public ResponseEntity<Object> updateCurrency(Currencies currency) {
+    public ResponseEntity<Object> updateCurrency(Currencies currency, HttpServletRequest httpServletRequest) {
         try {
 
             currency.setUpdatedDate(DateTime.getDateTime());
@@ -131,11 +136,12 @@ public class CurrencyService {
 
     /**
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 27-oct-2021
      */
-    public ResponseEntity<Object> deleteCurrency(Long id) {
+    public ResponseEntity<Object> deleteCurrency(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<Currencies> currency = currencyRepository.findById(id);
             if (currency.isPresent()) {

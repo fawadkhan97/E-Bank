@@ -7,7 +7,6 @@ import myapp.ebank.model.entity.Loans;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.service.LoanService;
 import myapp.ebank.service.UserService;
-import myapp.ebank.util.JwtTokenUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -30,13 +29,12 @@ public class UserController {
     final private UserService userService;
     final private LoanService loanService;
      private AuthenticationManager authenticationManager;
-    final private JwtTokenUtil jwtTokenUtil;
 
-    public UserController(UserService userService, LoanService loanService, AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
+    public UserController(UserService userService, LoanService loanService, AuthenticationManager authenticationManager
+                         ) {
         this.userService = userService;
         this.loanService = loanService;
         this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
     }
 
 
@@ -49,11 +47,11 @@ public class UserController {
 
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
+       // final UserDetails userDetails = userService.loadUserByUsername(authenticationRequest.getUsername());
 
-        final String token = jwtTokenUtil.generateToken(userDetails);
+      //  final String token = jwtTokenUtil.generateToken(userDetails);
 
-        return ResponseEntity.ok(new AuthenticationResponse(token));
+        return ResponseEntity.ok("new AuthenticationResponse(token)");
 
     }
 
@@ -88,9 +86,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
-        // check authorization
         return userService.saveUser(user, httpServletRequest);
-
     }
 
     /**
@@ -110,7 +106,7 @@ public class UserController {
      */
     @GetMapping("/verify")
     public ResponseEntity<Object> verifyUser(@RequestHeader(value = "userid") Long userid,
-                                             @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) {
+                                             @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.verifyUser(userid, token, httpServletRequest);
     }
 
@@ -154,7 +150,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/{userid}/applyForLoan")
-    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws Exception {
         return userService.applyForLoan(userid, loan, httpServletRequest);
 
     }

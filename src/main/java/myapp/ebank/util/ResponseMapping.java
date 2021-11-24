@@ -7,18 +7,16 @@ import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ResponseMapping {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime timestamp;
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
-    public static ObjectNode ApiReponse(HttpStatus httpStatus, String message, String path, Object data) throws ParseException {
+
+    public static ObjectNode apiResponse(HttpStatus httpStatus, String message, String path, Object data) throws ParseException {
         ObjectNode responseJson = jsonMapper.createObjectNode();
-        responseJson.put("timestamp", String.valueOf(DateTime.getDateTime()));
+        responseJson.put("timestamp", String.valueOf(LocalDateTime.now()));
         responseJson.put("httpStatus", String.valueOf(httpStatus));
         responseJson.put("message:", message);
         responseJson.put("path", path);

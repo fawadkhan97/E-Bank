@@ -39,13 +39,13 @@ public class InterestRateService {
             Date currentDate = SqlDate.getDateInSqlFormat();
             Optional<InterestRates> interestRates = interestRatesRepository.findByDateLikeLimit1(currentDate);
             if (interestRates.isPresent()) {
-                log.info("interest rate is " + interestRates.get().getInterestRate());
-                return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.OK, "found today interest exchange rates ", httpServletRequest.getRequestURI(), interestRates), HttpStatus.OK);
+                log.info("interest rate is {}" , interestRates.get().getInterestRate());
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "found today interest exchange rates ", httpServletRequest.getRequestURI(), interestRates), HttpStatus.OK);
             } else
-                return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.NOT_FOUND, "\"Could not get today rate...", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "\"Could not get today rate...", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info("some error has occurred trying to Fetch Interest rates, in Class InterestRateService and its function getDailyInterestRates " + e.getMessage());
-            return new ResponseEntity<>(ResponseMapping.ApiReponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,9 +53,10 @@ public class InterestRateService {
      * get interest Rate for specific Date
      *
      * @param date
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getInterestRateByDate(Date date) {
+    public ResponseEntity<Object> getInterestRateByDate(Date date, HttpServletRequest httpServletRequest) {
         try {
             Optional<InterestRates> interestRates = interestRatesRepository.findByDateLikeLimit1(date);
             if (interestRates.isPresent()) {
@@ -75,9 +76,10 @@ public class InterestRateService {
      * find between specific date range by starting date
      *
      * @param startDate
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam java.util.Date startDate) {
+    public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam java.util.Date startDate, HttpServletRequest httpServletRequest) {
         try {
             Optional<InterestRates> interestRate = interestRatesRepository.findByStartDate(startDate);
             if (interestRate.isPresent()) {
@@ -97,9 +99,10 @@ public class InterestRateService {
      *
      * @param startDate
      * @param endDate
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> getInterestRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
+    public ResponseEntity<Object> getInterestRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate, HttpServletRequest httpServletRequest) {
         try {
             List<InterestRates> interestRates = interestRatesRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate);
             if (!interestRates.isEmpty()) {
@@ -116,8 +119,9 @@ public class InterestRateService {
     /**
      * @return List ofinterestRates
      * @author Fawad khan
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> listAllInterestRates() {
+    public ResponseEntity<Object> listAllInterestRates(HttpServletRequest httpServletRequest) {
         try {
             List<InterestRates> interestRates = interestRatesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
@@ -137,10 +141,11 @@ public class InterestRateService {
      * fetch record by id
      *
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      */
-    public ResponseEntity<Object> getInterestRatesById(Long id) {
+    public ResponseEntity<Object> getInterestRatesById(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<InterestRates> interestRate = interestRatesRepository.findById(id);
             if (interestRate.isPresent() && interestRate.get().isActive()) {
@@ -168,9 +173,10 @@ public class InterestRateService {
      * save interest rate
      *
      * @param interestRates
+     * @param httpServletRequest
      * @return
      */
-    public ResponseEntity<Object> addInterestRate(InterestRates interestRates) {
+    public ResponseEntity<Object> addInterestRate(InterestRates interestRates, HttpServletRequest httpServletRequest) {
 
         try {
             interestRates.setActive(true);
@@ -193,11 +199,12 @@ public class InterestRateService {
      * update record
      *
      * @param interestRate
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> updateInterestRate(InterestRates interestRate) {
+    public ResponseEntity<Object> updateInterestRate(InterestRates interestRate, HttpServletRequest httpServletRequest) {
         try {
             interestRate.setUpdatedDate(DateTime.getDateTime());
             interestRatesRepository.save(interestRate);
@@ -216,11 +223,12 @@ public class InterestRateService {
      * delete record
      *
      * @param id
+     * @param httpServletRequest
      * @return
      * @author fawad khan
      * @createdDate 30-oct-2021
      */
-    public ResponseEntity<Object> deleteInterestRate(Long id) {
+    public ResponseEntity<Object> deleteInterestRate(Long id, HttpServletRequest httpServletRequest) {
         try {
             Optional<InterestRates> interestRate = interestRatesRepository.findById(id);
             if (interestRate.isPresent()) {

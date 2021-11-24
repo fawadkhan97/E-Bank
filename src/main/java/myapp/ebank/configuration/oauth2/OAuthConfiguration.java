@@ -1,4 +1,4 @@
-package myapp.ebank.configuration;
+package myapp.ebank.configuration.oauth2;
 
 import myapp.ebank.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -60,8 +60,18 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
                 .authorizedGrantTypes(authorizedGrantTypes)
-                .scopes("read", "write")
-                .resourceIds("ebank");
+                .scopes("write")
+                .resourceIds("ebank")
+
+                .and()
+                .withClient("user")
+                .secret(passwordEncoder.encode("secret"))
+                .authorizedGrantTypes("client_credentials", "password")
+                .authorities("user")
+                .scopes("read")
+                .resourceIds("ebank")
+                .accessTokenValiditySeconds(accessTokenValiditySeconds)
+                .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
     }
 
     @Override

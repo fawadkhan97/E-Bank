@@ -3,32 +3,24 @@ package myapp.ebank.controller;
 import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.service.KiborService;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/kibor")
 @Validated
 public class KiborController {
-    private static final String defaultAuthValue = "12345";
     final KiborService kiborRatesService;
 
     public KiborController(KiborService kiborRatesService) {
         this.kiborRatesService = kiborRatesService;
     }
 
-    public Boolean authorize(String authValue) {
-        return defaultAuthValue.equals(authValue);
-    }
 
     /**
      * fetch daily kibor rates
@@ -36,8 +28,8 @@ public class KiborController {
      * @return daily kibor rates
      */
     @GetMapping("/dailyRates")
-    public ResponseEntity<Object> dailyKiborRates() {
-        return kiborRatesService.dailyKiborRates();
+    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) {
+        return kiborRatesService.dailyKiborRates(httpServletRequest);
     }
 
     /**
@@ -47,9 +39,8 @@ public class KiborController {
      * @return
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date) {
-        System.out.println(date);
-        return kiborRatesService.getKiborRateByDate(date);
+    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date, HttpServletRequest httpServletRequest) {
+        return kiborRatesService.getKiborRateByDate(date, httpServletRequest);
     }
 
     /**
@@ -59,8 +50,9 @@ public class KiborController {
      * @return
      */
     @GetMapping("/getByStartDate")
-    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
-        return kiborRatesService.getKiborRateByStartDate(startDate);
+    public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate,
+                                                          HttpServletRequest httpServletRequest) {
+        return kiborRatesService.getKiborRateByStartDate(startDate, httpServletRequest);
     }
 
     /**
@@ -72,8 +64,9 @@ public class KiborController {
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getKiborRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
-                                                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate) {
-        return kiborRatesService.getKiborRateBetweenDates(startDate, endDate);
+                                                                @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date endDate,
+                                                                HttpServletRequest httpServletRequest) {
+        return kiborRatesService.getKiborRateBetweenDates(startDate, endDate, httpServletRequest);
     }
 
     /**
@@ -81,8 +74,8 @@ public class KiborController {
      * @return kiborRate object
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getKiborRate(@PathVariable Long id) {
-        return kiborRatesService.getKiborRatesById(id);
+    public ResponseEntity<Object> getKiborRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+        return kiborRatesService.getKiborRatesById(id, httpServletRequest);
     }
 
 
@@ -90,8 +83,8 @@ public class KiborController {
      * @return list of Kibor rates
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllKiborRates() {
-        return kiborRatesService.listAllKiborRates();
+    public ResponseEntity<Object> getAllKiborRates(HttpServletRequest httpServletRequest) {
+        return kiborRatesService.listAllKiborRates(httpServletRequest);
     }
 
 
@@ -102,45 +95,38 @@ public class KiborController {
      * @return
      */
     @PostMapping("/add")
-    public ResponseEntity<Object> addKiborRate(@RequestHeader(value = "Authorization") String authValue,
-                                               @Valid @RequestBody KiborRates kiborRate) {
-        if (authorize(authValue)) {
-            return kiborRatesService.addKiborRate(kiborRate);
-        } else
-            return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> addKiborRate(
+            @Valid @RequestBody KiborRates kiborRate,
+            HttpServletRequest httpServletRequest) {
+
+        return kiborRatesService.addKiborRate(kiborRate, httpServletRequest);
+
     }
 
 
     /**
-     * @param authValue
      * @param kiborRate
      * @return
      * @createdDate 29-oct-2021
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> updateKiborRate(@RequestHeader(value = "Authorization") String authValue,
-                                                  @Valid @RequestBody KiborRates kiborRate) {
-        if (authorize(authValue)) {
-            return kiborRatesService.updateKiborRate(kiborRate);
-        } else
-            return new ResponseEntity<>("not authorize ", HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Object> updateKiborRate(@Valid @RequestBody KiborRates kiborRate, HttpServletRequest httpServletRequest) {
+
+        return kiborRatesService.updateKiborRate(kiborRate, httpServletRequest);
+
     }
 
     /**
-     * @param authValue
      * @param id
      * @return
      * @createdDate 27-oct-2021
      */
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<Object> deleteKiborRate(@RequestHeader(value = "Authorization") String authValue,
-                                                  @PathVariable Long id) {
-        if (authorize(authValue)) {
-            return kiborRatesService.deleteKiborRate(id);
-        } else
-            return new ResponseEntity<>(" not authorize ", HttpStatus.UNAUTHORIZED);
-    }
+    public ResponseEntity<Object> deleteKiborRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
 
+        return kiborRatesService.deleteKiborRate(id, httpServletRequest);
+
+    }
 
 
 }
