@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Optional<Users> user = userRepository.findByUserName(userName);
-        if (user.isPresent()) {
+        if (user.isPresent() && user.get().isActive()) {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             for (Roles role : user.get().getRoles()) {
                 grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
@@ -236,7 +236,7 @@ public class UserService implements UserDetailsService {
             } else
                 return new ResponseEntity<>("incorrect verification details were entered or verification time has expired", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.info(String.valueOf(e.getCause()),e.getMessage());
+            log.info(String.valueOf(e.getCause()), e.getMessage());
             return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }

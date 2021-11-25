@@ -74,7 +74,7 @@ public class UserController {
      */
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest, OAuth2Authentication authentication) throws ParseException {
+    public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
         return userService.listAllUser(httpServletRequest);
     }
 
@@ -138,7 +138,7 @@ public class UserController {
      * @return
      * @createdDate 27-oct-2021
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
         return userService.deleteUser(id, httpServletRequest);
 

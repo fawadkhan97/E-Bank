@@ -35,7 +35,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
     @Value("${jwt.signing-key:123}")
     private String jwtSigningKey;
 
-    @Value("${jwt.accessTokenValiditySeconds:43200}") // 12 hours
+    @Value("${jwt.accessTokenValiditySeconds}") // 12 hours
     private int accessTokenValiditySeconds;
 
     @Value("${jwt.authorizedGrantTypes:password,authorization_code,refresh_token}")
@@ -61,17 +61,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
                 .authorizedGrantTypes(authorizedGrantTypes)
                 .scopes("write")
-                .resourceIds("ebank")
-
-                .and()
-                .withClient("user")
-                .secret(passwordEncoder.encode("secret"))
-                .authorizedGrantTypes("client_credentials", "password")
-                .authorities("user")
-                .scopes("read")
-                .resourceIds("ebank")
-                .accessTokenValiditySeconds(accessTokenValiditySeconds)
-                .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
+                .resourceIds("ebank");
     }
 
     @Override

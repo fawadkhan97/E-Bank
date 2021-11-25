@@ -23,6 +23,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             "/organization/add",
             "/permission/add",
             "/role/add",
+            //other url
+            "/**/today",
+            "/**/dailyRates",
+            "/**/getByDate",
+            "/**/getByDateBetween",
+            "/**/getByStartDate",
 
             // -- Swagger UI v2
             "/v2/api-docs",
@@ -52,8 +58,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/**/all").hasAuthority("admin")
-                .antMatchers("/user/update", "/user/add", "user/get/*").hasAuthority("user")
+                .antMatchers("/user/all", "/**/delete/**", "/role/**", "/permission/**", "/organization/**").hasAuthority("admin")
+                .antMatchers("/{userid}/**", "/user/update", "/user/get/**").hasAuthority("user")
+                .antMatchers("/**/add", "/**/update", "/**/all", "/**/get/**").hasAuthority("employee")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationExceptionHandling)
