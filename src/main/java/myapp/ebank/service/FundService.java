@@ -13,32 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Fund service.
- */
 @Service
 public class FundService {
 
     private static final Logger log = LogManager.getLogger(FundService.class);
-    /**
-     * The Fund repository.
-     */
     final FundRepository fundRepository;
 
-    /**
-     * Instantiates a new Fund service.
-     *
-     * @param fundRepository the fund repository
-     */
     public FundService(FundRepository fundRepository) {
         this.fundRepository = fundRepository;
     }
 
     /**
-     * List all funds response entity.
-     *
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @return List of funds
+     * @author Fawad khan
+     * @param httpServletRequest
      */
     public ResponseEntity<Object> listAllFunds(HttpServletRequest httpServletRequest) {
         try {
@@ -57,11 +45,11 @@ public class FundService {
     }
 
     /**
-     * Update fund response entity.
-     *
-     * @param fund               the fund
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param fund
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 01-nov-2021
      */
     public ResponseEntity<Object> updateFund(Funds fund, HttpServletRequest httpServletRequest) {
         try {
@@ -78,11 +66,11 @@ public class FundService {
     }
 
     /**
-     * Delete fund response entity.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param id
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 01-nov-2021
      */
     public ResponseEntity<Object> deleteFund(Long id, HttpServletRequest httpServletRequest) {
         try {

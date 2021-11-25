@@ -30,18 +30,14 @@ import java.text.ParseException;
 import java.util.*;
 
 /**
- * The type User service.
+ * @author Fawad khan
+ * A service class of user connected with repository which contains user CRUD operations
+ * createdDate 27-oct-2021
  */
 @Service
 public class UserService implements UserDetailsService {
     private static final Logger log = LogManager.getLogger(UserService.class);
-    /**
-     * The Loan repository.
-     */
     final LoanRepository loanRepository;
-    /**
-     * The Feign police record service.
-     */
     final FeignPoliceRecordService feignPoliceRecordService;
     private final UserRepository userRepository;
     private final EmailUtil emailUtil;
@@ -49,24 +45,12 @@ public class UserService implements UserDetailsService {
     private final Double interestRate = 0.045;
     private final Double loanAmount = 5000000.0;
     private final Double fundAmount = 10000000.0;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    /**
-     * The Unpaid loan count.
-     */
     int unpaidLoanCount = 0;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private Date expirationTime;
 
 
-    /**
-     * Instantiates a new User service.
-     *
-     * @param userRepository           the user repository
-     * @param emailUtil                the email util
-     * @param loanRepository           the loan repository
-     * @param feignPoliceRecordService the feign police record service
-     * @param bCryptPasswordEncoder    the b crypt password encoder
-     */
-// Autowiring through constructor
+    // Autowiring through constructor
     public UserService(UserRepository userRepository, EmailUtil emailUtil, LoanRepository loanRepository, FeignPoliceRecordService feignPoliceRecordService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.emailUtil = emailUtil;
@@ -76,11 +60,8 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * List all user response entity.
-     *
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @return List of users
+     * @author Fawad khan
      */
     public ResponseEntity<Object> listAllUser(HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -99,6 +80,11 @@ public class UserService implements UserDetailsService {
 
     }
 
+    /**
+     * @param userName
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         Optional<Users> user = userRepository.findByUserName(userName);
@@ -118,12 +104,10 @@ public class UserService implements UserDetailsService {
 
 
     /**
-     * Gets user by id.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the user by id
-     * @throws ParseException the parse exception
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> getUserById(Long id, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -147,12 +131,10 @@ public class UserService implements UserDetailsService {
 
 
     /**
-     * Save user response entity.
-     *
-     * @param user               the user
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param user
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> saveUser(Users user, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -185,12 +167,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Update user response entity.
-     *
-     * @param user               the user
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param user
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> updateUser(Users user, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -206,12 +186,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Delete user response entity.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> deleteUser(Long id, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -222,10 +200,9 @@ public class UserService implements UserDetailsService {
                 // set updated date
                 user.get().setUpdatedDate(DateTime.getDateTime());
                 userRepository.save(user.get());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "  Users deleted successfully", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
-
+                return new ResponseEntity<>(" : Users deleted successfully", HttpStatus.OK);
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "  Users does not exists ", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(" : Users does not exists ", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(
                     "some error has occurred while trying to Delete user, in class UserService and its function deleteUser   {} .... {}", e.getMessage(), e.getCause());
@@ -236,13 +213,11 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Verify user response entity.
-     *
-     * @param id                 the id
-     * @param token              the token
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param id
+     * @param token
+     * @return
+     * @author fawad khan
+     * @createdDate 14-oct-2021
      */
     public ResponseEntity<Object> verifyUser(Long id, int token, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -269,12 +244,10 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Send token response entity.
+     * send token to user
      *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param id
+     * @return
      */
     public ResponseEntity<Object> sendToken(Long id, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -299,13 +272,9 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Apply for loan response entity.
-     *
-     * @param id                 the id
-     * @param loan               the loan
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws Exception the exception
+     * @param id
+     * @param loan
+     * @return
      */
     public ResponseEntity<Object> applyForLoan(Long id, Loans loan, HttpServletRequest httpServletRequest) throws Exception {
         try {
@@ -320,7 +289,6 @@ public class UserService implements UserDetailsService {
                             }
                         }
                         if (unpaidLoanCount > 2) {
-
                             return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
                         }
                     }
@@ -354,13 +322,9 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Deposit loan response entity.
-     *
-     * @param id                 the id
-     * @param loan               the loan
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param id
+     * @param loan
+     * @return
      */
     public ResponseEntity<Object> depositLoan(Long id, Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
 
@@ -401,13 +365,9 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Apply for funds response entity.
-     *
-     * @param id                 the id
-     * @param funds              the funds
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
-     * @throws ParseException the parse exception
+     * @param id
+     * @param funds
+     * @return
      */
     public ResponseEntity<Object> applyForFunds(Long id, Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -421,8 +381,7 @@ public class UserService implements UserDetailsService {
                     fundsList.add(funds);
                     user.get().setFunds(fundsList);
                     userRepository.save(user.get());
-                    return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Funds requested has been received..it will be process and its status will be updated soon", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
-
+                    return new ResponseEntity<>("Funds requested has been received..it will be process and its status will be updated soon", HttpStatus.OK);
                 }
                 funds.setCreatedDate(DateTime.getDateTime());
                 funds.setActive(true);
@@ -430,13 +389,11 @@ public class UserService implements UserDetailsService {
                 fundsList.add(funds);
                 user.get().setFunds(fundsList);
                 userRepository.save(user.get());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "funds has been approved ", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
-
+                return new ResponseEntity<>("funds has been approved ", HttpStatus.OK);
             } else if (user.isPresent() && !user.get().getOrganization().getType().equalsIgnoreCase("government")) {
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, "only government departments can apply for funds", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>("only government departments can apply for funds", HttpStatus.METHOD_NOT_ALLOWED);
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
-
+                return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
         } catch (
                 Exception e) {
             log.info("error is {} .... {}", e.getMessage(), e.getCause());
@@ -447,12 +404,8 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * Gets user funds and loans.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the user funds and loans
-     * @throws ParseException the parse exception
+     * @param id
+     * @return
      */
     public ResponseEntity<Object> getUserFundsAndLoans(Long id, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -462,9 +415,9 @@ public class UserService implements UserDetailsService {
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();
                 userFundsAndLoans.setFunds(user.get().getFunds());
                 userFundsAndLoans.setLoans(user.get().getLoans());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Success", httpServletRequest.getRequestURI(),userFundsAndLoans), HttpStatus.OK);
+                return new ResponseEntity<>(userFundsAndLoans, HttpStatus.OK);
+            } else return new ResponseEntity<>("user may not exists for given id", HttpStatus.NOT_FOUND);
 
-            } else return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "user may not exists for given id", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
 
         } catch (Exception e) {
             log.info(

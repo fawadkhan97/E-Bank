@@ -3,7 +3,6 @@ package myapp.ebank.service;
 import myapp.ebank.model.entity.NationalReserves;
 import myapp.ebank.repository.NationalReservesRepository;
 import myapp.ebank.util.DateTime;
-import myapp.ebank.util.ResponseMapping;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,60 +13,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type National reserves service.
- */
 @Service
 public class NationalReservesService {
 
     private static final Logger log = LogManager.getLogger(NationalReservesService.class);
-    /**
-     * The National reserves repository.
-     */
     NationalReservesRepository nationalReservesRepository;
 
-    /**
-     * Instantiates a new National reserves service.
-     *
-     * @param nationalReservesRepository the national reserves repository
-     */
     public NationalReservesService(NationalReservesRepository nationalReservesRepository) {
         this.nationalReservesRepository = nationalReservesRepository;
     }
 
     /**
-     * Gets daily national reserves.
+     * get daily national Reserves
      *
-     * @return the daily national reserves
+     * @return NationalReserves Object
      */
-    public ResponseEntity<Object> getDailyNationalReserves() throws ParseException {
+    public ResponseEntity<Object> getDailyNationalReserves() {
         try {
             Date currentDate = SqlDate.getDateInSqlFormat();
             Optional<NationalReserves> nationalReserves = nationalReservesRepository.findByDateLike(currentDate);
             if (nationalReserves.isPresent()) {
                 System.out.println("Reserves are  " + nationalReserves.get().getForeignReserves());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.FOUND,"found data","",nationalReserves), HttpStatus.OK);
+                return new ResponseEntity<>(nationalReserves, HttpStatus.OK);
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "\"Could not get today rate...", "", null), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
 
         } catch (Exception e) {
             System.out.println("some error has occurred " + e.getCause() + " " + e.getMessage());
             log.info(
                     "some error has occurred trying to Fetch national reserves, in Class nationalReservesService and its function get dailynational reserves ", e.getMessage());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", "", null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("an error has occurred ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     /**
-     * Gets national reserves by date.
+     * get national Reserves for specific Date
      *
-     * @param date the date
-     * @return the national reserves by date
+     * @param date
+     * @return
      */
     public ResponseEntity<Object> getNationalReservesByDate(Date date) {
 
@@ -90,10 +77,10 @@ public class NationalReservesService {
     }
 
     /**
-     * Gets national reserves rate by start date.
+     * find between specific date range by starting date
      *
-     * @param startDate the start date
-     * @return the national reserves rate by start date
+     * @param startDate
+     * @return
      */
     public ResponseEntity<Object> getNationalReservesRateByStartDate(@RequestParam java.util.Date startDate) {
         try {
@@ -112,11 +99,11 @@ public class NationalReservesService {
     }
 
     /**
-     * Gets national reserves rate between dates.
+     * find between specific date range start and end
      *
-     * @param startDate the start date
-     * @param endDate   the end date
-     * @return the national reserves rate between dates
+     * @param startDate
+     * @param endDate
+     * @return
      */
     public ResponseEntity<Object> getNationalReservesRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate) {
         try {
@@ -135,9 +122,8 @@ public class NationalReservesService {
     }
 
     /**
-     * List all national reserves response entity.
-     *
-     * @return the response entity
+     * @return List of nationalReserves
+     * @author Fawad khan
      */
     public ResponseEntity<Object> listAllNationalReserves() {
         try {
@@ -159,10 +145,11 @@ public class NationalReservesService {
     }
 
     /**
-     * Gets national reserves by id.
-     *
-     * @param id the id
-     * @return the national reserves by id
+     * fetch record by id
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> getNationalReservesById(Long id) {
         try {
@@ -189,10 +176,10 @@ public class NationalReservesService {
     }
 
     /**
-     * Add national reserves response entity.
+     * save  National Reserves
      *
-     * @param nationalReserves the national reserves
-     * @return the response entity
+     * @param nationalReserves
+     * @return
      */
     public ResponseEntity<Object> addNationalReserves(NationalReserves nationalReserves) {
         try {
@@ -214,10 +201,11 @@ public class NationalReservesService {
     }
 
     /**
-     * Update national reserves response entity.
-     *
-     * @param nationalReserves the national reserves
-     * @return the response entity
+     * update national reserves
+     * @param nationalReserves
+     * @return
+     * @author fawad khan
+     * @createdDate 30-oct-2021
      */
     public ResponseEntity<Object> updateNationalReserves(NationalReserves nationalReserves) {
         try {
@@ -236,10 +224,10 @@ public class NationalReservesService {
     }
 
     /**
-     * Delete national reserves response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * delete data
+     * @param id
+     * @return ResponseEntity<Object>
+     * @author fawad khan
      */
     public ResponseEntity<Object> deleteNationalReserves(Long id) {
         try {

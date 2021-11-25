@@ -15,30 +15,25 @@ import java.util.Optional;
 
 
 /**
- * The type Role service.
+ * @author fawad khan
+ * @createdDate 12-oct-2021
  */
 @Service
 public class RoleService {
     private static final Logger log = LogManager.getLogger(RoleService.class);
 
-    /**
-     * The Role repository.
-     */
     final RoleRepository roleRepository;
 
-    /**
-     * Instantiates a new Role service.
-     *
-     * @param roleRepository the role repository
-     */
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
     /**
-     * Gets all roles.
+     * get list of all role available
      *
-     * @return the all roles
+     * @return Role object if any role
+     * @author Fawad khan
+     * @Created Date 31-0ct-2021
      */
     public ResponseEntity<Object> getAllRoles() {
         try {
@@ -59,10 +54,12 @@ public class RoleService {
     }
 
     /**
-     * Add role response entity.
+     * add role to db
      *
-     * @param role the role
-     * @return the response entity
+     * @param role
+     * @return Role object
+     * @author Fawad khan
+     * @Created Date 31-0ct-2021
      */
     public ResponseEntity<Object> addRole(Roles role) {
         try {
@@ -83,10 +80,10 @@ public class RoleService {
     }
 
     /**
-     * Gets role by id.
-     *
-     * @param id the id
-     * @return the role by id
+     * @param id
+     * @return role object
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> getRoleById(Long id) {
         try {
@@ -106,10 +103,9 @@ public class RoleService {
     }
 
     /**
-     * Update role response entity.
-     *
-     * @param roles the roles
-     * @return the response entity
+     * @param roles
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> updateRole(List<Roles> roles) {
         try {
@@ -128,10 +124,9 @@ public class RoleService {
     }
 
     /**
-     * Delete role response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * @param id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> deleteRole(Long id) {
         try {

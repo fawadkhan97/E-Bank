@@ -21,7 +21,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             //Sign up url
             "/user/add",
             "/organization/add",
-
+            "/permission/add",
+            "/role/add",
             //other url
             "/**/today",
             "/**/dailyRates",
@@ -33,16 +34,14 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
-            "/configuration/**",
-            "/webjars/**",
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html/**",
             "/webjars/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/api-docs/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**",
+            "/swagger-ui/**"
+            // other public endpoints of your API may be appended to this array
     };
 
     public ResourceServerConfiguration(AuthenticationExceptionHandling authenticationExceptionHandling) {

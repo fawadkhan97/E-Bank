@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * The type Permission controller.
- */
 @RestController
 @RequestMapping("/permission")
 @Validated
@@ -26,21 +23,15 @@ public class PermissionController {
     final private PermissionService permissionService;
     private static final Logger log = LogManager.getLogger(PermissionService.class);
 
-    /**
-     * Instantiates a new Permission controller.
-     *
-     * @param permissionService the permission service
-     */
     public PermissionController(PermissionService permissionService) {
         this.permissionService = permissionService;
     }
 
 
     /**
-     * Gets all permission.
-     *
-     * @param authValue the auth value
-     * @return the all permission
+     * @return
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllPermission(@RequestHeader("Authorization") String authValue) {
@@ -48,11 +39,9 @@ public class PermissionController {
     }
 
     /**
-     * Gets permission.
-     *
-     * @param authValue the auth value
-     * @param id        the id
-     * @return the permission
+     * @param id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getPermission(@RequestHeader("Authorization") String authValue,
@@ -61,11 +50,9 @@ public class PermissionController {
     }
 
     /**
-     * Add permission response entity.
-     *
-     * @param authValue   the auth value
-     * @param permissions the permissions
-     * @return the response entity
+     * @param permissions
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addPermission(@RequestHeader("Authorization") String authValue,
@@ -76,11 +63,9 @@ public class PermissionController {
     }
 
     /**
-     * Update permission response entity.
-     *
-     * @param authValue  the auth value
-     * @param permission the permission
-     * @return the response entity
+     * @param permission
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updatePermission(@RequestHeader("Authorization") String authValue,
@@ -91,11 +76,9 @@ public class PermissionController {
     }
 
     /**
-     * Delete permission response entity.
-     *
-     * @param authValue the auth value
-     * @param id        the id
-     * @return the response entity
+     * @param id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePermission(@RequestHeader("Authorization") String authValue,

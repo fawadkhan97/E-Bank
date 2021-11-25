@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The type Role controller.
+ * @author fawad khan
+ * @createdDate 31-oct-2021
  */
 @RestController
 @RequestMapping("/role")
@@ -25,21 +26,14 @@ public class RoleController {
     private static final String defaultAuthValue = "12345";
     final private RoleService roleService;
 
-    /**
-     * Instantiates a new Role controller.
-     *
-     * @param roleService the role service
-     */
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
 
     /**
-     * Gets all roles.
-     *
-     * @param authValue the auth value
-     * @return the all roles
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRoles(
@@ -50,11 +44,9 @@ public class RoleController {
     }
 
     /**
-     * Gets role.
-     *
-     * @param authValue the auth value
-     * @param id        the id
-     * @return the role
+     * @param id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getRole(@RequestHeader("Authorization") String authValue, @PathVariable Long id) {
@@ -63,11 +55,9 @@ public class RoleController {
     }
 
     /**
-     * Save role response entity.
-     *
-     * @param authValue the auth value
-     * @param role      the role
-     * @return the response entity
+     * @param role
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @PostMapping("/add")
     public ResponseEntity<Object> saveRole(@RequestHeader(required = false, value = "Authorization") String authValue,
@@ -79,11 +69,9 @@ public class RoleController {
     }
 
     /**
-     * Update role response entity.
-     *
-     * @param authValue the auth value
-     * @param roles     the roles
-     * @return the response entity
+     * @param roles
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateRole(@RequestHeader("Authorization") String authValue,
@@ -95,11 +83,9 @@ public class RoleController {
     }
 
     /**
-     * Delete role response entity.
-     *
-     * @param authValue the auth value
-     * @param id        the id
-     * @return the response entity
+     * @param id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteRole(@RequestHeader("Authorization") String authValue, @PathVariable Long id) {

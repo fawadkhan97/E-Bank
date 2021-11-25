@@ -6,15 +6,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * The type Date time.
- */
 public class DateTime {
     /**
-     * Gets date time.
+     * get current date and time
      *
-     * @return the date time
-     * @throws ParseException the parse exception
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static Date getDateTime() throws ParseException {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -24,10 +22,11 @@ public class DateTime {
     }
 
     /**
-     * Gets date.
+     * get current date only
      *
-     * @return the date
-     * @throws ParseException the parse exception
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static Date getDate() throws ParseException {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -38,10 +37,13 @@ public class DateTime {
     }
 
 
+
     /**
-     * Gets date in string.
+     * get current date in String only
      *
-     * @return the date in string
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static String getDateInString() {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -50,10 +52,11 @@ public class DateTime {
     }
 
     /**
-     * Gets time.
+     * get current time only
      *
-     * @return the time
-     * @throws ParseException the parse exception
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static Date getTime() throws ParseException {
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -63,11 +66,11 @@ public class DateTime {
     }
 
     /**
-     * Gets expire time.
+     * add  minutes in the current time (as specify during function call) which will be then use as token verification expiry time
      *
-     * @param expireTime the expire time
-     * @return the expire time
-     * @throws ParseException the parse exception
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static Date getExpireTime(int expireTime) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -78,11 +81,11 @@ public class DateTime {
     }
 
     /**
-     * Gets due date.
+     * add 5 days  in the current Date which will be then use as due date
      *
-     * @param days the days
-     * @return the due date
-     * @throws ParseException the parse exception
+     * @return
+     * @throws ParseException
+     * @author Fawad
      */
     public static Date getDueDate(int days) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
