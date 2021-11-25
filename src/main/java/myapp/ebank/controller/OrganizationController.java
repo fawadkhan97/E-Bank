@@ -10,32 +10,21 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-/**
- * The type Organization controller.
- */
 @RestController
 @RequestMapping("/organization")
 @Validated
 public class OrganizationController {
-    /**
-     * The Organization service.
-     */
     OrganizationService organizationService;
 
-    /**
-     * Instantiates a new Organization controller.
-     *
-     * @param organizationService the organization service
-     */
     public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
 
     /**
-     * Add organization response entity.
-     *
-     * @param organization the organization
-     * @return the response entity
+     * @param organization
+     * @return added organization object
+     * @author Fawad khan
+     * @createdDate 01-nov-2021
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addOrganization(@Validated @RequestBody Organizations organization) {
@@ -44,10 +33,11 @@ public class OrganizationController {
     }
 
     /**
-     * Gets all organizations.
-     *
-     * @param authValue the auth value
-     * @return the all organizations
+     * @return list of users
+     * @Author "Fawad khan"
+     * @Description "Display all user from db in a list if present which can be then
+     * displayed on screen"
+     * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllOrganizations(@RequestHeader(value = "Authorization") String authValue) {
@@ -55,11 +45,9 @@ public class OrganizationController {
     }
 
     /**
-     * Gets organization.
-     *
-     * @param authValue the auth value
-     * @param id        the id
-     * @return the organization
+     * @param id
+     * @return organization object
+     * @createdDate 01-nov-2021
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getOrganization(@RequestHeader(value = "Authorization", required = false) String authValue,
@@ -68,10 +56,9 @@ public class OrganizationController {
     }
 
     /**
-     * Update organization response entity.
-     *
-     * @param organization the organization
-     * @return the response entity
+     * @param organization
+     * @return
+     * @createdDate 01-nov-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateOrganization(@Valid @RequestBody Organizations organization) {
@@ -79,10 +66,9 @@ public class OrganizationController {
     }
 
     /**
-     * Delete organization response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * @param id
+     * @return
+     * @createdDate 01-nov-2021
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteOrganization(@PathVariable Long id) {

@@ -15,35 +15,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Currency service.
- */
 @Service
 public class CurrencyService {
 
     private static final Logger log = LogManager.getLogger(CurrencyService.class);
-    /**
-     * The Feign police record service.
-     */
     final FeignPoliceRecordService feignPoliceRecordService;
     private final CurrencyRepository currencyRepository;
 
-    /**
-     * Instantiates a new Currency service.
-     *
-     * @param currencyRepository       the currency repository
-     * @param feignPoliceRecordService the feign police record service
-     */
     public CurrencyService(CurrencyRepository currencyRepository, FeignPoliceRecordService feignPoliceRecordService) {
         this.currencyRepository = currencyRepository;
         this.feignPoliceRecordService = feignPoliceRecordService;
     }
 
     /**
-     * Gets all currencies.
+     * get all active currencies
      *
-     * @param httpServletRequest the http servlet request
-     * @return the all currencies
+     * @return
+     * @param httpServletRequest
      */
     public ResponseEntity<Object> getAllCurrencies(HttpServletRequest httpServletRequest) {
         try {
@@ -58,17 +46,18 @@ public class CurrencyService {
                 return new ResponseEntity<>(issuedCurrencies, HttpStatus.OK);
         } catch (Exception e) {
             log.info(
-                    "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies {}", e.getMessage());
+                    "some error has occurred trying to Fetch issued currencies, in Class issuedCurrenciesService and its function get all currencies ", e.getMessage());
             return new ResponseEntity<>("an error has occurred..", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Gets currency by id.
+     * fetch record by id
      *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the currency by id
+     * @param id
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
      */
     public ResponseEntity<Object> getCurrencyById(Long id, HttpServletRequest httpServletRequest) {
         try {
@@ -92,11 +81,11 @@ public class CurrencyService {
     }
 
     /**
-     * Save currency response entity.
-     *
-     * @param currency           the currency
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param currency
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> saveCurrency(Currencies currency, HttpServletRequest httpServletRequest) {
         try {
@@ -122,11 +111,11 @@ public class CurrencyService {
     }
 
     /**
-     * Update currency response entity.
-     *
-     * @param currency           the currency
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param currency
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 29-oct-2021
      */
     public ResponseEntity<Object> updateCurrency(Currencies currency, HttpServletRequest httpServletRequest) {
         try {
@@ -146,11 +135,11 @@ public class CurrencyService {
     }
 
     /**
-     * Delete currency response entity.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param id
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 27-oct-2021
      */
     public ResponseEntity<Object> deleteCurrency(Long id, HttpServletRequest httpServletRequest) {
         try {

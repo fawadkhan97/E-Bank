@@ -8,7 +8,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 /**
- * The type Email util.
+ * @author fawad khan
+ * @createdDate 14-oct-2021
  */
 @Service
 public class EmailUtil {
@@ -18,21 +19,16 @@ public class EmailUtil {
 	private final String body = " A new account was created using your email on e- bank app,  please enter following code to verify: ";
 	private final String subject = " User verification email";
 
-	/**
-	 * Instantiates a new Email util.
-	 *
-	 * @param javaMailSender the java mail sender
-	 */
 	public EmailUtil(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
 	}
 
 	/**
-	 * Send mail response entity.
-	 *
-	 * @param toEmail the to email
-	 * @param token   the token
-	 * @return the response entity
+	 * @author fawad khan
+	 * @createdDate 14-oct-2021
+	 * @param toEmail
+	 * @param token
+	 * @return
 	 */
 	public ResponseEntity<Object> sendMail(String toEmail, int token) {
 		try {

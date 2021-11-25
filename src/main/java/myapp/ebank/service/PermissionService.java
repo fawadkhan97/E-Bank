@@ -13,28 +13,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Permission service.
- */
 @Service
 public class PermissionService {
     private static final Logger log = LogManager.getLogger(PermissionService.class);
     final private PermissionRepository permissionRepository;
 
-    /**
-     * Instantiates a new Permission service.
-     *
-     * @param permissionRepository the permission repository
-     */
-// autowiring permissionRepository
+    // autowiring permissionRepository
     public PermissionService(PermissionRepository permissionRepository) {
         this.permissionRepository = permissionRepository;
     }
 
     /**
-     * Gets all permission.
-     *
-     * @return the all permission
+     * @return list of permissions available
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> getAllPermission() {
 
@@ -56,10 +48,10 @@ public class PermissionService {
     }
 
     /**
-     * Gets permission by id.
-     *
-     * @param id the id
-     * @return the permission by id
+     * @param id
+     * @return specific permission object as specify by id
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> getPermissionById(Long id) {
         try {
@@ -81,10 +73,10 @@ public class PermissionService {
     }
 
     /**
-     * Save permission response entity.
-     *
-     * @param permissions the permissions
-     * @return the response entity
+     * @param permissions
+     * @return saved permission object
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> savePermission(List<Permissions> permissions) {
         try {
@@ -108,10 +100,10 @@ public class PermissionService {
     }
 
     /**
-     * Update permission response entity.
-     *
-     * @param permissions the permissions
-     * @return the response entity
+     * @param permissions
+     * @return
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<Object> updatePermission(List<Permissions> permissions) {
         try {
@@ -130,10 +122,10 @@ public class PermissionService {
     }
 
     /**
-     * Delete permission response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * @param id
+     * @return
+     * @author fawad khan
+     * @createdDate 31-oct-2021
      */
     public ResponseEntity<String> deletePermission(Long id) {
         try {

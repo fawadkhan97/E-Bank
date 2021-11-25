@@ -10,48 +10,38 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
-import java.text.ParseException;
 
-/**
- * The type National reserve controller.
- */
 @RestController
 @RequestMapping("/nationalReserves")
 @Validated
 public class NationalReserveController {
 
-    /**
-     * The National reserves service.
-     */
     final NationalReservesService nationalReservesService;
 
-    /**
-     * Instantiates a new National reserve controller.
-     *
-     * @param nationalReservesService the national reserves service
-     */
     public NationalReserveController(NationalReservesService nationalReservesService) {
         this.nationalReservesService = nationalReservesService;
     }
 
 
     /**
-     * Gets today national reserves.
-     *
-     * @return the today national reserves
+     * @return list of national reserves
+     * @Author "Fawad khan"
+     * @Description "Display all nationalreserves from db in a list if present which can be then
+     * displayed on screen"
+     * @createdDate 30-oct-2021
      */
     @GetMapping("/today")
-    public ResponseEntity<Object> getTodayNationalReserves() throws ParseException {
+    public ResponseEntity<Object> getTodayNationalReserves() {
         return nationalReservesService.getDailyNationalReserves();
 
 
     }
 
     /**
-     * Gets national reserves by date.
+     * get rates by specific date
      *
-     * @param date the date
-     * @return the national reserves by date
+     * @param date
+     * @return
      */
     @GetMapping("/getByDate")
     public ResponseEntity<Object> getNationalReservesByDate(@RequestParam Date date) {
@@ -60,10 +50,10 @@ public class NationalReserveController {
 
 
     /**
-     * Gets national reserves rate by start date.
+     * get nationalReserves rates from start date to  current date
      *
-     * @param startDate the start date
-     * @return the national reserves rate by start date
+     * @param startDate
+     * @return
      */
     @GetMapping("/getByStartDate")
     public ResponseEntity<Object> getNationalReservesRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate) {
@@ -71,11 +61,11 @@ public class NationalReserveController {
     }
 
     /**
-     * Gets national reserves rate by start and end date.
+     * get nationalReserves rates from start date to  end date
      *
-     * @param startDate the start date
-     * @param endDate   the end date
-     * @return the national reserves rate by start and end date
+     * @param startDate
+     * @param endDate
+     * @return
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getNationalReservesRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
@@ -84,10 +74,8 @@ public class NationalReserveController {
     }
 
     /**
-     * Gets national reserves.
-     *
-     * @param id the id
-     * @return the national reserves
+     * @param id
+     * @return nationalReserves object
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getNationalReserves(@PathVariable Long id) {
@@ -96,9 +84,7 @@ public class NationalReserveController {
 
 
     /**
-     * Gets all national reserves.
-     *
-     * @return the all national reserves
+     * @return list of national reservess
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllNationalReserves() {
@@ -107,10 +93,12 @@ public class NationalReserveController {
 
 
     /**
-     * Add national reserves response entity.
+     * add reserves record to db
      *
-     * @param nationalreserves the nationalreserves
-     * @return the response entity
+     * @param nationalreserves
+     * @return added nationalreserves object
+     * @author Fawad khan
+     * @createdDate 30-oct-2021
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addNationalReserves(@Valid @RequestBody NationalReserves nationalreserves) {
@@ -120,10 +108,9 @@ public class NationalReserveController {
     }
 
     /**
-     * Update national reserves response entity.
-     *
-     * @param nationalreserves the nationalreserves
-     * @return the response entity
+     * @param nationalreserves
+     * @return
+     * @createdDate 30-oct-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateNationalReserves(@Valid @RequestBody NationalReserves nationalreserves) {
@@ -132,10 +119,9 @@ public class NationalReserveController {
     }
 
     /**
-     * Delete national reserves response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * @param id
+     * @return
+     * @createdDate 30-oct-2021
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteNationalReserves(@PathVariable Long id) {

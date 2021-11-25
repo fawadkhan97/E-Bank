@@ -8,33 +8,24 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-/**
- * The type Loan controller.
- */
 @RestController
 @RequestMapping("/loan")
 @Validated
 public class LoanController {
 
-    /**
-     * The Loan service.
-     */
     final LoanService loanService;
 
-    /**
-     * Instantiates a new Loan controller.
-     *
-     * @param loanService the loan service
-     */
     public LoanController(LoanService loanService) {
         this.loanService = loanService;
     }
 
 
     /**
-     * Gets all loans.
-     *
-     * @return the all loans
+     * @return list of loans
+     * @Author "Fawad khan"
+     * @Description "Display all loans from db in a list if present which can be then
+     * displayed on screen"
+     * @createdDate 27-oct-2021
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllLoans() {
@@ -44,10 +35,9 @@ public class LoanController {
     }
 
     /**
-     * Update loan response entity.
-     *
-     * @param loan the loan
-     * @return the response entity
+     * @param loan
+     * @return
+     * @createdDate 29-oct-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateLoan(@Valid @RequestBody Loans loan) {
@@ -57,10 +47,9 @@ public class LoanController {
     }
 
     /**
-     * Delete loan response entity.
-     *
-     * @param id the id
-     * @return the response entity
+     * @param id
+     * @return
+     * @createdDate 27-oct-2021
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteLoan(@PathVariable Long id) {

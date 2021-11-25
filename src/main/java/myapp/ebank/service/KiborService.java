@@ -3,7 +3,6 @@ package myapp.ebank.service;
 import myapp.ebank.model.entity.KiborRates;
 import myapp.ebank.repository.KiborRepository;
 import myapp.ebank.util.DateTime;
-import myapp.ebank.util.ResponseMapping;
 import myapp.ebank.util.SqlDate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,39 +14,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The type Kibor service.
- */
 @Service
 public class KiborService {
 
     private static final Logger log = LogManager.getLogger(KiborService.class);
-    /**
-     * The Kibor rates repository.
-     */
     KiborRepository kiborRatesRepository;
 
-    /**
-     * Instantiates a new Kibor service.
-     *
-     * @param kiborRatesRepository the kibor rates repository
-     */
     public KiborService(KiborRepository kiborRatesRepository) {
         // TODO Auto-generated constructor stub
         this.kiborRatesRepository = kiborRatesRepository;
     }
 
     /**
-     * Daily kibor rates response entity.
+     * get daily kibor rates
      *
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @return
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) {
         try {
             Date currentDate = SqlDate.getDateInSqlFormat();
             Optional<KiborRates> kiborRates = kiborRatesRepository.findByDateLike(currentDate);
@@ -55,23 +42,22 @@ public class KiborService {
                 System.out.println("kibor rate is " + kiborRates.get().getBid());
                 return new ResponseEntity<>(kiborRates, HttpStatus.OK);
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "\"Could not get today rate...", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Could not get today rates  ...", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             System.out.println("error has occured " + e.getMessage() + " " + e.getCause());
             log.info("some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getDailyKiborRates " + e.getMessage());
-                        return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<>("some error has occured ...", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Gets kibor rate by date.
+     * get kibor Rate for specific Date
      *
-     * @param date               the date
-     * @param httpServletRequest the http servlet request
-     * @return the kibor rate by date
+     * @param date
+     * @param httpServletRequest
+     * @return
      */
-    public ResponseEntity<Object> getKiborRateByDate(Date date, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> getKiborRateByDate(Date date, HttpServletRequest httpServletRequest) {
         try {
             Optional<KiborRates> Kibor = kiborRatesRepository.findByDateLike(date);
             if (Kibor.isPresent()) {
@@ -81,17 +67,16 @@ public class KiborService {
         } catch (Exception e) {
             log.info(
                     "some error has occurred trying to Fetch Kibor rates, in Class KiborRateService and its function getKiborRatesByDate " + e.getMessage());
-                        return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-
+            return new ResponseEntity<Object>("an error has occured ", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * Gets kibor rate by start date.
+     * find between specific date range by starting date
      *
-     * @param startDate          the start date
-     * @param httpServletRequest the http servlet request
-     * @return the kibor rate by start date
+     * @param startDate
+     * @param httpServletRequest
+     * @return
      */
     public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam java.util.Date startDate, HttpServletRequest httpServletRequest) {
         try {
@@ -109,12 +94,12 @@ public class KiborService {
     }
 
     /**
-     * Gets kibor rate between dates.
+     * find between specific date range start and end
      *
-     * @param startDate          the start date
-     * @param endDate            the end date
-     * @param httpServletRequest the http servlet request
-     * @return the kibor rate between dates
+     * @param startDate
+     * @param endDate
+     * @param httpServletRequest
+     * @return
      */
     public ResponseEntity<Object> getKiborRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate, HttpServletRequest httpServletRequest) {
         try {
@@ -131,12 +116,11 @@ public class KiborService {
     }
 
     /**
-     * List all kibor rates response entity.
-     *
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @return List of kiborRates
+     * @author Fawad khan
+     * @param httpServletRequest
      */
-    public ResponseEntity<Object> listAllKiborRates(HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> listAllKiborRates(HttpServletRequest httpServletRequest) {
         try {
             List<KiborRates> kiborRates = kiborRatesRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
@@ -148,17 +132,18 @@ public class KiborService {
         } catch (Exception e) {
             log.info("some error has occurred trying to Fetch kiborRates, in Class  KiborRatesService and its function listAllKiborRates " + e.getMessage());
 
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "an error has occurred ", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("KiborRates could not be found", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     /**
-     * Gets kibor rates by id.
+     * fetch record by id
      *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the kibor rates by id
+     * @param id
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
      */
     public ResponseEntity<Object> getKiborRatesById(Long id, HttpServletRequest httpServletRequest) {
         try {
@@ -183,11 +168,11 @@ public class KiborService {
     }
 
     /**
-     * Add kibor rate response entity.
+     * save kibor rates
      *
-     * @param kiborRates         the kibor rates
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param kiborRates
+     * @param httpServletRequest
+     * @return
      */
     public ResponseEntity<Object> addKiborRate(KiborRates kiborRates, HttpServletRequest httpServletRequest) {
         try {
@@ -205,11 +190,11 @@ public class KiborService {
     }
 
     /**
-     * Update kibor rate response entity.
-     *
-     * @param kiborRate          the kibor rate
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param kiborRate
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 30-oct-2021
      */
     public ResponseEntity<Object> updateKiborRate(KiborRates kiborRate, HttpServletRequest httpServletRequest) {
         try {
@@ -226,11 +211,11 @@ public class KiborService {
     }
 
     /**
-     * Delete kibor rate response entity.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param id
+     * @param httpServletRequest
+     * @return
+     * @author fawad khan
+     * @createdDate 30-oct-2021
      */
     public ResponseEntity<Object> deleteKiborRate(Long id, HttpServletRequest httpServletRequest) {
         try {

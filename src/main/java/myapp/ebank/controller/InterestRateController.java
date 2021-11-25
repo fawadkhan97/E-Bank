@@ -12,33 +12,20 @@ import javax.validation.Valid;
 import java.sql.Date;
 import java.text.ParseException;
 
-/**
- * The type Interest rate controller.
- */
 @RestController
 @RequestMapping("/interestRate")
 @Validated
 public class InterestRateController {
-    /**
-     * The Interest rate service.
-     */
     InterestRateService interestRateService;
 
-    /**
-     * Instantiates a new Interest rate controller.
-     *
-     * @param interestRateService the interest rate service
-     */
     public InterestRateController(InterestRateService interestRateService) {
         this.interestRateService = interestRateService;
     }
 
     /**
-     * Gets daily interest rate.
+     * return daily rates
      *
-     * @param httpServletRequest the http servlet request
-     * @return the daily interest rate
-     * @throws ParseException the parse exception
+     * @return
      */
     @GetMapping("/dailyRates")
     public ResponseEntity<Object> getDailyInterestRate(HttpServletRequest httpServletRequest) throws ParseException {
@@ -46,11 +33,10 @@ public class InterestRateController {
     }
 
     /**
-     * Gets interest rate by date.
+     * get rates by specific date
      *
-     * @param date               the date
-     * @param httpServletRequest the http servlet request
-     * @return the interest rate by date
+     * @param date
+     * @return
      */
     @GetMapping("/getByDate")
     public ResponseEntity<Object> getInterestRateByDate(@RequestParam Date date, HttpServletRequest httpServletRequest) {
@@ -58,11 +44,10 @@ public class InterestRateController {
     }
 
     /**
-     * Gets interest rate by start date.
+     * get interest rates from start date to  current date
      *
-     * @param startDate          the start date
-     * @param httpServletRequest the http servlet request
-     * @return the interest rate by start date
+     * @param startDate
+     * @return
      */
     @GetMapping("/getByStartDate")
     public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate, HttpServletRequest httpServletRequest) {
@@ -70,12 +55,11 @@ public class InterestRateController {
     }
 
     /**
-     * Gets interest rate by start and end date.
+     * get interest rates from start date to  end date
      *
-     * @param startDate          the start date
-     * @param endDate            the end date
-     * @param httpServletRequest the http servlet request
-     * @return the interest rate by start and end date
+     * @param startDate
+     * @param endDate
+     * @return
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getInterestRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
@@ -84,11 +68,8 @@ public class InterestRateController {
     }
 
     /**
-     * Gets interest rate.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the interest rate
+     * @param id
+     * @return interestRate object
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getInterestRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
@@ -96,10 +77,7 @@ public class InterestRateController {
     }
 
     /**
-     * Gets all interest rates.
-     *
-     * @param httpServletRequest the http servlet request
-     * @return the all interest rates
+     * @return list of interest rates
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllInterestRates(HttpServletRequest httpServletRequest) {
@@ -107,11 +85,10 @@ public class InterestRateController {
     }
 
     /**
-     * Add interest rate response entity.
+     * save interest rate
      *
-     * @param interestRates      the interest rates
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param interestRates
+     * @return
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addInterestRate(            @Valid @RequestBody InterestRates interestRates, HttpServletRequest httpServletRequest) {
@@ -119,11 +96,9 @@ public class InterestRateController {
     }
 
     /**
-     * Update interest rate response entity.
-     *
-     * @param interestRate       the interest rate
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param interestRate
+     * @return
+     * @createdDate 29-oct-2021
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateInterestRate(            @Valid @RequestBody InterestRates interestRate, HttpServletRequest httpServletRequest) {
@@ -131,11 +106,9 @@ public class InterestRateController {
     }
 
     /**
-     * Delete interest rate response entity.
-     *
-     * @param id                 the id
-     * @param httpServletRequest the http servlet request
-     * @return the response entity
+     * @param id
+     * @return
+     * @createdDate 27-oct-2021
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteInterestRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
