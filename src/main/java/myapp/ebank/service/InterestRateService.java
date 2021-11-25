@@ -19,20 +19,33 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Interest rate service.
+ */
 @Service
 public class InterestRateService {
 
     private static final Logger log = LogManager.getLogger(InterestRateService.class);
+    /**
+     * The Interest rates repository.
+     */
     InterestRatesRepository interestRatesRepository;
 
+    /**
+     * Instantiates a new Interest rate service.
+     *
+     * @param interestRatesRepository the interest rates repository
+     */
     public InterestRateService(InterestRatesRepository interestRatesRepository) {
         this.interestRatesRepository = interestRatesRepository;
     }
 
     /**
-     * get daily interest rate
+     * Gets daily interest rate.
      *
-     * @return InterestRate Object
+     * @param httpServletRequest the http servlet request
+     * @return the daily interest rate
+     * @throws ParseException the parse exception
      */
     public ResponseEntity<Object> getDailyInterestRate(HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -50,11 +63,11 @@ public class InterestRateService {
     }
 
     /**
-     * get interest Rate for specific Date
+     * Gets interest rate by date.
      *
-     * @param date
-     * @param httpServletRequest
-     * @return
+     * @param date               the date
+     * @param httpServletRequest the http servlet request
+     * @return the interest rate by date
      */
     public ResponseEntity<Object> getInterestRateByDate(Date date, HttpServletRequest httpServletRequest) {
         try {
@@ -73,11 +86,11 @@ public class InterestRateService {
     }
 
     /**
-     * find between specific date range by starting date
+     * Gets interest rate by start date.
      *
-     * @param startDate
-     * @param httpServletRequest
-     * @return
+     * @param startDate          the start date
+     * @param httpServletRequest the http servlet request
+     * @return the interest rate by start date
      */
     public ResponseEntity<Object> getInterestRateByStartDate(@RequestParam java.util.Date startDate, HttpServletRequest httpServletRequest) {
         try {
@@ -95,12 +108,12 @@ public class InterestRateService {
     }
 
     /**
-     * find between specific date range start and end
+     * Gets interest rate between dates.
      *
-     * @param startDate
-     * @param endDate
-     * @param httpServletRequest
-     * @return
+     * @param startDate          the start date
+     * @param endDate            the end date
+     * @param httpServletRequest the http servlet request
+     * @return the interest rate between dates
      */
     public ResponseEntity<Object> getInterestRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate, HttpServletRequest httpServletRequest) {
         try {
@@ -117,9 +130,10 @@ public class InterestRateService {
     }
 
     /**
-     * @return List ofinterestRates
-     * @author Fawad khan
-     * @param httpServletRequest
+     * List all interest rates response entity.
+     *
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> listAllInterestRates(HttpServletRequest httpServletRequest) {
         try {
@@ -138,12 +152,11 @@ public class InterestRateService {
     }
 
     /**
-     * fetch record by id
+     * Gets interest rates by id.
      *
-     * @param id
-     * @param httpServletRequest
-     * @return
-     * @author fawad khan
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the interest rates by id
      */
     public ResponseEntity<Object> getInterestRatesById(Long id, HttpServletRequest httpServletRequest) {
         try {
@@ -170,11 +183,11 @@ public class InterestRateService {
     }
 
     /**
-     * save interest rate
+     * Add interest rate response entity.
      *
-     * @param interestRates
-     * @param httpServletRequest
-     * @return
+     * @param interestRates      the interest rates
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> addInterestRate(InterestRates interestRates, HttpServletRequest httpServletRequest) {
 
@@ -196,13 +209,11 @@ public class InterestRateService {
     }
 
     /**
-     * update record
+     * Update interest rate response entity.
      *
-     * @param interestRate
-     * @param httpServletRequest
-     * @return
-     * @author fawad khan
-     * @createdDate 30-oct-2021
+     * @param interestRate       the interest rate
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> updateInterestRate(InterestRates interestRate, HttpServletRequest httpServletRequest) {
         try {
@@ -220,13 +231,11 @@ public class InterestRateService {
     }
 
     /**
-     * delete record
+     * Delete interest rate response entity.
      *
-     * @param id
-     * @param httpServletRequest
-     * @return
-     * @author fawad khan
-     * @createdDate 30-oct-2021
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> deleteInterestRate(Long id, HttpServletRequest httpServletRequest) {
         try {

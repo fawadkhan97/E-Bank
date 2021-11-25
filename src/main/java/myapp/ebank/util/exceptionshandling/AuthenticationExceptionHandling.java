@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The type Authentication exception handling.
+ */
 @Component
 public class AuthenticationExceptionHandling implements AuthenticationEntryPoint {
     private static final Logger log = LogManager.getLogger(AuthenticationExceptionHandling.class);

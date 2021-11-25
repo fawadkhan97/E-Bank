@@ -10,44 +10,59 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
+import java.text.ParseException;
 
+/**
+ * The type Kibor controller.
+ */
 @RestController
 @RequestMapping("/kibor")
 @Validated
 public class KiborController {
+    /**
+     * The Kibor rates service.
+     */
     final KiborService kiborRatesService;
 
+    /**
+     * Instantiates a new Kibor controller.
+     *
+     * @param kiborRatesService the kibor rates service
+     */
     public KiborController(KiborService kiborRatesService) {
         this.kiborRatesService = kiborRatesService;
     }
 
 
     /**
-     * fetch daily kibor rates
+     * Daily kibor rates response entity.
      *
-     * @return daily kibor rates
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     @GetMapping("/dailyRates")
-    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> dailyKiborRates(HttpServletRequest httpServletRequest) throws ParseException {
         return kiborRatesService.dailyKiborRates(httpServletRequest);
     }
 
     /**
-     * get rates for specified date
+     * Gets kibor rates by date.
      *
-     * @param date
-     * @return
+     * @param date               the date
+     * @param httpServletRequest the http servlet request
+     * @return the kibor rates by date
      */
     @GetMapping("/getByDate")
-    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> getKiborRatesByDate(@RequestParam Date date, HttpServletRequest httpServletRequest) throws ParseException {
         return kiborRatesService.getKiborRateByDate(date, httpServletRequest);
     }
 
     /**
-     * get kibor rates from start date to  current date
+     * Gets kibor rate by start date.
      *
-     * @param startDate
-     * @return
+     * @param startDate          the start date
+     * @param httpServletRequest the http servlet request
+     * @return the kibor rate by start date
      */
     @GetMapping("/getByStartDate")
     public ResponseEntity<Object> getKiborRateByStartDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.util.Date startDate,
@@ -56,11 +71,12 @@ public class KiborController {
     }
 
     /**
-     * get kibor rates from start date to  end date
+     * Gets kibor rate by start and end date.
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate          the start date
+     * @param endDate            the end date
+     * @param httpServletRequest the http servlet request
+     * @return the kibor rate by start and end date
      */
     @GetMapping("/getByDateBetween")
     public ResponseEntity<Object> getKiborRateByStartAndEndDate(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") java.util.Date startDate,
@@ -70,8 +86,11 @@ public class KiborController {
     }
 
     /**
-     * @param id
-     * @return kiborRate object
+     * Gets kibor rate.
+     *
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the kibor rate
      */
     @GetMapping("/get/{id}")
     public ResponseEntity<Object> getKiborRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {
@@ -80,19 +99,23 @@ public class KiborController {
 
 
     /**
-     * @return list of Kibor rates
+     * Gets all kibor rates.
+     *
+     * @param httpServletRequest the http servlet request
+     * @return the all kibor rates
      */
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllKiborRates(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<Object> getAllKiborRates(HttpServletRequest httpServletRequest) throws ParseException {
         return kiborRatesService.listAllKiborRates(httpServletRequest);
     }
 
 
     /**
-     * save kibor rate
+     * Add kibor rate response entity.
      *
-     * @param kiborRate
-     * @return
+     * @param kiborRate          the kibor rate
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addKiborRate(
@@ -105,9 +128,11 @@ public class KiborController {
 
 
     /**
-     * @param kiborRate
-     * @return
-     * @createdDate 29-oct-2021
+     * Update kibor rate response entity.
+     *
+     * @param kiborRate          the kibor rate
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     @PutMapping("/update")
     public ResponseEntity<Object> updateKiborRate(@Valid @RequestBody KiborRates kiborRate, HttpServletRequest httpServletRequest) {
@@ -117,9 +142,11 @@ public class KiborController {
     }
 
     /**
-     * @param id
-     * @return
-     * @createdDate 27-oct-2021
+     * Delete kibor rate response entity.
+     *
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteKiborRate(@PathVariable Long id, HttpServletRequest httpServletRequest) {

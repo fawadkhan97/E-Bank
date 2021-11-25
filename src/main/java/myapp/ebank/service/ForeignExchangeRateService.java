@@ -21,23 +21,34 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Foreign exchange rate service.
+ */
 @Service
 public class ForeignExchangeRateService {
 
 
     private static final Logger log = LogManager.getLogger(ForeignExchangeRateService.class);
+    /**
+     * The Foreign exchange rate repository.
+     */
     ForeignExchangeRateRepository foreignExchangeRateRepository;
 
+    /**
+     * Instantiates a new Foreign exchange rate service.
+     *
+     * @param foreignExchangeRateRepository the foreign exchange rate repository
+     */
     public ForeignExchangeRateService(ForeignExchangeRateRepository foreignExchangeRateRepository) {
         this.foreignExchangeRateRepository = foreignExchangeRateRepository;
     }
 
 
     /**
-     * get daily foreignExchange rate
+     * Gets daily foreign exchange rate.
      *
-     * @return ForeignExchangeRate Object
-     * @param httpServletRequest
+     * @param httpServletRequest the http servlet request
+     * @return the daily foreign exchange rate
      */
     public ResponseEntity<Object> getDailyForeignExchangeRate(HttpServletRequest httpServletRequest) {
 
@@ -57,11 +68,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * get foreignExchange Rate for specific Date
+     * Gets foreign exchange rate by date.
      *
-     * @param date
-     * @param httpServletRequest
-     * @return foreign exchange list
+     * @param date               the date
+     * @param httpServletRequest the http servlet request
+     * @return the foreign exchange rate by date
      */
     public ResponseEntity<Object> getForeignExchangeRateByDate(Date date, HttpServletRequest httpServletRequest) {
         try {
@@ -79,11 +90,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * find between specific date range by starting date
+     * Gets foreign exchange rate by start date.
      *
-     * @param startDate
-     * @param httpServletRequest
-     * @return foreignExchangeRate
+     * @param startDate          the start date
+     * @param httpServletRequest the http servlet request
+     * @return the foreign exchange rate by start date
      */
     public ResponseEntity<Object> getForeignExchangeRateByStartDate(@RequestParam java.util.Date startDate, HttpServletRequest httpServletRequest) {
         try {
@@ -100,11 +111,13 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * find between specific date range start and end
+     * Gets foreign exchange rate between dates.
      *
-     * @param startDate
-     * @param endDate
-     * @return
+     * @param startDate          the start date
+     * @param endDate            the end date
+     * @param httpServletRequest the http servlet request
+     * @return the foreign exchange rate between dates
+     * @throws ParseException the parse exception
      */
     public ResponseEntity<Object> getForeignExchangeRateBetweenDates(@RequestParam java.util.Date startDate, @RequestParam java.util.Date endDate, HttpServletRequest httpServletRequest) throws ParseException {
         try {
@@ -122,8 +135,9 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * @return List of foreignExchangeRates
-     * @author Fawad khan
+     * List all foreign exchange rates response entity.
+     *
+     * @return the response entity
      */
     public ResponseEntity<Object> listAllForeignExchangeRates() {
         try {
@@ -145,13 +159,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * fetch record by id
+     * Gets foreign exchange rates by id.
      *
-     * @param id
-     * @param httpServletRequest
-     * @return
-     * @author fawad khan
-     * @createdDate 27-oct-2021
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the foreign exchange rates by id
      */
     public ResponseEntity<Object> getForeignExchangeRatesById(Long id, HttpServletRequest httpServletRequest) {
         try {
@@ -174,11 +186,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * save foreignExchange rate
+     * Add foreign exchange rate response entity.
      *
-     * @param foreignExchangeRates
-     * @param httpServletRequest
-     * @return
+     * @param foreignExchangeRates the foreign exchange rates
+     * @param httpServletRequest   the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> addForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates, HttpServletRequest httpServletRequest) {
         try {
@@ -202,13 +214,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * update rates
+     * Update foreign exchange rate response entity.
      *
-     * @param foreignExchangeRates
-     * @param httpServletRequest
-     * @return
-     * @author fawad khan
-     * @createdDate 30-oct-2021
+     * @param foreignExchangeRates the foreign exchange rates
+     * @param httpServletRequest   the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> updateForeignExchangeRate(List<ForeignExchangeRates> foreignExchangeRates, HttpServletRequest httpServletRequest) {
         try {
@@ -227,12 +237,11 @@ public class ForeignExchangeRateService {
     }
 
     /**
-     * delete foreign exchanges
+     * Delete foreign exchange rate response entity.
      *
-     * @param id
-     * @param httpServletRequest
-     * @author fawad khan
-     * @createdDate 30-oct-2021
+     * @param id                 the id
+     * @param httpServletRequest the http servlet request
+     * @return the response entity
      */
     public ResponseEntity<Object> deleteForeignExchangeRate(Long id, HttpServletRequest httpServletRequest) {
         try {
