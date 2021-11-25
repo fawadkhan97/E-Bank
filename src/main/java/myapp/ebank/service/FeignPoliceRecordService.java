@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 
+/**
+ * The interface Feign police record service.
+ */
 @FeignClient(name = "e-police-system")
 public interface FeignPoliceRecordService {
   /*  @GetMapping("/currency/getByid/{id}")
@@ -13,10 +16,10 @@ public interface FeignPoliceRecordService {
     //public PoliceRecordDTO getPoliceRecord(String cnic);
 
     /**
-     * find criminals by their cnic
+     * Check criminal record boolean.
      *
-     * @param cnic
-     * @return
+     * @param cnic the cnic
+     * @return the boolean
      */
     @GetMapping("/criminal/check-criminal-record")
     public Boolean checkCriminalRecord(@RequestHeader String cnic);

@@ -9,6 +9,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * The type Sms util.
+ */
 public class SMSUtil {
 
     private static final Logger log = LogManager.getLogger(SMSUtil.class);
@@ -23,13 +26,13 @@ public class SMSUtil {
             "otp is : ";
 
     /**
-     * @param phoneNumber
-     * @param token
-     * @return
-     * @author fawad khan
-     * @createdDate 11-oct-2021
+     * Send sms response entity.
+     *
+     * @param phoneNumber the phone number
+     * @param token       the token
+     * @return the response entity
      */
-    // send otp sms
+// send otp sms
     public ResponseEntity<Object> sendSMS(String phoneNumber, int token) {
         try {
             	//Twilio.init(ACCOUNT_SID, AUTH_TOKEN);

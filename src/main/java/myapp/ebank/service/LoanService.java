@@ -13,20 +13,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Loan service.
+ */
 @Service
 public class LoanService {
 
 
     private static final Logger log = LogManager.getLogger(LoanService.class);
+    /**
+     * The Loan repository.
+     */
     final LoanRepository loanRepository;
 
+    /**
+     * Instantiates a new Loan service.
+     *
+     * @param loanRepository the loan repository
+     */
     public LoanService(LoanRepository loanRepository) {
         this.loanRepository = loanRepository;
     }
 
     /**
-     * @return List of loans
-     * @author Fawad khan
+     * List all loans response entity.
+     *
+     * @return the response entity
      */
     public ResponseEntity<Object> listAllLoans() {
         try {
@@ -47,10 +59,10 @@ public class LoanService {
     }
 
     /**
-     * @param loan
-     * @return
-     * @author fawad khan
-     * @createdDate 01-nov-2021
+     * Update loan response entity.
+     *
+     * @param loan the loan
+     * @return the response entity
      */
     public ResponseEntity<Object> updateLoan(Loans loan) {
         try {
@@ -69,10 +81,10 @@ public class LoanService {
     }
 
     /**
-     * @param id
-     * @return
-     * @author fawad khan
-     * @createdDate 01-nov-2021
+     * Delete loan response entity.
+     *
+     * @param id the id
+     * @return the response entity
      */
     public ResponseEntity<Object> deleteLoan(Long id) {
         try {

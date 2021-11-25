@@ -15,19 +15,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Organization service.
+ */
 @Service
 public class OrganizationService {
     private static final Logger log = LogManager.getLogger(OrganizationService.class);
     final private OrganizationRepository organizationRepository;
 
-    // Autowiring through constructor
+    /**
+     * Instantiates a new Organization service.
+     *
+     * @param organizationRepository the organization repository
+     */
+// Autowiring through constructor
     public OrganizationService(OrganizationRepository organizationRepository) {
         this.organizationRepository = organizationRepository;
     }
 
     /**
-     * @return List of organizations
-     * @author Fawad khan
+     * List all organization response entity.
+     *
+     * @return the response entity
      */
     public ResponseEntity<Object> listAllOrganization() {
         try {
@@ -52,11 +61,10 @@ public class OrganizationService {
     }
 
     /**
-     *  get organization by specific id
-     * @param id
-     * @return
-     * @author fawad khan
-     * @createdDate 27-oct-2021
+     * Gets organization by id.
+     *
+     * @param id the id
+     * @return the organization by id
      */
     public ResponseEntity<Object> getOrganizationById(Long id) {
         try {
@@ -81,10 +89,10 @@ public class OrganizationService {
     }
 
     /**
-     * @param organization
-     * @return
-     * @author fawad khan
-     * @createdDate 27-oct-2021
+     * Save organization response entity.
+     *
+     * @param organization the organization
+     * @return the response entity
      */
     public ResponseEntity<Object> saveOrganization(Organizations organization) {
         try {
@@ -109,10 +117,10 @@ public class OrganizationService {
     }
 
     /**
-     * @param organization
-     * @return
-     * @author fawad khan
-     * @createdDate 27-oct-2021
+     * Update organization response entity.
+     *
+     * @param organization the organization
+     * @return the response entity
      */
     public ResponseEntity<Object> updateOrganization(Organizations organization) {
         try {
@@ -132,10 +140,10 @@ public class OrganizationService {
     }
 
     /**
-     * @param id
-     * @return
-     * @author fawad khan
-     * @createdDate 27-oct-2021
+     * Delete organization response entity.
+     *
+     * @param id the id
+     * @return the response entity
      */
     public ResponseEntity<Object> deleteOrganization(Long id) {
         try {

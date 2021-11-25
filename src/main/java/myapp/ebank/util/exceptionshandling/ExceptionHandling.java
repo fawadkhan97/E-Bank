@@ -22,10 +22,21 @@ import java.text.ParseException;
 import java.util.InputMismatchException;
 import java.util.Objects;
 
+/**
+ * The type Exception handling.
+ */
 @ControllerAdvice
 public class ExceptionHandling {
     private static final Logger log = LogManager.getLogger(ExceptionHandling.class);
 
+    /**
+     * Handle exception response entity.
+     *
+     * @param e       the e
+     * @param request the request
+     * @return the response entity
+     * @throws ParseException the parse exception
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public static ResponseEntity<Object> handleException(MethodArgumentNotValidException e, HttpServletRequest request) throws ParseException {
@@ -39,18 +50,42 @@ public class ExceptionHandling {
         return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, errorResult, request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Parsing exception response entity.
+     *
+     * @param e       the e
+     * @param request the request
+     * @return the response entity
+     * @throws ParseException the parse exception
+     */
     @ExceptionHandler({ParseException.class, AuthenticationException.class})
     public static ResponseEntity<Object> parsingException(Exception e, HttpServletRequest request) throws ParseException {
         log.info("some error has occurred see logs for more details ....parsing exception is {}..{}..{}", e.getClass(), e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Jwt exception response entity.
+     *
+     * @param e       the e
+     * @param request the request
+     * @return the response entity
+     * @throws ParseException the parse exception
+     */
     @ExceptionHandler({TokenExpiredException.class, JWTDecodeException.class, JWTVerificationException.class})
     public static ResponseEntity<Object> jwtException(Exception e, HttpServletRequest request) throws ParseException {
         log.info("some error has occurred see logs for more details ....parsing exception is {} : {} uri is {} ", e.getClass(), e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI(), null), HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Input validation exception response entity.
+     *
+     * @param e       the e
+     * @param request the request
+     * @return the response entity
+     * @throws ParseException the parse exception
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({RuntimeException.class, MissingRequestValueException.class, InputMismatchException.class, NonUniqueResultException.class})
     public static ResponseEntity<Object> inputValidationException(Exception e, HttpServletRequest request) throws ParseException {
