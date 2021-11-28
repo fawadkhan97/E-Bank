@@ -75,5 +75,19 @@ public class Users implements Serializable {
             @JoinColumn(name = "roles_id", nullable = false)})
     private List<Roles> roles = new ArrayList<>();
 
-
+    public Users(long id, String fullName, String userName, String phoneNumber, String email, String cnic, String password, int age, String dob, Date createdDate, Date updatedDate, boolean isActive, int token) {
+        this.id = id;
+        this.fullName = fullName;
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.cnic = cnic;
+        this.password = password;
+        this.age = age;
+        this.dob = dob;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
+        this.isActive = isActive;
+        this.token = token;
+    }
 }
