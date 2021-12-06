@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +73,8 @@ public class CurrencyService {
      */
     public ResponseEntity<Object> getCurrencyById(Long id, HttpServletRequest httpServletRequest) {
         try {
+
+
             Optional<Currencies> currency = currencyRepository.findById(id);
             if (currency.isPresent() && currency.get().getIsActive()) {
                 // check if currency is verified

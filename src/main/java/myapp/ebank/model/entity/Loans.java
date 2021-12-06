@@ -23,6 +23,7 @@ public class Loans implements Serializable {
     @NotNull(message = "amount cannot be blank ")
     @Column(name = "loanAmount",nullable = false)
     private Double loanAmount;
+    @NotBlank(message = "description cannot be blank ")
     @Column(name = "description",nullable = false)
     private String description;
     @Column(name = "paidstatus")
@@ -30,13 +31,11 @@ public class Loans implements Serializable {
     @Column(name = "dueDate")
     private Date dueDate;
     @Column(name = "insterestRate")
-    @Min(value=1, message = "value should be greater than 0")
     private Double interestRate;
     @Column(name = "totalAmountToBePaid")
-    @Min(value=1, message = "value should be greater than 0")
     private Double totalAmountToBePaid;
     @Column(name = "amountPaid")
-    @Min(value=1, message = "value should be greater than 0")
+    @Min(value=0, message = "amount paid  should be equal to total Amount To Be Paid")
     private Double amountPaid;
     @Column(name = "createdDate")
     private Date createdDate;

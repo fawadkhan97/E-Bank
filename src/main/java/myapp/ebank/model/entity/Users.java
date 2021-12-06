@@ -90,4 +90,8 @@ public class Users implements Serializable {
         this.isActive = isActive;
         this.token = token;
     }
+
+    public Users() {
+
+    }
 }

@@ -7,10 +7,7 @@ import myapp.ebank.model.entity.Roles;
 import myapp.ebank.model.entity.Users;
 import myapp.ebank.repository.LoanRepository;
 import myapp.ebank.repository.UserRepository;
-import myapp.ebank.util.DateTime;
-import myapp.ebank.util.EmailUtil;
-import myapp.ebank.util.ResponseMapping;
-import myapp.ebank.util.SMSUtil;
+import myapp.ebank.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,6 +25,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The type User service.
@@ -193,6 +192,9 @@ public class UserService implements UserDetailsService {
      * @throws ParseException the parse exception
      */
     public ResponseEntity<Object> updateUser(Users user, HttpServletRequest httpServletRequest) throws ParseException {
+        HashMap<String, Object> responseMap = new HashMap<>();
+        responseMap.put("userid", user.getId());
+        responseMap.put("username", "fawad");
         try {
             user.setUpdatedDate(DateTime.getDateTime());
             userRepository.save(user);
@@ -201,7 +203,6 @@ public class UserService implements UserDetailsService {
             log.info(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser {} .... {}", e.getMessage(), e.getCause());
             return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
 
@@ -309,21 +310,16 @@ public class UserService implements UserDetailsService {
      */
     public ResponseEntity<Object> applyForLoan(Long id, Loans loan, HttpServletRequest httpServletRequest) throws Exception {
         try {
-            if (loan.getAmountPaid() < loanAmount) {
+            if (loan.getLoanAmount() < loanAmount) {
                 Optional<Users> user = userRepository.findById(id);
                 if (user.isPresent() && user.get().isActive()) {
                     List<Loans> loans = new ArrayList<>(user.get().getLoans());
-                    if (!loans.isEmpty()) {
-                        for (Loans loan1 : loans) {
-                            if (!loan1.getPaidStatus()) {
-                                unpaidLoanCount += 1;
-                            }
-                        }
+                    // count total unpaid loans of user
+                    unpaidLoanCount = (int) loans.stream().filter(loans1 ->!loans1.getPaidStatus()).count();
                         if (unpaidLoanCount > 2) {
-
                             return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
                         }
-                    }
+
                     log.info("user fetch and found from db by id  {}: ", user);
                     loan.setCreatedDate(DateTime.getDateTime());
                     loan.setInterestRate(interestRate);
@@ -337,7 +333,7 @@ public class UserService implements UserDetailsService {
                     loans.add(loan);
                     user.get().setLoans(loans);
                     // save loan to db first then save user
-                    loanRepository.save(loan);
+                   loanRepository.save(loan);
                     userRepository.save(user.get());
                     return new ResponseEntity<>(loan, HttpStatus.OK);
                 } else {
@@ -345,8 +341,9 @@ public class UserService implements UserDetailsService {
                     return new ResponseEntity<>("could not found user with given details.... user may not be verified", HttpStatus.NOT_FOUND);
                 }
             } else
-                return new ResponseEntity<>("maximum allowed limit of loan is {loanAMount} ", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("maximum allowed limit of loan is {loanAmount} ", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+            e.printStackTrace();
             log.info("an error has occurred in userService method apply for loan  {} .... {}", e.getMessage(), e.getCause());
             return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
 
@@ -462,9 +459,10 @@ public class UserService implements UserDetailsService {
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();
                 userFundsAndLoans.setFunds(user.get().getFunds());
                 userFundsAndLoans.setLoans(user.get().getLoans());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Success", httpServletRequest.getRequestURI(),userFundsAndLoans), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Success", httpServletRequest.getRequestURI(), userFundsAndLoans), HttpStatus.OK);
 
-            } else return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "user may not exists for given id", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+            } else
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "user may not exists for given id", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
 
         } catch (Exception e) {
             log.info(

@@ -182,9 +182,8 @@ public class UserController {
      * @throws Exception the exception
      */
     @PostMapping("/{userid}/applyForLoan")
-    public ResponseEntity<Object> applyForLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws Exception {
+    public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws Exception {
         return userService.applyForLoan(userid, loan, httpServletRequest);
-
     }
 
     /**

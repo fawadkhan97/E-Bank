@@ -21,6 +21,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             //Sign up url
             "/user/add",
             "/organization/add",
+            "/role/add",
 
             //other url
             "/**/today",
