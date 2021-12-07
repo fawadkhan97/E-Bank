@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 /**
@@ -73,6 +74,7 @@ public class UserService implements UserDetailsService {
         this.feignPoliceRecordService = feignPoliceRecordService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
+
 
     /**
      * List all user response entity.
@@ -136,6 +138,7 @@ public class UserService implements UserDetailsService {
                 return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.info(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById {} .... {}", e.getMessage(), e.getCause());
             return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -315,10 +318,10 @@ public class UserService implements UserDetailsService {
                 if (user.isPresent() && user.get().isActive()) {
                     List<Loans> loans = new ArrayList<>(user.get().getLoans());
                     // count total unpaid loans of user
-                    unpaidLoanCount = (int) loans.stream().filter(loans1 ->!loans1.getPaidStatus()).count();
-                        if (unpaidLoanCount > 2) {
-                            return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
-                        }
+                    unpaidLoanCount = (int) loans.stream().filter(loans1 -> !loans1.getPaidStatus()).count();
+                    if (unpaidLoanCount > 2) {
+                        return new ResponseEntity<>("user has already pending unpaid loans", HttpStatus.METHOD_NOT_ALLOWED);
+                    }
 
                     log.info("user fetch and found from db by id  {}: ", user);
                     loan.setCreatedDate(DateTime.getDateTime());
@@ -333,7 +336,7 @@ public class UserService implements UserDetailsService {
                     loans.add(loan);
                     user.get().setLoans(loans);
                     // save loan to db first then save user
-                   loanRepository.save(loan);
+                    loanRepository.save(loan);
                     userRepository.save(user.get());
                     return new ResponseEntity<>(loan, HttpStatus.OK);
                 } else {
@@ -366,6 +369,7 @@ public class UserService implements UserDetailsService {
             Optional<Loans> fetchUserLoans = loanRepository.findById(loan.getId());
             if (user.isPresent() && user.get().isActive() && fetchUserLoans.isPresent()) {
                 List<Loans> loansList = new ArrayList<>(user.get().getLoans());
+
                 for (Loans loan1 : loansList) {
                     // check if user contain  the loan specified
                     if (loan1.getId() == loan.getId() && !loan1.getPaidStatus()) {

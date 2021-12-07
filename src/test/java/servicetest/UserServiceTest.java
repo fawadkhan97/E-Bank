@@ -5,6 +5,7 @@ import myapp.ebank.model.entity.Users;
 import myapp.ebank.repository.UserRepository;
 import myapp.ebank.service.UserService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,26 +21,32 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     UserService userService;
 
-    @MockBean
+    @Mock
     UserRepository userRepository;
 
-HttpServletRequest httpServletRequest;
+    HttpServletRequest httpServletRequest;
+
+    @BeforeEach
+    void initUseCase() {
+        userService = new UserService(userRepository, null, null, null, null);
+    }
 
     @SneakyThrows
     @Test
     @DisplayName("Test findById ")
     void testFindById() {
-        Users user = new Users(1L, "fawadkhan", "fawad60","+923125954041","fawad45@gmail.com","3710194563447","asd",20,"01-01-1998", new Date(),new Date(),true,78555);
-        doReturn(Optional.of(user)).when(userRepository).findById(1L);
-
+        Users user = new Users(1L, "fawadkhan", "fawad60", "+923125954041", "fawad45@gmail.com", "3710194563447", "asd", 20, "01-01-1998", new Date(), new Date(), true, 78555);
+        when(userRepository.findByIdAndIsActive(user.getId(),user.isActive())).thenReturn(Optional.of(user));
         // Execute the service call
-        ResponseEntity<Object> returnedUsers = userService.getUserById(1L,httpServletRequest);
+
+     ResponseEntity<Object> returnedUsers = userService.getUserById(1L, httpServletRequest);
 
 
         // Assert the response
