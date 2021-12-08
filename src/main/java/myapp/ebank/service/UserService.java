@@ -1,5 +1,6 @@
 package myapp.ebank.service;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import myapp.ebank.model.dto.UserFundsAndLoans;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
@@ -10,6 +11,7 @@ import myapp.ebank.repository.UserRepository;
 import myapp.ebank.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,23 +81,23 @@ public class UserService implements UserDetailsService {
     /**
      * List all user response entity.
      *
-     * @param httpServletRequest the http servlet request
+     * @param requestUri the http servlet request uri
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> listAllUser(HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> listAllUser(String  requestUri) throws ParseException {
         try {
             List<Users> users = userRepository.findAllByIsActiveOrderByCreatedDateDesc(true);
             // check if list is empty
             if (users.isEmpty()) {
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "  Users are empty", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "  Users are empty", requestUri, null), HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "users found", httpServletRequest.getRequestURI(), users), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "users found", requestUri, users), HttpStatus.OK);
             }
 
         } catch (Exception e) {
             log.info("some error has occurred trying to Fetch users, in Class  UserService and its function listAllUser \t{} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found",requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -126,22 +128,22 @@ public class UserService implements UserDetailsService {
      * @return the user by id
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> getUserById(Long id, HttpServletRequest httpServletRequest) throws ParseException {
+    public ObjectNode getUserById(Long id, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
                 // check if user is verified
                 log.info("user fetch and found from db by id  : {} ", user);
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "user found", httpServletRequest.getRequestURI(), user), HttpStatus.OK);
+                return ResponseMapping.apiResponse(HttpStatus.OK, "user found",requestUri, user.get());
             } else {
                 log.info("no user found with id:{}", id);
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified", httpServletRequest.getRequestURI(), null), HttpStatus.NOT_FOUND);
+                return ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified",requestUri, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
             log.info(
                     "some error has occurred during fetching Users by id , in class UserService and its function getUserById {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found", httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Some error occurred..Users could not be found",requestUri, null);
 
         }
 
@@ -156,7 +158,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> saveUser(Users user, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> saveUser(Users user, String  requestUri) throws ParseException {
         try {
             //   Boolean criminalRecord = feignPoliceRecordService.checkCriminalRecord("61101-7896541-5");
             //  log.info("record is from kamran :" + criminalRecord);
@@ -178,10 +180,10 @@ public class UserService implements UserDetailsService {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (DataIntegrityViolationException e) {
             log.info("error is   {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, e.getRootCause().getMessage(),requestUri, null), HttpStatus.NOT_ACCEPTABLE);
         } catch (Exception e) {
             log.info("some error has occurred while trying to save user,, in class UserService and its function saveUser {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
@@ -194,7 +196,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> updateUser(Users user, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> updateUser(Users user, String  requestUri) throws ParseException {
         HashMap<String, Object> responseMap = new HashMap<>();
         responseMap.put("userid", user.getId());
         responseMap.put("username", "fawad");
@@ -205,7 +207,7 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             log.info(
                     "some error has occurred while trying to update user,, in class UserService and its function updateUser {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -217,7 +219,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> deleteUser(Long id, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> deleteUser(Long id, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
@@ -226,14 +228,14 @@ public class UserService implements UserDetailsService {
                 // set updated date
                 user.get().setUpdatedDate(DateTime.getDateTime());
                 userRepository.save(user.get());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "  Users deleted successfully", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "  Users deleted successfully",requestUri, null), HttpStatus.OK);
 
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "  Users does not exists ", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "  Users does not exists ",requestUri, null), HttpStatus.OK);
         } catch (Exception e) {
             log.info(
                     "some error has occurred while trying to Delete user, in class UserService and its function deleteUser   {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -248,7 +250,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> verifyUser(Long id, int token, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> verifyUser(Long id, int token, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findByIdAndToken(id, token);
             Date date = DateTime.getDateTime();
@@ -266,7 +268,7 @@ public class UserService implements UserDetailsService {
                 return new ResponseEntity<>("incorrect verification details were entered or verification time has expired", HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             log.info(String.valueOf(e.getCause()), e.getMessage());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -280,7 +282,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> sendToken(Long id, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> sendToken(Long id, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent()) {
@@ -298,7 +300,7 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             log.info(
                     "some error has occurred during fetching User by id , in class UserService and its function sendSms  {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -311,7 +313,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws Exception the exception
      */
-    public ResponseEntity<Object> applyForLoan(Long id, Loans loan, HttpServletRequest httpServletRequest) throws Exception {
+    public ResponseEntity<Object> applyForLoan(Long id, Loans loan, String  requestUri) throws Exception {
         try {
             if (loan.getLoanAmount() < loanAmount) {
                 Optional<Users> user = userRepository.findById(id);
@@ -348,7 +350,7 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             e.printStackTrace();
             log.info("an error has occurred in userService method apply for loan  {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }
@@ -362,7 +364,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> depositLoan(Long id, Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> depositLoan(Long id, Loans loan, String  requestUri) throws ParseException {
 
         try {
             Optional<Users> user = userRepository.findById(id);
@@ -395,7 +397,7 @@ public class UserService implements UserDetailsService {
         } catch (
                 Exception e) {
             log.info("an error has occurred in userService method depositLoan  {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -410,7 +412,7 @@ public class UserService implements UserDetailsService {
      * @return the response entity
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> applyForFunds(Long id, Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> applyForFunds(Long id, Funds funds, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findById(id);
             if (user.isPresent() && user.get().isActive() && user.get().getOrganization().getType().equalsIgnoreCase("government")) {
@@ -422,7 +424,7 @@ public class UserService implements UserDetailsService {
                     fundsList.add(funds);
                     user.get().setFunds(fundsList);
                     userRepository.save(user.get());
-                    return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Funds requested has been received..it will be process and its status will be updated soon", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                    return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Funds requested has been received..it will be process and its status will be updated soon",requestUri, null), HttpStatus.OK);
 
                 }
                 funds.setCreatedDate(DateTime.getDateTime());
@@ -431,17 +433,17 @@ public class UserService implements UserDetailsService {
                 fundsList.add(funds);
                 user.get().setFunds(fundsList);
                 userRepository.save(user.get());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "funds has been approved ", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "funds has been approved ",requestUri, null), HttpStatus.OK);
 
             } else if (user.isPresent() && !user.get().getOrganization().getType().equalsIgnoreCase("government")) {
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, "only government departments can apply for funds", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.BAD_REQUEST, "only government departments can apply for funds",requestUri, null), HttpStatus.OK);
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "could not found user with given details.... user may not be verified",requestUri, null), HttpStatus.OK);
 
         } catch (
                 Exception e) {
             log.info("error is {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
 
@@ -455,7 +457,7 @@ public class UserService implements UserDetailsService {
      * @return the user funds and loans
      * @throws ParseException the parse exception
      */
-    public ResponseEntity<Object> getUserFundsAndLoans(Long id, HttpServletRequest httpServletRequest) throws ParseException {
+    public ResponseEntity<Object> getUserFundsAndLoans(Long id, String  requestUri) throws ParseException {
         try {
             Optional<Users> user = userRepository.findByIdAndIsActive(id, true);
             if (user.isPresent()) {
@@ -463,15 +465,15 @@ public class UserService implements UserDetailsService {
                 UserFundsAndLoans userFundsAndLoans = new UserFundsAndLoans();
                 userFundsAndLoans.setFunds(user.get().getFunds());
                 userFundsAndLoans.setLoans(user.get().getLoans());
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Success", httpServletRequest.getRequestURI(), userFundsAndLoans), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.OK, "Success",requestUri, userFundsAndLoans), HttpStatus.OK);
 
             } else
-                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "user may not exists for given id", httpServletRequest.getRequestURI(), null), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.NOT_FOUND, "user may not exists for given id",requestUri, null), HttpStatus.OK);
 
         } catch (Exception e) {
             log.info(
                     "some error has occurred during fetching User by id , in class UserService and its function getUserFundsAndLoans {} .... {}", e.getMessage(), e.getCause());
-            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), httpServletRequest.getRequestURI(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ResponseMapping.apiResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(),requestUri, null), HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
     }

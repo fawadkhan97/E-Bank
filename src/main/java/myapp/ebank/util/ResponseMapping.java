@@ -3,6 +3,7 @@ package myapp.ebank.util;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 
 import java.text.ParseException;
@@ -29,8 +30,9 @@ public class ResponseMapping {
      */
     public static ObjectNode apiResponse(HttpStatus httpStatus, String message, String path, Object data) throws ParseException {
         ObjectNode responseJson = jsonMapper.createObjectNode();
+
         responseJson.put("timestamp", String.valueOf(LocalDateTime.now()));
-        responseJson.put("httpStatus", String.valueOf(httpStatus));
+        responseJson.put("status", httpStatus.toString());
         responseJson.put("message:", message);
         responseJson.put("path", path);
         if (null != data) {

@@ -75,7 +75,9 @@ public class Users implements Serializable {
             @JoinColumn(name = "roles_id", nullable = false)})
     private List<Roles> roles = new ArrayList<>();
 
-    public Users(long id, String fullName, String userName, String phoneNumber, String email, String cnic, String password, int age, String dob, Date createdDate, Date updatedDate, boolean isActive, int token) {
+
+    public Users(long id, String fullName, String userName, String phoneNumber, String email, String cnic, String password, int age, String dob,
+                 Date createdDate, Date updatedDate, boolean isActive, int token, List<Funds> funds, List<Loans> loans, Organizations organization, List<Roles> roles) {
         this.id = id;
         this.fullName = fullName;
         this.userName = userName;
@@ -89,6 +91,10 @@ public class Users implements Serializable {
         this.updatedDate = updatedDate;
         this.isActive = isActive;
         this.token = token;
+        this.funds = funds;
+        this.loans = loans;
+        this.organization = organization;
+        this.roles = roles;
     }
 
     public Users() {

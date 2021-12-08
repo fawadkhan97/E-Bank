@@ -1,5 +1,6 @@
 package myapp.ebank.controller;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import myapp.ebank.model.dto.AuthenticationRequest;
 import myapp.ebank.model.entity.Funds;
 import myapp.ebank.model.entity.Loans;
@@ -28,7 +29,7 @@ import java.text.ParseException;
 public class UserController {
     final private UserService userService;
     final private LoanService loanService;
-     private AuthenticationManager authenticationManager;
+     private final AuthenticationManager authenticationManager;
 
     /**
      * Instantiates a new User controller.
@@ -84,7 +85,7 @@ public class UserController {
      */
     @GetMapping("/all")
     public ResponseEntity<Object> getAllUsers(HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.listAllUser(httpServletRequest);
+        return userService.listAllUser(httpServletRequest.getRequestURI());
     }
 
     /**
@@ -97,7 +98,7 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Object> addUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.saveUser(user, httpServletRequest);
+        return userService.saveUser(user, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -110,7 +111,7 @@ public class UserController {
      */
     @PostMapping("/{id}/sendToken")
     public ResponseEntity<Object> sendToken(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.sendToken(id, httpServletRequest);
+        return userService.sendToken(id, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -125,7 +126,7 @@ public class UserController {
     @GetMapping("/verify")
     public ResponseEntity<Object> verifyUser(@RequestHeader(value = "userid") Long userid,
                                              @RequestHeader(value = "token") int token, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.verifyUser(userid, token, httpServletRequest);
+        return userService.verifyUser(userid, token, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -137,8 +138,8 @@ public class UserController {
      * @throws ParseException the parse exception
      */
     @GetMapping("/get/{id}")
-    public ResponseEntity<Object> getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.getUserById(id, httpServletRequest);
+    public ObjectNode getUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.getUserById(id, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -152,7 +153,7 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody Users user, HttpServletRequest httpServletRequest) throws ParseException {
 
-        return userService.updateUser(user, httpServletRequest);
+        return userService.updateUser(user, httpServletRequest.getRequestURI());
 
     }
 
@@ -167,14 +168,13 @@ public class UserController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.deleteUser(id, httpServletRequest);
+        return userService.deleteUser(id, httpServletRequest.getRequestURI());
 
     }
 
     /**
      * Apply for loan response entity.
      *
-     * @param authValue          the auth value
      * @param userid             the userid
      * @param loan               the loan
      * @param httpServletRequest the http servlet request
@@ -183,7 +183,7 @@ public class UserController {
      */
     @PostMapping("/{userid}/applyForLoan")
     public ResponseEntity<Object> applyForLoan(@PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws Exception {
-        return userService.applyForLoan(userid, loan, httpServletRequest);
+        return userService.applyForLoan(userid, loan, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -197,8 +197,8 @@ public class UserController {
      * @throws ParseException the parse exception
      */
     @PostMapping("/{userid}/depositLoan")
-    public ResponseEntity<Object> depositLoan(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.depositLoan(userid, loan, httpServletRequest);
+    public ResponseEntity<Object> depositLoan( @PathVariable Long userid, @Valid @RequestBody Loans loan, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.depositLoan(userid, loan, httpServletRequest.getRequestURI());
     }
 
     /**
@@ -212,8 +212,8 @@ public class UserController {
      * @throws ParseException the parse exception
      */
     @PostMapping("/{userid}/applyForFunds")
-    public ResponseEntity<Object> applyForFunds(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, @Valid @RequestBody Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.applyForFunds(userid, funds, httpServletRequest);
+    public ResponseEntity<Object> applyForFunds( @PathVariable Long userid, @Valid @RequestBody Funds funds, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.applyForFunds(userid, funds, httpServletRequest.getRequestURI());
 
     }
 
@@ -227,8 +227,8 @@ public class UserController {
      * @throws ParseException the parse exception
      */
     @GetMapping("/{userid}/getFundsAndLoans")
-    public ResponseEntity<Object> getUserFundsAndLoans(@RequestHeader(value = "Authorization") String authValue, @PathVariable Long userid, HttpServletRequest httpServletRequest) throws ParseException {
-        return userService.getUserFundsAndLoans(userid, httpServletRequest);
+    public ResponseEntity<Object> getUserFundsAndLoans( @PathVariable Long userid, HttpServletRequest httpServletRequest) throws ParseException {
+        return userService.getUserFundsAndLoans(userid, httpServletRequest.getRequestURI());
 
     }
 }
